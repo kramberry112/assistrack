@@ -171,8 +171,8 @@
                 <hr style="border: 1.5px solid #222; margin-bottom: 18px; margin-top: 0;">
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
                     <label style="font-weight: bold;">Are you Computer Literate?</label>
-                    <input type="checkbox" name="is_literate" value="1" required> Yes
-                    <input type="checkbox" name="is_literate" value="0" required> No
+                    <input type="radio" name="is_literate" value="1" required> Yes
+                    <input type="radio" name="is_literate" value="0" required> No
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
                     <label>If Yes, what tools can you use? (Select all that apply)</label><br>
@@ -184,31 +184,31 @@
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
                     <label>ARE YOU ABLE TO COMMIT TO WORKING A MINIMUM NUMBER OF HOURS PER WEEK AS REQUIRED BY THE POSITION?</label><br>
-                    <input type="checkbox" name="can_commit" value="1" required> Yes
-                    <input type="checkbox" name="can_commit" value="0" required> No
+                    <input type="radio" name="can_commit" value="1" required> Yes
+                    <input type="radio" name="can_commit" value="0" required> No
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
                     <label>ARE YOU WILLING TO WORK OVERTIME IF NECESSARY?</label><br>
-                    <input type="checkbox" name="willing_overtime" value="1" required> Yes
-                    <input type="checkbox" name="willing_overtime" value="0" required> No
+                    <input type="radio" name="willing_overtime" value="1" required> Yes
+                    <input type="radio" name="willing_overtime" value="0" required> No
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
                     <label>ARE YOU COMFORTABLE WITH PERFORMING CLERICAL TASK SUCH AS FILING, DATA ENTRY, AND PHOTOCOPYING?</label><br>
-                    <input type="checkbox" name="comfortable_clerical" value="1" required> Yes
-                    <input type="checkbox" name="comfortable_clerical" value="0" required> No
+                    <input type="radio" name="comfortable_clerical" value="1" required> Yes
+                    <input type="radio" name="comfortable_clerical" value="0" required> No
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
                     <label>DO YOU POSSESS STRONG COMMUNICATION SKILLS, BOTH WRITTEN AND VERBAL?</label><br>
-                    <input type="checkbox" name="strong_communication" value="1" required> Yes
-                    <input type="checkbox" name="strong_communication" value="0" required> No
+                    <input type="radio" name="strong_communication" value="1" required> Yes
+                    <input type="radio" name="strong_communication" value="0" required> No
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
                     <label>ARE YOU WILLING TO UNDERGO TRAINING RELATED TO YOUR DUTIES AS A STUDENT ASSISTANT?</label><br>
-                    <input type="checkbox" name="willing_training" value="1" required> Yes
-                    <input type="checkbox" name="willing_training" value="0" required> No
+                    <input type="radio" name="willing_training" value="1" required> Yes
+                    <input type="radio" name="willing_training" value="0" required> No
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
-                    <label>OTHER TALENTS/ SKILLS/ SOFT SKILLS/TECHNICAL SKILLS/SOBBIES, WRITE IT DOWN:</label>
+                    <label>OTHER TALENTS/ SKILLS/ SOFT SKILLS/TECHNICAL SKILLS/HOBBIES, WRITE IT DOWN:</label>
                     <textarea name="other_skills" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; height: 60px; background: #f7f7f7;"></textarea>
                 </div>
                 <div style="text-align: right; margin-top: 18px;">

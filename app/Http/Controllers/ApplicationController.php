@@ -8,15 +8,16 @@ use Illuminate\Http\Request;
 class ApplicationController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource (all applicants).
      */
     public function index()
     {
-        //
+        $applications = Application::all();
+        return view('admin.applicants.index', compact('applications'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new resource (application form).
      */
     public function create()
     {
@@ -55,33 +56,36 @@ class ApplicationController extends Controller
             'other_skills' => 'nullable|string',
         ]);
 
-        // Handle picture upload
         if ($request->hasFile('picture')) {
             $data['picture'] = $request->file('picture')->store('pictures', 'public');
         }
 
-        // Store tools as JSON
         if (isset($data['tools'])) {
             $data['tools'] = json_encode($data['tools']);
         }
 
-        // Convert checkboxes to boolean
         foreach ([
-            'is_literate', 'can_commit', 'willing_overtime', 'comfortable_clerical', 'strong_communication', 'willing_training'
+            'is_literate', 'can_commit', 'willing_overtime',
+            'comfortable_clerical', 'strong_communication', 'willing_training'
         ] as $field) {
             $data[$field] = isset($data[$field]) ? (bool)$data[$field] : false;
         }
 
-        \App\Models\Application::create($data);
-    return redirect('/apply/thankyou');
+        $application = Application::create($data);
+
+        // If the user is an admin, redirect to applicants list; otherwise, show thank you page
+        if (auth()->check() && auth()->user()->is_admin) {
+            return redirect()->route('applications.index')->with('success', 'Application submitted successfully.');
+        }
+        return view('application.show', compact('application'));
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource (single applicant details).
      */
     public function show(Application $application)
     {
-        //
+        return view('admin.applicants.show', compact('application'));
     }
 
     /**
@@ -89,7 +93,7 @@ class ApplicationController extends Controller
      */
     public function edit(Application $application)
     {
-        //
+        return view('application.edit', compact('application'));
     }
 
     /**
@@ -97,7 +101,7 @@ class ApplicationController extends Controller
      */
     public function update(Request $request, Application $application)
     {
-        //
+        // your update logic here...
     }
 
     /**
@@ -105,6 +109,6 @@ class ApplicationController extends Controller
      */
     public function destroy(Application $application)
     {
-        //
+        // your delete logic here...
     }
 }

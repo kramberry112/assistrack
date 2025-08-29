@@ -3,21 +3,19 @@
 @section('content')
 <div style="background: #222; min-height: 100vh; font-family: Arial, sans-serif;">
     <!-- Header with Logo and Nav -->
-<header style="background: #fff; padding: 10px 40px; display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="/images/uddlogo.png" alt="UDD Logo" style="width: 45px; height: 45px;">
-            <div style="font-size: 16px; font-weight: bold; color: #1a237e; line-height: 1.2;">
-                UNIVERSIDAD DE DAGUPAN
-            </div>
+    <div class="header-bar" style="background: #eaeaea; color: #1a237e; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px;">
+        <div style="display: flex; align-items: center;">
+            <img src="/images/uddlogo.png" alt="UDD Logo" style="height: 44px; width: 44px; object-fit: contain; margin-right: 12px;">
+            <span class="logo-text" style="font-size: 22px; font-weight: bold; color: #1a237e; letter-spacing: 1px;">UNIVERSIDAD DE DAGUPAN</span>
         </div>
-		<nav style="display: flex; gap: 28px; font-size: 15px; font-weight: bold;">
-			<a href="/index" style="color: #1a237e; text-decoration: none;">About</a>
-			<a href="#" style="color: #1a237e; text-decoration: none;">Home</a>
-			<a href="#" style="color: #1a237e; text-decoration: none;">Contact Us</a>
-			<a href="/apply" style="color: #1a237e; text-decoration: none;">Apply</a>
-			<a href="/login" style="color: #1a237e; text-decoration: none;">Login</a>
-		</nav>
-	</header>
+        <nav style="display: flex; gap: 32px;">
+            <a href="/index" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">About</a>
+            <a href="/welcome" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Home</a>
+            <a href="#" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Contact Us</a>
+            <a href="/apply" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Apply</a>
+            <a href="/login" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Login</a>
+        </nav>
+    </div>
 
     <!-- Banner -->
     <section style="position: relative; height: 320px; border-bottom: 6px solid #3a5a8c; overflow: hidden;">
@@ -56,8 +54,8 @@
     </main>
 
     <!-- Footer -->
-    <footer style="background: #2a3a5a; color: #fff; text-align: center; font-size: 13px; padding: 18px 0; margin-top: 0;">
-        &copy; 2023 - 2024 by MRCY Inc., a non-profit organization. All rights reserved.
-    </footer>
+            <footer style="background: #1a237e; color: #fff; text-align: center; font-size: 13px; padding: 18px 0; margin-top: 0; letter-spacing: 1px;">
+                &copy; 2023 - 2024 by MRCY Inc., a non-profit organization. All rights reserved.
+            </footer>
 </div>
 @endsection
