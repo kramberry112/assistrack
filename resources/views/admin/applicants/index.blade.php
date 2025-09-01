@@ -2,6 +2,33 @@
 
 @section('content')
 <style>
+    /* Action cell layout: View left, Add to Student List right */
+    .applicants-table td.action-cell {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0;
+        padding-right: 16px;
+    }
+    .applicants-table td.action-cell a {
+        background: #f3f4f6;
+        color: #2563eb;
+        border: none;
+        padding: 4px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .applicants-table td.action-cell form button {
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        padding: 4px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+    }
     body {
         margin: 0;
         padding: 0;
@@ -255,10 +282,20 @@
             </nav>
         </div>
         <div class="profile" id="profileDropdown">
-            <div class="avatar">LA</div>
-            <div class="profile-details">
-                <span class="name">Admin Full name</span>
-                <span class="username">Admin username</span>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: 600;">LA</div>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="name" style="font-size: 0.9rem; font-weight: 600; letter-spacing: 0.05em;">Admin Full name</span>
+                    <span class="username" style="font-size: 0.75rem; letter-spacing: 0.05em; color: #555;">Admin username</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; margin-left: auto;">
+                    <button id="logoutUp" style="background:none;border:none;cursor:pointer;padding:0;" title="Show Logout">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                    </button>
+                    <button id="logoutDown" style="background:none;border:none;cursor:pointer;padding:0;" title="Hide Logout">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
             </div>
             <div id="logoutMenu">
                 <form method="POST" action="{{ route('logout') }}">
@@ -302,7 +339,14 @@
                                 <td>{{ $applicant->course }}</td>
                                 <td>{{ $applicant->year_level }}</td>
                                 <td>{{ $applicant->id_number }}</td>
-                                <td>Pending</td> <td><a href="{{ route('applications.show', $applicant->id) }}">View</a></td>
+                                <td>Pending</td>
+                                <td class="action-cell">
+                                    <a href="{{ route('applications.show', $applicant->id) }}">View</a>
+                                    <form method="POST" action="{{ route('studentlist.add', $applicant->id) }}">
+                                        @csrf
+                                        <button type="submit">Add to Student List</button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -323,6 +367,15 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function() {
         if (menu.style.display === 'block') menu.style.display = 'none';
     });
+    // Redirect to login page after logout
+    const logoutForm = menu.querySelector('form');
+    if (logoutForm) {
+        logoutForm.addEventListener('submit', function() {
+            setTimeout(function() {
+                window.location.href = '/login';
+            }, 500);
+        });
+    }
 });
 </script>
 @endsection

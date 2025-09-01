@@ -6,7 +6,7 @@
         margin: 0;
         padding: 0;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: #f3f4f6; /* Light gray background */
+        background: #f3f4f6;
     }
 
     .dashboard-container {
@@ -85,7 +85,7 @@
     .sidebar .profile {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 16px;
         padding: 16px 20px;
         border-top: 1px solid #e5e7eb;
         cursor: pointer;
@@ -93,8 +93,8 @@
     }
 
     .sidebar .profile .avatar {
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         background: #e5e7eb;
         border-radius: 50%;
         display: flex;
@@ -107,16 +107,16 @@
     .sidebar .profile-details {
         display: flex;
         flex-direction: column;
-        font-size: 0.85rem;
     }
 
     .sidebar .profile-details .name {
+        font-size: 0.9rem;
         font-weight: 600;
         color: #111827;
     }
 
     .sidebar .profile-details .username {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: #6b7280;
     }
 
@@ -239,18 +239,33 @@
                 </a>
             </nav>
         </div>
+
+        <!-- Profile -->
         <div class="profile" id="profileDropdown">
-            <div class="avatar">LA</div>
+            <div class="avatar">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
             <div class="profile-details">
-                <span class="name">Admin Full name</span>
-                <span class="username">Admin username</span>
+                <span class="name">{{ auth()->user()->name }}</span>
+                <span class="username">{{ auth()->user()->username }}</span>
             </div>
-            <div id="logoutMenu">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit">Logout</button>
-                </form>
+            <div style="margin-left:auto; display:flex; flex-direction:column; gap:2px; align-items:center;">
+                <button id="logoutUp" style="background:none;border:none;cursor:pointer;padding:0;" title="Show Logout">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                </button>
+                <button id="logoutDown" style="background:none;border:none;cursor:pointer;padding:0;" title="Hide Logout">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
             </div>
+        </div>
+
+        <div id="logoutMenu">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit">Logout</button>
+            </form>
         </div>
     </aside>
 

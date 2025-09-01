@@ -22,12 +22,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/applicants', [ApplicationController::class, 'index'])->name('applicants.list');
     Route::get('/applicants/{application}', [ApplicationController::class, 'show'])->name('applicants.show');
     Route::view('/reports', 'admin.reports.index')->name('reports.list');
+    Route::post('/student-list/add/{id}', [\App\Http\Controllers\StudentListController::class, 'add'])->name('studentlist.add');
 
     // Profile management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+    
+    // Redirect root URL to login page
+    Route::get('/', function () {
+        return redirect()->route('login');
+        });
+    });
 
 // Resource route for applications (for admin CRUD)
 Route::resource('applications', ApplicationController::class);

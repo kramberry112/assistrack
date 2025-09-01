@@ -22,6 +22,11 @@
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
                 <div style="margin-bottom: 18px;">
+                    <label for="username" style="font-size: 15px; color: #23408e; font-weight: bold;">Username</label>
+                    <input id="username" type="text" name="username" value="{{ old('username') }}" required autocomplete="username" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 6px; padding: 8px; font-size: 16px; margin-top: 4px;">
+                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
+                </div>
+                <div style="margin-bottom: 18px;">
                     <label for="email" style="font-size: 15px; color: #23408e; font-weight: bold;">Email</label>
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 6px; padding: 8px; font-size: 16px; margin-top: 4px;">
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
