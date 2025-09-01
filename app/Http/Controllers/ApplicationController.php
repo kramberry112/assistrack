@@ -32,7 +32,7 @@ class ApplicationController extends Controller
         $data = $request->validate([
             'student_name' => 'required|string|max:255',
             'course' => 'required|string|max:255',
-            'block' => 'nullable|string|max:255',
+            'year_level' => 'nullable|string|max:255',
             'age' => 'nullable|string|max:10',
             'id_number' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',

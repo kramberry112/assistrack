@@ -36,16 +36,16 @@
                             <p class="font-medium">{{ $application->course }}</p>
                         </div>
                         <div>
-                            <p class="text-gray-500 text-sm">Block</p>
-                            <p class="font-medium">{{ $application->block }}</p>
+                            <p class="text-gray-500 text-sm">Year Level</p>
+                            <p class="font-medium">{{ $application->year_level }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Student ID</p>
+                            <p class="font-medium">{{ $application->id_number }}</p>
                         </div>
                         <div>
                             <p class="text-gray-500 text-sm">Age</p>
                             <p class="font-medium">{{ $application->age }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">ID Number</p>
-                            <p class="font-medium">{{ $application->id_number }}</p>
                         </div>
                         <div>
                             <p class="text-gray-500 text-sm">Email</p>

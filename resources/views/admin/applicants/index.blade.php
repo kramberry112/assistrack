@@ -289,7 +289,8 @@
                         <tr>
                             <th>Applicant Name</th>
                             <th>Course</th>
-                            <th>Block</th>
+                            <th>Year Level</th>
+                            <th>Student ID</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -299,7 +300,8 @@
                             <tr>
                                 <td>{{ $applicant->student_name }}</td>
                                 <td>{{ $applicant->course }}</td>
-                                <td>{{ $applicant->block }}</td>
+                                <td>{{ $applicant->year_level }}</td>
+                                <td>{{ $applicant->id_number }}</td>
                                 <td>Pending</td> <td><a href="{{ route('applications.show', $applicant->id) }}">View</a></td>
                             </tr>
                         @endforeach

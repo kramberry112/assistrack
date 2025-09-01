@@ -79,16 +79,14 @@
                                </select>
                            </div>
                            <div style="flex: 1;">
-                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Block:</label>
-                               <select name="block" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Year Level:</label>
+                               <select name="year_level" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
                                    <option value="">Select</option>
-                                   <option value="1">1</option>
-                                   <option value="2">2</option>
-                                   <option value="3">3</option>
-                                   <option value="4">4</option>
-                                   <option value="5">5</option>
-                                   <option value="6">6</option>
-                                   <option value="7">7</option>
+                                   <option>First Year</option>
+                                   <option>Second Year</option>
+                                   <option>Third Year</option>
+                                   <option>Fourth Year</option>
+                                   <option>Fifth Year</option>
                                </select>
                            </div>
                            <div style="flex: 1;">

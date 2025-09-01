@@ -16,7 +16,7 @@ return new class extends Migration
             // Personal Information
             $table->string('student_name');
             $table->string('course');
-            $table->string('block')->nullable();
+            $table->string('year_level')->nullable();
             $table->string('age')->nullable();
             $table->string('id_number')->nullable();
             $table->string('address')->nullable();
