@@ -33,12 +33,18 @@
                 </div>
                 <div style="margin-bottom: 18px;">
                     <label for="password" style="font-size: 15px; color: #23408e; font-weight: bold;">Password</label>
-                    <input id="password" type="password" name="password" required autocomplete="new-password" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 6px; padding: 8px; font-size: 16px; margin-top: 4px;">
+                    <div style="position:relative;">
+                        <input id="password" type="password" name="password" required autocomplete="new-password" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 6px; padding: 8px; font-size: 16px; margin-top: 4px; padding-right:32px;">
+                        <span class="toggle-password" data-target="password" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem;">&#128065;</span>
+                    </div>
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
                 <div style="margin-bottom: 18px;">
                     <label for="password_confirmation" style="font-size: 15px; color: #23408e; font-weight: bold;">Confirm Password</label>
-                    <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 6px; padding: 8px; font-size: 16px; margin-top: 4px;">
+                    <div style="position:relative;">
+                        <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 6px; padding: 8px; font-size: 16px; margin-top: 4px; padding-right:32px;">
+                        <span class="toggle-password" data-target="password_confirmation" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem;">&#128065;</span>
+                    </div>
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
@@ -48,4 +54,16 @@
             </form>
         </div>
     </main>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.toggle-password').forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+            var input = document.getElementById(this.getAttribute('data-target'));
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+    });
+});
+</script>
+</script>
 </div>

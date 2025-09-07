@@ -36,17 +36,31 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Detect role from email
+        $email = $request->email;
+        $role = null;
+        if (str_ends_with($email, '.admin@cdd.edu.ph')) {
+            $role = 'admin';
+        } elseif (str_ends_with($email, '.head@cdd.edu.ph')) {
+            $role = 'head';
+        } elseif (str_ends_with($email, '.stud@cdd.edu.ph')) {
+            $role = 'stud';
+        }
+        if (!$role) {
+            return back()->withErrors(['email' => 'Email must follow the format: username.role@cdd.edu.ph']);
+        }
+
         $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $role,
         ]);
 
-        event(new Registered($user));
+    event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+    // Redirect to login page with success message
+    return redirect()->route('login')->with('success', 'Registered successfully! Please log in.');
     }
 }

@@ -2,18 +2,17 @@
 
 @section('content')
 <style>
+    /* Copy of admin student list styles */
     body {
         margin: 0;
         padding: 0;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         background: #f3f4f6;
     }
-
     .dashboard-container {
         display: flex;
         min-height: 100vh;
     }
-
     /* Sidebar */
     .sidebar {
         width: 260px;
@@ -23,7 +22,6 @@
         flex-direction: column;
         justify-content: space-between;
     }
-
     .sidebar .logo {
         display: flex;
         align-items: center;
@@ -31,24 +29,20 @@
         padding: 20px;
         border-bottom: 1px solid #e5e7eb;
     }
-
     .sidebar .logo img {
         width: 36px;
         height: 36px;
     }
-
     .sidebar .logo span {
         font-size: 1rem;
         font-weight: 600;
         color: #111827;
     }
-
     .sidebar .nav {
         display: flex;
         flex-direction: column;
         margin-top: 8px;
     }
-
     .sidebar .nav a {
         display: flex;
         align-items: center;
@@ -57,22 +51,20 @@
         font-size: 0.95rem;
         color: #374151;
         text-decoration: none;
-        transition: all 0.2s;
+        transition: all 0.2s ease;
         border-left: 3px solid transparent;
         font-weight: 500;
     }
-
     .sidebar .nav a:hover {
-        background: #f9fafb;
+        background: #f3f4f6;
         color: #111827;
     }
-
     .sidebar .nav a.active {
         background: #f9fafb;
         color: #111827;
         border-left: 3px solid #3b82f6;
+        font-weight: 600;
     }
-
     .sidebar .nav a .icon {
         width: 20px;
         height: 20px;
@@ -80,30 +72,27 @@
         align-items: center;
         justify-content: center;
     }
-
     /* Profile */
     .sidebar .profile {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 20px;
-    border-top: 1px solid #e5e7eb;
-    cursor: pointer;
-    position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        border-top: 1px solid #e5e7eb;
+        cursor: pointer;
+        position: relative;
     }
-
     .sidebar .profile .avatar {
-    width: 36px;
-    height: 36px;
-    background: #e5e7eb;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    color: #374151;
+        width: 36px;
+        height: 36px;
+        background: #e5e7eb;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: #374151;
     }
-
     .sidebar .profile-details {
         display: flex;
         flex-direction: column;
@@ -120,7 +109,7 @@
         color: #6b7280;
         letter-spacing: 0.05em;
     }
-
+    
     /* Logout dropdown */
     #logoutMenu {
         display: none;
@@ -172,7 +161,6 @@
         background: linear-gradient(90deg, #b91c1c, #dc2626);
         box-shadow: 0 4px 16px rgba(239,68,68,0.15);
     }
-
     /* Main Content */
     .main-content {
         flex: 1;
@@ -181,37 +169,71 @@
         flex-direction: column;
         padding: 20px;
     }
-
     .content-card {
         flex: 1;
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 8px;
+        border-radius: 10px;
         padding: 0;
         display: flex;
         flex-direction: column;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
-
     .content-header {
         display: flex;
         align-items: center;
         gap: 8px;
         padding: 16px 20px;
         border-bottom: 1px solid #e5e7eb;
-        background: #fff;
+        background: #f9fafb;
+        font-size: 0.95rem;
+        color: #374151;
+        font-weight: 600;
+    }
+    /* Student List */
+    .studentlist-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 16px 24px 4px 24px;
+    }
+    .studentlist-desc {
         font-size: 0.95rem;
         color: #6b7280;
+        margin-bottom: 12px;
+        padding: 0 24px;
     }
-
-    .welcome-section {
-        flex: 1;
-        padding: 24px;
+    .table-container {
+        width: 100%;
+        padding: 0 24px 24px 24px;
+        overflow-x: auto;
     }
-
-    .welcome-message {
-        font-size: 1.25rem;
-        font-weight: 600;
+    .student-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .student-table thead th {
+        background: #f3f4f6;
         color: #111827;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 12px 16px;
+        text-align: left;
+    }
+    .student-table tbody td {
+        font-size: 0.9rem;
+        color: #374151;
+        padding: 12px 16px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .student-table tbody tr:hover td {
+        background: #f9fafb;
+    }
+    .student-table tbody tr:last-child td {
+        border-bottom: none;
     }
 </style>
 
@@ -224,8 +246,9 @@
                 <span>Assistrack Portal</span>
             </div>
             <nav class="nav">
-                <a href="#" class="active">
+                <a href="{{ route('Head') }}">
                     <span class="icon">
+                        <!-- Dashboard Icon -->
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="7" height="7" rx="1"/>
                             <rect x="14" y="3" width="7" height="7" rx="1"/>
@@ -235,8 +258,9 @@
                     </span>
                     Dashboard
                 </a>
-                <a href="{{ route('student.list') }}">
+                <a href="{{ route('head.student.list') }}" class="active">
                     <span class="icon">
+                        <!-- Student Icon -->
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                             <circle cx="12" cy="7" r="4"/>
@@ -244,18 +268,9 @@
                     </span>
                     Student List
                 </a>
-                <a href="{{ route('applicants.list') }}">
+                <a href="{{ route('head.reports.list') }}">
                     <span class="icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="m22 21-3-3 3-3"/>
-                        </svg>
-                    </span>
-                    New Applicants
-                </a>
-                <a href="{{ route('reports.list') }}">
-                    <span class="icon">
+                        <!-- Reports Icon -->
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                             <line x1="9" y1="9" x2="15" y2="9"/>
@@ -266,7 +281,6 @@
                 </a>
             </nav>
         </div>
-
         <!-- Profile -->
         <div class="profile" id="profileDropdown">
             @if(auth()->user()->profile_photo)
@@ -293,8 +307,8 @@
         </div>
 
         <div id="logoutMenu">
-            <a href="{{ route('profile.edit') }}">Settings</a>
-            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+            <a href="{{ route('profile.edit') }}" style="display:block;margin-bottom:8px;text-align:center;background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:0.9rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background 0.2s;">Settings</a>
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit">Logout</button>
             </form>
@@ -307,16 +321,46 @@
             <div class="content-header">
                 <span class="icon">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="14" width="7" height="7" rx="1"/>
-                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
                     </svg>
                 </span>
-                Dashboard
+                Student Official List
             </div>
-            <div class="welcome-section">
-                <h1 class="welcome-message">Welcome, Admin!</h1>
+            <div class="studentlist-title">Student Official List</div>
+            <div class="studentlist-desc">This list contains Official Student Assistants of Universidad de Dagupan</div>
+            <div class="table-container">
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Course</th>
+                            <th>Year Level</th>
+                            <th>Student ID</th>
+                            <th>Designated Office</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($students as $student)
+                            <tr>
+                                <td>{{ $student->student_name }}</td>
+                                <td>{{ $student->course }}</td>
+                                <td>{{ $student->year_level }}</td>
+                                <td>{{ $student->id_number }}</td>
+                                <td>{{ $student->designated_office ?? 'N/A' }}</td>
+                                <td class="action-cell">
+                                    <a href="{{ route('head.students.show', $student->id) }}">View</a>
+                                    <form method="POST" action="{{ route('students.delete', $student->id) }}" style="display:inline-block; margin-left:8px;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this student?')" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -324,8 +368,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var profile = document.getElementById('profileDropdown');
-    var menu = document.getElementById('logoutMenu');
+    const profile = document.getElementById('profileDropdown');
+    const menu = document.getElementById('logoutMenu');
     profile.addEventListener('click', function(e) {
         e.stopPropagation();
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';

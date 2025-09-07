@@ -28,7 +28,19 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Get authenticated user
+        $user = Auth::user();
+        $email = $user->email;
+        if (str_ends_with($email, '.admin@cdd.edu.ph')) {
+            return redirect()->route('Admin');
+        } elseif (str_ends_with($email, '.head@cdd.edu.ph')) {
+            return redirect()->route('Head');
+        } elseif (str_ends_with($email, '.stud@cdd.edu.ph')) {
+            return redirect()->route('Student');
+        }
+        // More appropriate fallback: redirect to login with error
+        Auth::logout();
+        return redirect()->route('login')->withErrors(['email' => 'Your account type is not recognized.']);
     }
 
     /**

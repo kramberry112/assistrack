@@ -298,11 +298,11 @@
             <span class="logo-text">UNIVERSIDAD DE DAGUPAN</span>
         </div>
         <nav style="display: flex; gap: 32px; font-size: 17px; font-weight: bold;">
-			<a href="/index" style="color: #1a237e; text-decoration: none;">About</a>
-            <a href="/welcome" style="color: #1a237e; text-decoration: none;">Home</a>
-			<a href="#" style="color: #1a237e; text-decoration: none;">Contact Us</a>
-			<a href="/apply" style="color: #1a237e; text-decoration: none;">Apply</a>
-			<a href="/login" style="color: #1a237e; text-decoration: none;">Login</a>
+               <a href="/index" style="color: #1a237e; text-decoration: none;">About</a>
+               <a href="/welcome" style="color: #1a237e; text-decoration: none;">Home</a>
+               <a href="/contact" style="color: #1a237e; text-decoration: none;">Contact Us</a>
+               <a href="/apply" style="color: #1a237e; text-decoration: none;">Apply</a>
+               <a href="/login" style="color: #1a237e; text-decoration: none;">Login</a>
 		</nav>
     </div>
     <div class="banner"></div>

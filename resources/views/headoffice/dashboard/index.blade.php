@@ -122,6 +122,7 @@
     }
 
     /* Logout dropdown */
+    /* Logout dropdown */
     #logoutMenu {
         display: none;
         position: absolute;
@@ -224,7 +225,7 @@
                 <span>Assistrack Portal</span>
             </div>
             <nav class="nav">
-                <a href="#" class="active">
+                <a href="{{ route('Head') }}" class="active">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="7" height="7" rx="1"/>
@@ -235,7 +236,7 @@
                     </span>
                     Dashboard
                 </a>
-                <a href="{{ route('student.list') }}">
+                <a href="{{ route('head.student.list') }}">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -244,17 +245,7 @@
                     </span>
                     Student List
                 </a>
-                <a href="{{ route('applicants.list') }}">
-                    <span class="icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="m22 21-3-3 3-3"/>
-                        </svg>
-                    </span>
-                    New Applicants
-                </a>
-                <a href="{{ route('reports.list') }}">
+                <a href="{{ route('head.reports') }}">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -269,7 +260,7 @@
 
         <!-- Profile -->
         <div class="profile" id="profileDropdown">
-            @if(auth()->user()->profile_photo)
+             @if(auth()->user()->profile_photo)
                 <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="{{ auth()->user()->name }}" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
             @else
                 <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=667eea&color=fff&size=36" alt="{{ auth()->user()->name }}" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
@@ -293,8 +284,8 @@
         </div>
 
         <div id="logoutMenu">
-            <a href="{{ route('profile.edit') }}">Settings</a>
-            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+            <a href="{{ route('profile.edit') }}" style="display:block;margin-bottom:8px;text-align:center;background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:0.9rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background 0.2s;">Settings</a>
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit">Logout</button>
             </form>
@@ -316,7 +307,7 @@
                 Dashboard
             </div>
             <div class="welcome-section">
-                <h1 class="welcome-message">Welcome, Admin!</h1>
+                <h1 class="welcome-message">Welcome, Head!</h1>
             </div>
         </div>
     </section>

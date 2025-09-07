@@ -101,38 +101,65 @@
     .sidebar .profile-details .name {
         font-weight: 600;
         color: #111827;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
     }
     .sidebar .profile-details .username {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: #6b7280;
+        letter-spacing: 0.05em;
     }
+    
+    /* Logout dropdown */
     #logoutMenu {
         display: none;
         position: absolute;
         bottom: 60px;
         left: 20px;
         background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        padding: 10px;
-        z-index: 20;
-        min-width: 160px;
-    }
-    #logoutMenu button {
-        width: 100%;
-        background: #ef4444;
-        color: #fff;
         border: none;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        padding: 24px 20px 16px 20px;
+        min-width: 220px;
+        z-index: 100;
+        text-align: center;
+    }
+
+    #logoutMenu a,
+    #logoutMenu button {
+        display: block;
+        width: 100%;
         border-radius: 6px;
-        padding: 8px 12px;
         font-size: 0.9rem;
         font-weight: 500;
+        margin-bottom: 8px;
+        padding: 8px 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        text-align: center;
         cursor: pointer;
-        transition: background 0.2s;
     }
+
+    #logoutMenu a {
+        background: #4f8ef7;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    #logoutMenu a:hover {
+        background: #2563eb;
+    }
+
+    #logoutMenu button {
+        background: linear-gradient(90deg, #ef4444, #dc2626);
+        color: #fff;
+    }
+
     #logoutMenu button:hover {
-        background: #dc2626;
+        background: linear-gradient(90deg, #b91c1c, #dc2626);
+        box-shadow: 0 4px 16px rgba(239,68,68,0.15);
     }
 
     /* Main Content */
@@ -221,7 +248,7 @@
                 <span>Assistrack Portal</span>
             </div>
             <nav class="nav">
-                <a href="{{ route('dashboard') }}">
+                <a href="{{ route('Admin') }}">
                     <span class="icon">
                         <!-- Dashboard Icon -->
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -267,28 +294,37 @@
                 </a>
             </nav>
         </div>
+        <!-- Profile -->
         <div class="profile" id="profileDropdown">
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: 600;">LA</div>
-                <div style="display: flex; flex-direction: column;">
-                    <span class="name" style="font-size: 0.9rem; font-weight: 600; letter-spacing: 0.05em;">Admin Full name</span>
-                    <span class="username" style="font-size: 0.75rem; letter-spacing: 0.05em; color: #555;">Admin username</span>
-                </div>
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; margin-left: auto;">
-                    <button id="logoutUp" style="background:none;border:none;cursor:pointer;padding:0;" title="Show Logout">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                    </button>
-                    <button id="logoutDown" style="background:none;border:none;cursor:pointer;padding:0;" title="Hide Logout">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                </div>
+            @if(auth()->user()->profile_photo)
+                <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="{{ auth()->user()->name }}" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+            @else
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=667eea&color=fff&size=36" alt="{{ auth()->user()->name }}" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+            @endif
+            <div class="profile-details">
+                <span class="name">{{ auth()->user()->name }}</span>
+                <span class="username">{{ auth()->user()->username }}</span>
             </div>
-            <div id="logoutMenu">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit">Logout</button>
-                </form>
+            <div style="margin-left:auto; display:flex; flex-direction:column; gap:2px; align-items:center;">
+                <button id="logoutUp" style="background:none;border:none;cursor:pointer;padding:0;" title="Show Logout">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                </button>
+                <button id="logoutDown" style="background:none;border:none;cursor:pointer;padding:0;" title="Hide Logout">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
             </div>
+        </div>
+
+        <div id="logoutMenu">
+            <a href="{{ route('profile.edit') }}" style="display:block;margin-bottom:8px;text-align:center;background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:0.9rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background 0.2s;">Settings</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
         </div>
     </aside>
 
@@ -311,13 +347,31 @@
                     <thead>
                         <tr>
                             <th>Student Name</th>
-                            <th>Block and Course</th>
-                            <th>Work Destination</th>
+                            <th>Course</th>
+                            <th>Year Level</th>
+                            <th>Student ID</th>
+                            <th>Designated Office</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Student rows go here -->
+                        @foreach($students as $student)
+                            <tr>
+                                <td>{{ $student->student_name }}</td>
+                                <td>{{ $student->course }}</td>
+                                <td>{{ $student->year_level }}</td>
+                                <td>{{ $student->id_number }}</td>
+                                <td>{{ $student->designated_office ?? 'N/A' }}</td>
+                                <td class="action-cell">
+                                    <a href="{{ route('students.show', $student->id) }}">View</a>
+                                    <form method="POST" action="{{ route('students.delete', $student->id) }}" style="display:inline-block; margin-left:8px;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this student?')" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

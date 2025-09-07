@@ -69,7 +69,10 @@
                     </div>
                     <div style="margin-bottom: 1.25rem;">
                         <label for="password" style="font-size: 1rem; color: #23408e; font-weight: 600; margin-bottom: 0.5rem; display: block;">Password</label>
-                        <input id="password" type="password" name="password" required autocomplete="current-password" style="width: 100%; border: 1.5px solid #23408e; border-radius: 8px; padding: 10px 12px; font-size: 1rem; margin-top: 4px; background: #f7faff; transition: border 0.2s; outline: none;">
+                        <div style="position:relative;">
+                            <input id="password" type="password" name="password" required autocomplete="current-password" style="width: 100%; border: 1.5px solid #23408e; border-radius: 8px; padding: 10px 12px; font-size: 1rem; margin-top: 4px; background: #f7faff; transition: border 0.2s; outline: none; padding-right:32px;">
+                            <span class="toggle-password" data-target="password" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem;">&#128065;</span>
+                        </div>
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
                     <div style="margin-bottom: 1.25rem; display: flex; align-items: center;">
@@ -90,6 +93,16 @@
                         <span>Return Home</span>
                     </a>
                 </form>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.toggle-password').forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+            var input = document.getElementById(this.getAttribute('data-target'));
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+    });
+});
+</script>
             </div>
         </div>
     </main>

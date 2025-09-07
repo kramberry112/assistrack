@@ -9,31 +9,49 @@ Route::view('/welcome', 'welcomepage.welcome');
 Route::view('/index', 'aboutpage.index');
 Route::view('/achievements', 'aboutpage.achievements');
 Route::view('/events', 'aboutpage.events');
+Route::view('/contact', 'contactus.index');
 
 // Application form
 Route::get('/apply', [ApplicationController::class, 'create'])->name('application.create');
 Route::post('/apply', [ApplicationController::class, 'store'])->name('application.store');
 Route::view('/apply/show', 'application.show');
 
+
 // Admin pages (protected)
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('/dashboard', 'admin.dashboard.index')->name('dashboard');
-    Route::view('/student-list', 'admin.studentlists.index')->name('student.list');
+    Route::view('/dashboard', 'admin.dashboard.index')->name('Admin');
+    Route::get('/student-list', [\App\Http\Controllers\StudentListController::class, 'index'])->name('student.list');
+    Route::get('/students/{student}', [\App\Http\Controllers\StudentListController::class, 'show'])->name('students.show');
+    Route::delete('/students/{student}', [\App\Http\Controllers\StudentListController::class, 'destroy'])->name('students.delete');
     Route::get('/applicants', [ApplicationController::class, 'index'])->name('applicants.list');
     Route::get('/applicants/{application}', [ApplicationController::class, 'show'])->name('applicants.show');
     Route::view('/reports', 'admin.reports.index')->name('reports.list');
     Route::post('/student-list/add/{id}', [\App\Http\Controllers\StudentListController::class, 'add'])->name('studentlist.add');
-
     // Profile management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     // Redirect root URL to login page
     Route::get('/', function () {
         return redirect()->route('login');
-        });
     });
+});
+
+// Head Office pages (protected)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('/headdashboard', 'headoffice.dashboard.index')->name('Head');
+    Route::get('/head-student-list', [\App\Http\Controllers\HeadStudentListController::class, 'index'])->name('head.student.list');
+    Route::view('/head-reports', 'headoffice.reports.index')->name('head.reports.list');
+    Route::view('/head-reports-alt', 'headoffice.reports.index')->name('head.reports');
+    Route::get('/head-students/{student}', [\App\Http\Controllers\HeadStudentListController::class, 'show'])->name('head.students.show');
+});
+
+// Student pages (protected)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('/studentdashboard', 'student.dashboard.index')->name('Student');
+    // Add more student routes here as needed
+});
 
 // Resource route for applications (for admin CRUD)
 Route::resource('applications', ApplicationController::class);
