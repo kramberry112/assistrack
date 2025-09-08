@@ -116,11 +116,34 @@
                        </div>
                 </div>
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
-                    <div style="width: 320px; height: 300px; border: 2px solid #222; background: #f6f2f2; display: flex; align-items: center; justify-content: center; margin-bottom: 0; position: relative; overflow: hidden;">
-                        <img id="picturePreview" src="/images/placeholder2x2.png" alt="2x2 Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0; display: none; position: absolute; top: 0; left: 0;">
-                        <span id="picturePreviewLabel" style="font-size: 38px; font-family: 'Segoe UI', Arial, sans-serif; color: #222; letter-spacing: 4px; text-align: center; font-weight: 500; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Upload<br>Picture</span>
+                    <div style="width: 320px; height: 300px; position: relative; margin-bottom: 0; border: 2px solid #222; background: #f6f2f2; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img id="profile-preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0; display: none; position: absolute; top: 0; left: 0;">
+                        <span id="picturePreviewLabel" style="font-size: 38px; font-family: 'Segoe UI', Arial, sans-serif; color: #222; letter-spacing: 4px; text-align: center; font-weight: 500; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Upload<br>Photo</span>
+                        <button type="button" id="cameraBtn" style="position: absolute; bottom: 12px; right: 12px; background: #fff; border-radius: 8px; border: 2px solid #23408e; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.10); cursor: pointer;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#23408e" stroke-width="2">
+                                <rect x="3" y="7" width="18" height="12" rx="3" fill="#eaeaea" stroke="#23408e"/>
+                                <circle cx="12" cy="13" r="4" fill="#fff" stroke="#23408e"/>
+                                <rect x="8" y="3" width="8" height="4" rx="2" fill="#eaeaea" stroke="#23408e"/>
+                            </svg>
+                        </button>
+                        <input type="file" name="picture" id="pictureInput" accept="image/*" required style="display:none;">
+                        <input type="hidden" name="cropped_picture" id="cropped-picture">
                     </div>
-                    <input type="file" name="picture" id="pictureInput" accept="image/*" required style="width: 100px; font-size: 13px; margin-top: 18px;">
+                    <!-- Modal for cropping -->
+                    <div id="cropperModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+                        <div style="background:#fff; padding:24px; border-radius:8px; box-shadow:0 2px 16px rgba(0,0,0,0.18); min-width:340px; max-width:95vw; text-align:center; position:relative;">
+                            <span style="position:absolute; top:12px; right:18px; font-size:28px; cursor:pointer;" onclick="closeModal()">&times;</span>
+                            <h3 style="margin-bottom:12px;">Edit Profile Picture</h3>
+                            <img id="modal-image" style="max-width:320px; max-height:320px; display:block; margin:auto;">
+                            <div style="margin-top:10px;">
+                                <button type="button" onclick="rotateImage(-90)">⟲</button>
+                                <button type="button" onclick="rotateImage(90)">⟳</button>
+                                <button type="button" onclick="zoomImage(0.1)">＋</button>
+                                <button type="button" onclick="zoomImage(-0.1)">－</button>
+                            </div>
+                            <button type="button" style="margin-top:18px; padding:8px 32px; font-size:18px; background:#23408e; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;" onclick="saveCroppedImage()">Save</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -299,25 +322,73 @@
         });
 
         // Picture preview logic
+        // Cropper.js integration
+        let cropper;
         const pictureInput = document.getElementById('pictureInput');
-        const picturePreview = document.getElementById('picturePreview');
-        const picturePreviewLabel = document.getElementById('picturePreviewLabel');
+        const cameraBtn = document.getElementById('cameraBtn');
+        cameraBtn.addEventListener('click', function() {
+            pictureInput.click();
+        });
+        const profilePreview = document.getElementById('profile-preview');
+    // Removed label for minimal UI
+        const cropperModal = document.getElementById('cropperModal');
+        const modalImage = document.getElementById('modal-image');
         pictureInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(ev) {
-                    picturePreview.src = ev.target.result;
-                    picturePreview.style.display = 'block';
-                    picturePreviewLabel.style.display = 'none';
+                    // Only open cropper modal, do not show preview yet
+                    modalImage.src = ev.target.result;
+                    cropperModal.style.display = 'flex';
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(modalImage, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                    });
                 };
                 reader.readAsDataURL(file);
-            } else {
-                picturePreview.src = '/images/placeholder2x2.png';
-                picturePreview.style.display = 'none';
-                picturePreviewLabel.style.display = 'block';
             }
         });
+        function rotateImage(deg) {
+            if (cropper) cropper.rotate(deg);
+        }
+        function zoomImage(factor) {
+            if (cropper) cropper.zoom(factor);
+        }
+        function saveCroppedImage() {
+            if (cropper) {
+                const canvas = cropper.getCroppedCanvas({ width: 320, height: 300 });
+                const dataUrl = canvas.toDataURL('image/png');
+                document.getElementById('cropped-picture').value = dataUrl;
+                const profilePreview = document.getElementById('profile-preview');
+                const picturePreviewLabel = document.getElementById('picturePreviewLabel');
+                profilePreview.src = dataUrl;
+                profilePreview.style.display = 'block';
+                picturePreviewLabel.style.display = 'none';
+                cropperModal.style.display = 'none';
+                cropper.destroy();
+            }
+        }
+        function closeModal() {
+            cropperModal.style.display = 'none';
+            // Restore label if no image was saved
+            const profilePreview = document.getElementById('profile-preview');
+            const picturePreviewLabel = document.getElementById('picturePreviewLabel');
+            if (!document.getElementById('cropped-picture').value) {
+                profilePreview.style.display = 'none';
+                picturePreviewLabel.style.display = 'block';
+            }
+            if (cropper) cropper.destroy();
+        }
+</script>
+<!-- Cropper.js CSS & JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+</script>
+<!-- Cropper.js CSS & JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
         </script>
 
 
