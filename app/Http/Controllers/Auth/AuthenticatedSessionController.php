@@ -30,17 +30,18 @@ class AuthenticatedSessionController extends Controller
 
         // Get authenticated user
         $user = Auth::user();
-        $email = $user->email;
-        if (str_ends_with($email, '.admin@cdd.edu.ph')) {
-            return redirect()->route('Admin');
-        } elseif (str_ends_with($email, '.head@cdd.edu.ph')) {
-            return redirect()->route('Head');
-        } elseif (str_ends_with($email, '.stud@cdd.edu.ph')) {
-            return redirect()->route('Student');
+        // Use role field for redirect
+        switch ($user->role) {
+            case 'admin':
+                return redirect()->route('Admin');
+            case 'head':
+                return redirect()->route('Head');
+            case 'student':
+                return redirect()->route('student.dashboard');
+            default:
+                Auth::logout();
+                return redirect()->route('login')->withErrors(['email' => 'Your account type is not recognized.']);
         }
-        // More appropriate fallback: redirect to login with error
-        Auth::logout();
-        return redirect()->route('login')->withErrors(['email' => 'Your account type is not recognized.']);
     }
 
     /**

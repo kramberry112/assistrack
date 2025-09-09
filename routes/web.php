@@ -19,7 +19,8 @@ Route::view('/apply/show', 'application.show');
 
 // Admin pages (protected)
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('/dashboard', 'admin.dashboard.index')->name('Admin');
+    Route::view('/admindashboard', 'admin.dashboard.index')->name('Admin');
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardRedirectController::class, 'redirect'])->name('dashboard');
     Route::get('/student-list', [\App\Http\Controllers\StudentListController::class, 'index'])->name('student.list');
     Route::get('/students/{student}', [\App\Http\Controllers\StudentListController::class, 'show'])->name('students.show');
     Route::delete('/students/{student}', [\App\Http\Controllers\StudentListController::class, 'destroy'])->name('students.delete');
@@ -49,7 +50,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Student pages (protected)
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('/studentdashboard', 'student.dashboard.index')->name('Student');
+    Route::get('/studentdashboard', [\App\Http\Controllers\StudentTaskController::class, 'dashboard'])->name('student.dashboard');
+    Route::post('/student-tasks/{id}/status', [\App\Http\Controllers\StudentTaskController::class, 'updateStatus'])->name('student.tasks.status');
+    Route::post('/student-tasks/{id}/progress', [\App\Http\Controllers\StudentTaskController::class, 'updateProgress'])->name('student.tasks.progress');
+    Route::view('/student-community', 'students.community.index')->name('student.community');
+    Route::view('/student-reports', 'students.reports.index')->name('student.reports');
+    Route::view('/student-tasks/create', 'students.dashboard.create')->name('student.tasks.create');
+    Route::post('/student-tasks', [\App\Http\Controllers\StudentTaskController::class, 'store'])->name('student.tasks.store');
     // Add more student routes here as needed
 });
 
