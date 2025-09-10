@@ -102,7 +102,6 @@
     flex-direction: column;
     align-items: stretch;
     padding: 0;
-    animation: swipeLeft 1.2s cubic-bezier(0.23, 1, 0.32, 1) infinite alternate;
     }
     .grid-item img {
     width: 100%;
@@ -320,38 +319,44 @@
                 </div>
             </div>
             <hr class="divider">
-            <div class="section-header">Achievements</div>
+            <div class="section-header">News</div>
             <div class="grid-row">
                 <div class="grid-item">
-                    <img src="{{ asset('images/achieve1.png') }}" alt="Escalator">
-                    <div class="caption">Infrastructure development -<br>new escalator in UdD</div>
+                    <img src="{{ asset('images/news1.png') }}" alt="Escalator">
+                        <div class="caption" style="font-weight:bold;">Infrastructure development -<br>new escalator in UdD</div>
+                        <div style="font-size:15px; color:#888; text-align:center; margin-top:4px;">June 3, 2024</div>
                 </div>
                 <div class="grid-item">
-                    <img src="{{ asset('images/achieve2.png') }}" alt="Capilano">
-                    <div class="caption">Capilano University honored<br>Universidad de Dagupan as its Most Outstanding Global Partner.</div>
+                    <img src="{{ asset('images/news2.png') }}" alt="Capilano">
+                        <div class="caption" style="font-weight:bold;">Capilano University honored<br>Universidad de Dagupan as its Most Outstanding Global Partner.</div>
+                        <div style="font-size:15px; color:#888; text-align:center; margin-top:4px;">February 25, 2025</div>
                 </div>
                 <div class="grid-item">
-                    <img src="{{ asset('images/achieve3.png') }}" alt="ISO Certificate">
-                    <div class="caption">UdD achieves ISO 21001:2018 Certification, a First in Region 1</div>
+                    <img src="{{ asset('images/news3.png') }}" alt="ISO Certificate">
+                        <div class="caption" style="font-weight:bold;">UdD achieves ISO 21001:2018 Certification, a First in Region 1</div>
+                        <div style="font-size:15px; color:#888; text-align:center; margin-top:4px;">January 17, 2025</div>
                 </div>
             </div>
                 <div style="display: flex; justify-content: flex-end;">
-                    <a href="/achievements" class="more-btn">More Achievements</a>
+                    <a href="/news" class="more-btn">More News</a>
                 </div>
             <hr class="divider">
             <div class="section-header">Events</div>
             <div class="grid-row">
                 <div class="grid-item">
                     <img src="{{ asset('images/event1.png') }}" alt="GMA Event">
-                    <div class="caption"><span style="font-weight:700;">UdD hosts first Luzon leg of GMA Masterclass Series</span><br><span style="font-size:15px;">March 7, 2025</span></div>
+                    <div class="caption"><span style="font-weight:700;">UdD hosts first Luzon leg of GMA Masterclass Series</span></div>
+                    <div style="font-size:15px; color:#888; text-align:center; margin-top:4px;">March 7, 2025</div>
                 </div>
                 <div class="grid-item">
                     <img src="{{ asset('images/event2.png') }}" alt="Robotics">
-                    <div class="caption"><span style="font-weight:700;">SHS - Robotics Competition in Universidad</span><br><span style="font-size:15px;">March 27, 2025</span></div>
+                    <div class="caption"><span style="font-weight:700;">SHS - Robotics Competition in Universidad</span></div>
+                    <div style="font-size:15px; color:#888; text-align:center; margin-top:4px;">March 27, 2025</div>
                 </div>
                 <div class="grid-item">
                     <img src="{{ asset('images/event3.png') }}" alt="Intramurals">
-                    <div class="caption"><span style="font-weight:700;">Intramural 2025</span><br><span style="font-size:15px;">March 31, 2025</span></div>
+                    <div class="caption"><span style="font-weight:700;">Intramural 2025</span></div>
+                    <div style="font-size:15px; color:#888; text-align:center; margin-top:4px;">March 31, 2025</div>
                 </div>
             </div>
                 <div style="display: flex; justify-content: flex-end;">

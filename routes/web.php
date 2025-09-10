@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 // Public pages
 Route::view('/welcome', 'welcomepage.welcome');
 Route::view('/index', 'aboutpage.index');
-Route::view('/achievements', 'aboutpage.achievements');
+Route::view('/news', 'aboutpage.news');
 Route::view('/events', 'aboutpage.events');
 Route::view('/contact', 'contactus.index');
 
