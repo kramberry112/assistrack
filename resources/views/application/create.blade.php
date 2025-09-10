@@ -284,6 +284,26 @@
             background: #dbeafe;
         }
         </style>
+        <style>
+        @media print {
+            body * {
+                visibility: hidden !important;
+            }
+            #applicationForm, #applicationForm * {
+                visibility: visible !important;
+            }
+            #applicationForm {
+                position: absolute !important;
+                left: 0; top: 0; width: 100vw;
+                background: #fff !important;
+                box-shadow: none !important;
+                z-index: 99999;
+            }
+            .modal-confirm-bg, .modal-confirm-box, #modalPrint, #modalConfirm, #cropperModal {
+                display: none !important;
+            }
+        }
+        </style>
         <div id="modalConfirm" style="display:none;" class="modal-confirm-bg">
             <div class="modal-confirm-box">
                 <div class="modal-confirm-title">ARE YOU SURE YOU<br>WANT TO SUBMIT?</div>
@@ -293,32 +313,116 @@
                 </div>
             </div>
         </div>
+        <!-- Print Modal -->
+        <div id="modalPrint" style="display:none;" class="modal-confirm-bg">
+            <div class="modal-confirm-box">
+                <div class="modal-confirm-title">DO YOU WANT TO<br>PRINT THIS FORM?</div>
+                <div class="modal-confirm-btns">
+                    <button type="button" id="modalPrintYes" class="modal-confirm-btn">PRINT</button>
+                    <button type="button" id="modalPrintNo" class="modal-confirm-btn">CANCEL</button>
+                </div>
+            </div>
+        </div>
         <script>
         const form = document.getElementById('applicationForm');
         const modal = document.getElementById('modalConfirm');
         const btnYes = document.getElementById('modalYes');
         const btnNo = document.getElementById('modalNo');
+        const modalPrint = document.getElementById('modalPrint');
+        const btnPrintYes = document.getElementById('modalPrintYes');
+        const btnPrintNo = document.getElementById('modalPrintNo');
         let allowSubmit = false;
+        let submitted = false;
+
         form.addEventListener('submit', function(e) {
+            e.preventDefault();
             if (!form.checkValidity()) {
-                e.preventDefault();
                 alert('Please fill out all required fields before submitting the form.');
                 return;
             }
             if (!allowSubmit) {
-                e.preventDefault();
                 modal.style.display = 'flex';
             } else {
                 allowSubmit = false;
+                submitted = true;
+                // Submit via AJAX, but do NOT clear/reset the form
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                }).then(function(response) {
+                    if (response.ok) {
+                        // Show print modal, keep form data visible
+                        modalPrint.style.display = 'flex';
+                    } else {
+                        alert('Submission failed. Please try again.');
+                    }
+                }).catch(function() {
+                    alert('Submission failed. Please try again.');
+                });
             }
         });
+
         btnYes.addEventListener('click', function() {
             modal.style.display = 'none';
             allowSubmit = true;
-            form.submit();
+            // Trigger submit event again, but now allowSubmit is true so AJAX will run
+            form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
         });
         btnNo.addEventListener('click', function() {
             modal.style.display = 'none';
+        });
+
+        // Show print modal after successful submission
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.location.hash === '#submitted') {
+                setTimeout(function() {
+                    modalPrint.style.display = 'flex';
+                }, 400);
+            }
+        });
+
+        // Intercept form submission to add hash and show print modal
+        form.addEventListener('submit', function(e) {
+            if (allowSubmit && !submitted) {
+                e.preventDefault();
+                submitted = true;
+                // Actually submit the form via AJAX to avoid page reload
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                }).then(function(response) {
+                    if (response.ok) {
+                        window.location.hash = '#submitted';
+                        modalPrint.style.display = 'flex';
+                    } else {
+                        alert('Submission failed. Please try again.');
+                    }
+                }).catch(function() {
+                    alert('Submission failed. Please try again.');
+                });
+            }
+        });
+
+        btnPrintYes.addEventListener('click', function() {
+            modalPrint.style.display = 'none';
+            window.print();
+            // After print dialog closes, redirect to show page
+            setTimeout(function() {
+                window.location.href = '/apply/show';
+            }, 500);
+        });
+        btnPrintNo.addEventListener('click', function() {
+            modalPrint.style.display = 'none';
+            window.location.href = '/apply/show';
         });
 
         // Picture preview logic
