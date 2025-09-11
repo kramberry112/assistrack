@@ -72,10 +72,14 @@
                                <label style="font-size: 16px; font-weight: bold; text-align: left;">Course:</label>
                                <select name="course" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
                                    <option value="">Select</option>
-                                   <option value="BSIT">BSIT</option>
-                                   <option value="BSBA">BSBA</option>
-                                   <option value="BSED">BSED</option>
-                                   <option value="BSN">BSN</option>
+                                   <option value="BSIT">SOH</option>
+                                   <option value="BSBA">STE</option>
+                                   <option value="BSED">SBA</option>
+                                   <option value="BSN">SOHS</option>
+                                   <option value="BSN">SOE</option>
+                                   <option value="BSN">SITE</option>
+                                   <option value="BSN">SIHM</option>
+                                   <option value="BSN">SOC</option>
                                </select>
                            </div>
                            <div style="flex: 1;">
@@ -289,6 +293,7 @@
             body * {
                 visibility: hidden !important;
             }
+            /* Show only the form and its header block */
             #applicationForm, #applicationForm * {
                 visibility: visible !important;
             }
@@ -299,7 +304,20 @@
                 box-shadow: none !important;
                 z-index: 99999;
             }
+            /* Hide navigation bar and banner for print */
+            .header-bar, .header-bar *, section, section *, nav, .header-bar nav {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            /* Show only the form header block at the top */
+            .form-header-block, .form-header-block * {
+                display: block !important;
+                visibility: visible !important;
+            }
             .modal-confirm-bg, .modal-confirm-box, #modalPrint, #modalConfirm, #cropperModal {
+                display: none !important;
+            }
+            button[type="submit"], #cameraBtn {
                 display: none !important;
             }
         }
