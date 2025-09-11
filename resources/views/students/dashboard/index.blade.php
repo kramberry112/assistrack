@@ -83,25 +83,25 @@
 
     /* Profile */
     .sidebar .profile {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 20px;
-    border-top: 1px solid #e5e7eb;
-    cursor: pointer;
-    position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        border-top: 1px solid #e5e7eb;
+        cursor: pointer;
+        position: relative;
     }
 
     .sidebar .profile .avatar {
-    width: 36px;
-    height: 36px;
-    background: #e5e7eb;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    color: #374151;
+        width: 36px;
+        height: 36px;
+        background: #e5e7eb;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: #374151;
     }
 
     .sidebar .profile-details {
@@ -121,7 +121,6 @@
         letter-spacing: 0.05em;
     }
 
-    /* Logout dropdown */
     /* Logout dropdown */
     #logoutMenu {
         display: none;
@@ -180,39 +179,437 @@
         background: #f9fafb;
         display: flex;
         flex-direction: column;
-        padding: 20px;
     }
 
-    .content-card {
-        flex: 1;
+    /* Fixed Header */
+    .page-header {
         background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 0;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 20px 32px;
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 50;
     }
 
-    .content-header {
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .header-title h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d2e83;
+        margin: 0;
+        letter-spacing: 0.03em;
+    }
+
+    .header-stats {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-item .label {
+        font-size: 1rem;
+        color: #6b7280;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .stat-item .value {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .stat-item .value.todo {
+        color: #ef4444;
+    }
+
+    .stat-item .value.in-progress {
+        color: #f59e42;
+    }
+
+    .stat-item .value.completed {
+        color: #22c55e;
+    }
+
+    /* Content Area */
+    .content-area {
+        flex: 1;
+        padding: 24px 32px;
+    }
+
+    .controls-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        background: #fff;
+        padding: 20px 24px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .search-input {
+        width: 280px;
+        padding: 10px 16px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        font-size: 1rem;
+        background: #f9fafb;
+    }
+
+    .controls-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .filter-btn, .create-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 16px 20px;
-        border-bottom: 1px solid #e5e7eb;
-        background: #fff;
-        font-size: 0.95rem;
-        color: #6b7280;
+        border: none;
+        transition: all 0.2s;
     }
 
-    .welcome-section {
-        flex: 1;
-        padding: 24px;
+    .filter-btn {
+        background: #f3f4f6;
+        color: #374151;
     }
 
-    .welcome-message {
-        font-size: 1.25rem;
+    .filter-btn:hover {
+        background: #e5e7eb;
+    }
+
+    .create-btn {
+        background: #2d2e83;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(45,46,131,0.15);
+    }
+
+    .create-btn:hover {
+        background: #1e1f5a;
+        box-shadow: 0 4px 16px rgba(45,46,131,0.25);
+    }
+
+    /* Tabs */
+    .tabs-section {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        margin-bottom: 24px;
+        padding: 0 4px;
+    }
+
+    .tab {
         font-weight: 600;
-        color: #111827;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 12px 4px;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+        font-size: 1rem;
+    }
+
+    .tab:hover {
+        color: #374151;
+    }
+
+    .tab.active {
+        color: #2d2e83;
+        border-bottom: 3px solid #7c83e7;
+    }
+
+    /* Tasks Container */
+    .tasks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+    }
+
+    /* Create Task Modal - unchanged */
+    #createTaskModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.18);
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: #fff;
+        padding: 40px 36px;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        width: 480px;
+        max-width: 98vw;
+    }
+
+    .modal-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #2d2e83;
+        margin-bottom: 24px;
+        text-align: center;
+        letter-spacing: 0.02em;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 1.1rem;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .form-input, .form-textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+        outline: none;
+        border-color: #7c83e7;
+    }
+
+    .form-textarea {
+        resize: vertical;
+        overflow: auto;
+    }
+
+    .priority-dropdown {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        cursor: pointer;
+        background: #fff;
+        position: relative;
+        font-size: 1rem;
+    }
+
+    .priority-options {
+        display: none;
+        position: absolute;
+        top: 54px;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        z-index: 10;
+    }
+
+    .priority-option {
+        padding: 12px 16px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+
+    .priority-option:hover {
+        background: #f3f4f6;
+    }
+
+    .priority-option[data-value="critical"] {
+        color: #ef4444;
+    }
+
+    .priority-option[data-value="medium"] {
+        color: #f59e42;
+    }
+
+    .priority-option[data-value="not_urgent"] {
+        color: #22c55e;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 14px;
+        margin-top: 24px;
+    }
+
+    .btn-cancel, .btn-submit {
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+    }
+
+    .btn-cancel {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    .btn-cancel:hover {
+        background: #d1d5db;
+    }
+
+    .btn-submit {
+        background: #2d2e83;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(45,46,131,0.10);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-submit:hover {
+        background: #1e1f5a;
+        box-shadow: 0 4px 16px rgba(45,46,131,0.20);
+    }
+
+    .form-message {
+        margin-bottom: 16px;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    /* Task Cards - unchanged styling */
+    .task-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        padding: 28px 24px;
+        transition: box-shadow 0.2s;
+    }
+
+    .task-card:hover {
+        box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+    }
+
+    .task-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+
+    .task-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #374151;
+    }
+
+    .task-status {
+        font-size: 0.95rem;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 12px;
+        color: #fff;
+    }
+
+    .task-status.todo {
+        background: #ef4444;
+    }
+
+    .task-status.in_progress {
+        background: #f59e42;
+    }
+
+    .task-status.completed {
+        background: #22c55e;
+    }
+
+    .task-status.due {
+        background: #7c83e7;
+    }
+
+    .task-description {
+        color: #444;
+        font-size: 1rem;
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
+
+    .task-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.98rem;
+        color: #888;
+        margin-bottom: 10px;
+    }
+
+    .task-date {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .task-progress {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .task-actions {
+        margin-top: 14px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .task-action {
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.2s;
+    }
+
+    .task-action.start {
+        background: #7c83e7;
+        color: #fff;
+    }
+
+    .task-action.start:hover {
+        background: #6366f1;
+    }
+
+    .task-action.complete {
+        background: #22c55e;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(34,197,94,0.12);
+    }
+
+    .task-action.complete:hover {
+        background: #16a34a;
     }
 </style>
 
@@ -247,7 +644,7 @@
                     </span>
                     Community
                 </a>
-                <a href="{{ route('student.reports') }}">
+                <a href="{{ route('student.calendar') }}">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -255,14 +652,14 @@
                             <line x1="9" y1="15" x2="15" y2="15"/>
                         </svg>
                     </span>
-                    Reports
+                    Calendar
                 </a>
             </nav>
         </div>
 
         <!-- Profile -->
         <div class="profile" id="profileDropdown">
-             @if(auth()->user()->profile_photo)
+            @if(auth()->user()->profile_photo)
                 <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="{{ auth()->user()->name }}" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
             @else
                 <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=667eea&color=fff&size=36" alt="{{ auth()->user()->name }}" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
@@ -271,22 +668,18 @@
                 <span class="name">{{ auth()->user()->name }}</span>
                 <span class="username">{{ auth()->user()->username }}</span>
             </div>
-            <div style="margin-left:auto; display:flex; flex-direction:column; gap:2px; align-items:center;">
-                <button id="logoutUp" style="background:none;border:none;cursor:pointer;padding:0;" title="Show Logout">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="18 15 12 9 6 15"></polyline>
-                    </svg>
-                </button>
-                <button id="logoutDown" style="background:none;border:none;cursor:pointer;padding:0;" title="Hide Logout">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </button>
+            <div style="margin-left:auto; display:flex; flex-direction:column; gap:4px; align-items:center; justify-content:center; height:60px;">
+                <svg id="logoutUp" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 15 12 9 18 15"></polyline>
+                </svg>
+                <svg id="logoutDown" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
             </div>
         </div>
 
         <div id="logoutMenu">
-            <a href="{{ route('profile.edit') }}" style="display:block;margin-bottom:8px;text-align:center;background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:0.9rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background 0.2s;">Settings</a>
+            <a href="{{ route('profile.edit') }}">Settings</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit">Logout</button>
@@ -296,235 +689,138 @@
 
     <!-- Main Content -->
     <section class="main-content">
-        <div class="content-card">
-            <div class="content-header" style="font-size:1.5rem;font-weight:600;color:#2d2e83;letter-spacing:0.03em;display:flex;align-items:center;justify-content:space-between;">
-                <span>TASKS OVERVIEW</span>
-                <button style="background:none;border:none;cursor:pointer;padding:0;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        <!-- Fixed Header -->
+        <div class="page-header">
+            <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                <div class="header-title" style="display:flex;align-items:center;gap:16px;">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <line x1="9" y1="9" x2="15" y2="9"/>
+                        <line x1="9" y1="15" x2="15" y2="15"/>
                     </svg>
-                </button>
+                    <h1 style="font-size:1.5rem;font-weight:700;color:#2563eb;letter-spacing:0.5px;">TASKS OVERVIEW</h1>
+                </div>
+                <svg class="notification-bell" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
             </div>
-            <div class="welcome-section" style="padding-top:16px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                    <input type="text" placeholder="Search" style="width:260px;padding:8px 14px;border-radius:8px;border:1px solid #e5e7eb;font-size:1rem;">
-                    <div style="display:flex;align-items:center;gap:12px;">
-                        <button style="background:#f3f4f6;border:none;padding:8px 18px;border-radius:8px;font-size:1rem;color:#374151;display:flex;align-items:center;gap:8px;cursor:pointer;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                            Filter
-                        </button>
-                        <button id="createTaskBtn" style="background:#2d2e83;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:1rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            Create Task
-                        </button>
-                <!-- Create Task Modal -->
-                <div id="createTaskModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:999;align-items:center;justify-content:center;">
-                    <div style="background:#fff;padding:32px 28px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);width:420px;max-width:98vw;">
-                        <h2 style="font-size:1.2rem;font-weight:600;color:#2d2e83;margin-bottom:18px;">Create Task</h2>
-                        <form id="createTaskForm" method="POST" action="{{ route('student.tasks.store') }}">
-                            @csrf
-                            <div style="margin-bottom:14px;">
-                                <label for="taskTitle" style="font-weight:500;color:#374151;">Title</label>
-                                <textarea id="taskTitle" name="title" required style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid #e5e7eb;margin-top:4px;min-height:40px;resize:vertical;overflow:auto;"></textarea>
-                            </div>
-                            <div style="margin-bottom:14px;">
-                                <label for="taskDesc" style="font-weight:500;color:#374151;">Description</label>
-                                <textarea id="taskDesc" name="description" required style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid #e5e7eb;margin-top:4px;min-height:120px;"></textarea>
-                            </div>
-                            <div style="margin-bottom:14px;position:relative;">
-                                <label for="taskPriority" style="font-weight:500;color:#374151;">Level of Priority</label>
-                                <input type="hidden" id="taskPriority" name="priority" value="">
-                                <div id="priorityDropdown" style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid #e5e7eb;margin-top:4px;cursor:pointer;background:#fff;position:relative;">
-                                    <span id="prioritySelected" style="color:#9ca3af;">Select priority</span>
-                                    <svg style="float:right;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                    <div id="priorityOptions" style="display:none;position:absolute;top:44px;left:0;width:100%;background:#fff;border:1px solid #e5e7eb;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.08);z-index:10;">
-                                        <div class="priority-option" data-value="critical" style="padding:10px 14px;cursor:pointer;">Critical</div>
-                                        <div class="priority-option" data-value="medium" style="padding:10px 14px;cursor:pointer;">Medium Importance</div>
-                                        <div class="priority-option" data-value="not_urgent" style="padding:10px 14px;cursor:pointer;">Not Urgent</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="margin-bottom:18px;">
-                                <label for="taskDue" style="font-weight:500;color:#374151;">Due Date</label>
-                                <input type="date" id="taskDue" name="due_date" required style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid #e5e7eb;margin-top:4px;">
-                            </div>
-                            <div id="taskFormMsg" style="margin-bottom:12px;font-size:1rem;"></div>
-                            <div style="display:flex;justify-content:flex-end;gap:10px;">
-                                <button type="button" id="closeTaskModal" style="background:#e5e7eb;color:#374151;border:none;padding:8px 18px;border-radius:8px;font-size:1rem;cursor:pointer;">Cancel</button>
-                                <button id="submitTaskBtn" type="submit" style="background:#2d2e83;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:1rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;">
-                                    <span id="submitTaskText">Create</span>
-                                    <span id="submitTaskSpinner" style="display:none;"><svg width="18" height="18" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-dasharray="31.4 31.4" transform="rotate(-90 25 25)"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/></circle></svg></span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Controls -->
+            <div class="controls-section">
+                <input type="text" placeholder="Search" class="search-input">
+                <div class="controls-right">
+                    <button class="filter-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        Filter
+                    </button>
+                    <button id="createTaskBtn" class="create-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Create Task
+                    </button>
                 </div>
-            <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Custom Priority Dropdown
-                var priorityDropdown = document.getElementById('priorityDropdown');
-                var priorityOptions = document.getElementById('priorityOptions');
-                var prioritySelected = document.getElementById('prioritySelected');
-                var priorityInput = document.getElementById('taskPriority');
-                if(priorityDropdown && priorityOptions && prioritySelected && priorityInput) {
-                    priorityDropdown.onclick = function(e) {
-                        e.stopPropagation();
-                        priorityOptions.style.display = priorityOptions.style.display === 'block' ? 'none' : 'block';
-                    };
-                    document.querySelectorAll('.priority-option').forEach(function(opt) {
-                        opt.onclick = function(e) {
-                            var val = this.getAttribute('data-value');
-                            var text = this.textContent;
-                            priorityInput.value = val;
-                            prioritySelected.textContent = text;
-                            prioritySelected.style.color = '#374151';
-                            priorityOptions.style.display = 'none';
-                        };
-                    });
-                    document.addEventListener('click', function(e) {
-                        if(priorityOptions.style.display === 'block') priorityOptions.style.display = 'none';
-                    });
-                }
-                var createBtn = document.getElementById('createTaskBtn');
-                var modal = document.getElementById('createTaskModal');
-                var closeBtn = document.getElementById('closeTaskModal');
-                var form = document.getElementById('createTaskForm');
-                var submitBtn = document.getElementById('submitTaskBtn');
-                var submitText = document.getElementById('submitTaskText');
-                var submitSpinner = document.getElementById('submitTaskSpinner');
-                var msgBox = document.getElementById('taskFormMsg');
-                if(createBtn && modal && closeBtn && form && submitBtn && submitText && submitSpinner && msgBox) {
-                    createBtn.onclick = function(e) {
-                        e.preventDefault();
-                        modal.style.display = 'flex';
-                        msgBox.innerHTML = '';
-                        form.reset();
-                        submitBtn.disabled = false;
-                        submitText.style.display = 'inline';
-                        submitSpinner.style.display = 'none';
-                    };
-                    closeBtn.onclick = function() {
-                        modal.style.display = 'none';
-                    };
-                    window.onclick = function(event) {
-                        if(event.target === modal) {
-                            modal.style.display = 'none';
-                        }
-                    };
-                    form.onsubmit = function(ev) {
-                        ev.preventDefault();
-                        submitBtn.disabled = true;
-                        submitText.style.display = 'none';
-                        submitSpinner.style.display = 'inline-block';
-                        msgBox.innerHTML = '';
-                        var formData = new FormData(form);
-                        fetch(form.action, {
-                            method: 'POST',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': form.querySelector('[name=_token]').value
-                            },
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.success && data.task) {
-                                msgBox.style.color = '#22c55e';
-                                msgBox.innerHTML = 'Task created successfully!';
-                                // Add new task card to To-Do tab
-                                var container = document.getElementById('tasks-container');
-                                var card = document.createElement('div');
-                                card.className = 'task-card';
-                                card.setAttribute('data-status', 'todo');
-                                card.style.background = '#fff';
-                                card.style.borderRadius = '12px';
-                                card.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
-                                card.style.padding = '18px 20px';
-                                card.style.width = '260px';
-                                card.style.display = '';
-                                card.innerHTML = `
-                                    <div style="background:#7c83e7;color:#fff;font-weight:600;border-radius:4px;padding:4px 12px;display:inline-block;margin-bottom:8px;">To-Do</div>
-                                    <div style="font-weight:600;font-size:1.1rem;color:#222;margin-bottom:4px;">${data.task.title}</div>
-                                    <div style="color:#444;font-size:0.98rem;margin-bottom:12px;">${data.task.description}</div>
-                                    <div style="font-size:0.95rem;color:#888;margin-bottom:8px;">Priority: ${data.task.priority.replace('_',' ')}</div>
-                                    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.95rem;color:#888;">
-                                        <span><svg width='16' height='16' style='vertical-align:middle;margin-right:4px;' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='3' width='18' height='18' rx='2'/><line x1='9' y1='9' x2='15' y2='9'/></svg> ${data.task.due_date}</span>
-                                        <span>0%</span>
-                                    </div>
-                                    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-                                        <button class="task-action" data-id="${data.task.id}" data-status="in_progress" style="background:#7c83e7;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Start</button>
-                                    </div>
-                                `;
-                                container.prepend(card);
-                                setTimeout(function() {
-                                    modal.style.display = 'none';
-                                }, 1200);
-                                form.reset();
-                            } else if(data.success) {
-                                msgBox.style.color = '#22c55e';
-                                msgBox.innerHTML = 'Task created successfully!';
-                                setTimeout(function() {
-                                    modal.style.display = 'none';
-                                }, 1200);
-                                form.reset();
-                            } else {
-                                msgBox.style.color = '#ef4444';
-                                msgBox.innerHTML = data.message || 'Failed to create task.';
-                            }
-                        })
-                        .catch(() => {
-                            msgBox.style.color = '#ef4444';
-                            msgBox.innerHTML = 'An error occurred. Please try again.';
-                        })
-                        .finally(() => {
-                            submitBtn.disabled = false;
-                            submitText.style.display = 'inline';
-                            submitSpinner.style.display = 'none';
-                        });
-                    };
-                }
-            });
-            </script>
-                    </div>
-                </div>
-                <div style="display:flex;align-items:center;gap:24px;margin-bottom:18px;">
-                    <span id="tab-todo" class="tab active" style="font-weight:500;color:#374151;cursor:pointer;border-bottom:3px solid #7c83e7;padding-bottom:2px;">To-Do ({{ count($grouped['todo']) }})</span>
-                    <span id="tab-in_progress" class="tab" style="font-weight:500;color:#374151;cursor:pointer;">In Progress ({{ count($grouped['in_progress']) }})</span>
-                    <span id="tab-completed" class="tab" style="font-weight:500;color:#374151;cursor:pointer;">Completed ({{ count($grouped['completed']) }})</span>
-                    <span id="tab-due" class="tab" style="font-weight:500;color:#374151;cursor:pointer;">Due ({{ count($grouped['due']) }})</span>
-                </div>
-                <div id="tasks-container" style="display:flex;flex-wrap:wrap;gap:24px;">
-                    @foreach(['todo','in_progress','completed','due'] as $tab)
-                        @foreach($grouped[$tab] as $task)
-                            <div class="task-card" data-status="{{ $tab }}" style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.04);padding:18px 20px;width:260px;display:{{ $tab == 'todo' ? '' : 'none' }};">
-                                <div style="background:@if($tab=='critical')#ef4444;@else #7c83e7;@endif;color:#fff;font-weight:600;border-radius:4px;padding:4px 12px;display:inline-block;margin-bottom:8px;">
-                                    {{ ucfirst(str_replace('_',' ', $tab)) }}
-                                </div>
-                                <div style="font-weight:600;font-size:1.1rem;color:#222;margin-bottom:4px;">{{ $task->title }}</div>
-                                <div style="color:#444;font-size:0.98rem;margin-bottom:12px;">{{ $task->description }}</div>
-                                <div style="font-size:0.95rem;color:#888;margin-bottom:8px;">Priority: {{ ucfirst(str_replace('_',' ', $task->priority)) }}</div>
-                                <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.95rem;color:#888;">
-                                    <span><svg width="16" height="16" style="vertical-align:middle;margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x="9" y="9" x2="15" y2="9"/></svg> {{ \Carbon\Carbon::parse($task->due_date)->format('M d, Y') }}</span>
-                                    <span>{{ $task->status == 'completed' ? '100%' : ($task->status == 'in_progress' ? '85%' : '0%') }}</span>
-                                </div>
-                                <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-                                    @if($task->status == 'in_progress')
-                                        <button style="background:#e5e7eb;color:#374151;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">File Organization</button>
-                                        <button style="background:#e5e7eb;color:#374151;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Material Handling</button>
-                                        <button style="background:#e5e7eb;color:#374151;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Assistance</button>
-                                        <button style="background:#e5e7eb;color:#374151;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Input Data</button>
-                                    @endif
-                                    @if($task->status == 'todo')
-                                        <button class="task-action" data-id="{{ $task->id }}" data-status="in_progress" style="background:#7c83e7;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Start</button>
-                                    @elseif($task->status == 'in_progress')
-                                        <button class="task-action" data-id="{{ $task->id }}" data-status="completed" style="background:#22c55e;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Complete</button>
-                                    @endif
-                                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-section">
+                <span id="tab-todo" class="tab active">To-Do ({{ count($grouped['todo']) }})</span>
+                <span id="tab-in_progress" class="tab">In Progress ({{ count($grouped['in_progress']) }})</span>
+                <span id="tab-completed" class="tab">Completed ({{ count($grouped['completed']) }})</span>
+                <span id="tab-due" class="tab">Due ({{ count($grouped['due']) }})</span>
+            </div>
+
+            <!-- Tasks Grid -->
+            <div id="tasks-container" class="tasks-grid">
+                @foreach(['todo','in_progress','completed','due'] as $tab)
+                    @foreach($grouped[$tab] as $task)
+                        <div class="task-card" data-status="{{ $tab }}" style="display:{{ $tab == 'todo' ? '' : 'none' }};">
+                            <div class="task-header">
+                                <span class="task-title" style="font-size:1.1rem;font-weight:700;color:#111827;">{{ $task->title }}</span>
+                                <span class="task-status {{ $tab }}" style="font-size:0.95rem;color:#6b7280;">{{ ucfirst(str_replace('_',' ', $tab)) }}</span>
                             </div>
-                        @endforeach
+                            <div class="task-description" style="font-size:0.95rem;color:#6b7280;margin-bottom:12px;">{{ $task->description }}</div>
+                            <div class="task-meta">
+                                <span class="task-date" style="font-size:0.85rem;color:#374151;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <line x="9" y="9" x2="15" y2="9"/>
+                                    </svg>
+                                    {{ \Carbon\Carbon::parse($task->due_date)->format('M d, Y') }}
+                                </span>
+                                <span class="task-progress" style="font-size:0.85rem;color:#374151;">
+                                    @if($task->status == 'completed')100%@elseif($task->status == 'in_progress')0%@else&nbsp;@endif
+                                </span>
+                            </div>
+                            <div class="task-actions">
+                                @if($task->status == 'todo')
+                                    <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress">Start</button>
+                                @elseif($task->status == 'in_progress')
+                                    <button class="task-action complete" data-id="{{ $task->id }}" data-status="completed">Complete</button>
+                                @endif
+                            </div>
+                        </div>
                     @endforeach
-                </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Create Task Modal -->
+        <div id="createTaskModal">
+            <div class="modal-content">
+                <h2 class="modal-title">Create New Task</h2>
+                <form id="createTaskForm" method="POST" action="{{ route('student.tasks.store') }}">
+                    @csrf
+                    <div class="form-group">
+                        <label for="taskTitle" class="form-label">Title</label>
+                        <textarea id="taskTitle" name="title" required class="form-textarea" style="min-height:40px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDesc" class="form-label">Description</label>
+                        <textarea id="taskDesc" name="description" required class="form-textarea" style="min-height:100px;"></textarea>
+                    </div>
+                    <div class="form-group" style="position:relative;">
+                        <label for="taskPriority" class="form-label">Level of Priority</label>
+                        <input type="hidden" id="taskPriority" name="priority" value="">
+                        <div id="priorityDropdown" class="priority-dropdown">
+                            <span id="prioritySelected" style="color:#9ca3af;">Select priority</span>
+                            <svg style="float:right;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            <div id="priorityOptions" class="priority-options">
+                                <div class="priority-option" data-value="critical">Critical</div>
+                                <div class="priority-option" data-value="medium">Medium Importance</div>
+                                <div class="priority-option" data-value="not_urgent">Not Urgent</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDue" class="form-label">Due Date</label>
+                        <input type="date" id="taskDue" name="due_date" required class="form-input">
+                    </div>
+                    <div id="taskFormMsg" class="form-message"></div>
+                    <div class="modal-actions">
+                        <button type="button" id="closeTaskModal" class="btn-cancel">Cancel</button>
+                        <button id="submitTaskBtn" type="submit" class="btn-submit">
+                            <span id="submitTaskText">Create</span>
+                            <span id="submitTaskSpinner" style="display:none;">
+                                <svg width="20" height="20" viewBox="0 0 50 50">
+                                    <circle cx="25" cy="25" r="20" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-dasharray="31.4 31.4" transform="rotate(-90 25 25)">
+                                        <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
@@ -532,38 +828,232 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var profile = document.getElementById('profileDropdown');
-    var menu = document.getElementById('logoutMenu');
-    profile.addEventListener('click', function(e) {
-        e.stopPropagation();
-        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    });
-    // Tab switching logic (robust mapping for all tabs, outside profile click)
+    // Profile dropdown with up/down arrow logic (community style)
+    const profileDropdown = document.getElementById('profileDropdown');
+    const logoutMenu = document.getElementById('logoutMenu');
+    const logoutUp = document.getElementById('logoutUp');
+    const logoutDown = document.getElementById('logoutDown');
+
+    // Initially hide the down arrow and show the up arrow
+    if (logoutDown && logoutUp) {
+        logoutDown.style.display = 'none';
+        logoutUp.style.display = 'block';
+    }
+
+    if (profileDropdown && logoutMenu && logoutUp && logoutDown) {
+        profileDropdown.addEventListener('click', function() {
+            if (logoutMenu.style.display === 'block') {
+                logoutMenu.style.display = 'none';
+                logoutUp.style.display = 'block';
+                logoutDown.style.display = 'none';
+            } else {
+                logoutMenu.style.display = 'block';
+                logoutUp.style.display = 'none';
+                logoutDown.style.display = 'block';
+            }
+        });
+    }
+
+    // Custom Priority Dropdown
+    var priorityDropdown = document.getElementById('priorityDropdown');
+    var priorityOptions = document.getElementById('priorityOptions');
+    var prioritySelected = document.getElementById('prioritySelected');
+    var priorityInput = document.getElementById('taskPriority');
+    
+    if(priorityDropdown && priorityOptions && prioritySelected && priorityInput) {
+        priorityDropdown.onclick = function(e) {
+            e.stopPropagation();
+            priorityOptions.style.display = priorityOptions.style.display === 'block' ? 'none' : 'block';
+        };
+        document.querySelectorAll('.priority-option').forEach(function(opt) {
+            opt.onclick = function(e) {
+                var val = this.getAttribute('data-value');
+                var text = this.textContent;
+                priorityInput.value = val;
+                prioritySelected.textContent = text;
+                prioritySelected.style.color = '#374151';
+                setTimeout(function() {
+                    priorityOptions.style.display = 'none';
+                }, 0);
+            };
+        });
+        document.addEventListener('click', function(e) {
+            if(priorityOptions.style.display === 'block') priorityOptions.style.display = 'none';
+        });
+    }
+
+    // Create Task Modal
+    var createBtn = document.getElementById('createTaskBtn');
+    var modal = document.getElementById('createTaskModal');
+    var closeBtn = document.getElementById('closeTaskModal');
+    var form = document.getElementById('createTaskForm');
+    var submitBtn = document.getElementById('submitTaskBtn');
+    var submitText = document.getElementById('submitTaskText');
+    var submitSpinner = document.getElementById('submitTaskSpinner');
+    var msgBox = document.getElementById('taskFormMsg');
+    
+    if(createBtn && modal && closeBtn && form && submitBtn && submitText && submitSpinner && msgBox) {
+        createBtn.onclick = function(e) {
+            e.preventDefault();
+            modal.style.display = 'flex';
+            msgBox.innerHTML = '';
+            form.reset();
+            prioritySelected.textContent = 'Select priority';
+            prioritySelected.style.color = '#9ca3af';
+            priorityInput.value = '';
+            submitBtn.disabled = false;
+            submitText.style.display = 'inline';
+            submitSpinner.style.display = 'none';
+        };
+        
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        };
+        
+        window.onclick = function(event) {
+            if(event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+        
+        form.onsubmit = function(ev) {
+            ev.preventDefault();
+            submitBtn.disabled = true;
+            submitText.style.display = 'none';
+            submitSpinner.style.display = 'inline-block';
+            msgBox.innerHTML = '';
+            
+            var formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': form.querySelector('[name=_token]').value
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success && data.task) {
+                    msgBox.style.color = '#22c55e';
+                    msgBox.innerHTML = 'Task created successfully!';
+                    
+                    // Add new task card to To-Do tab
+                    var container = document.getElementById('tasks-container');
+                    var card = document.createElement('div');
+                    card.className = 'task-card';
+                    card.setAttribute('data-status', 'todo');
+                    card.style.display = '';
+                    card.innerHTML = `
+                        <div class="task-header">
+                            <span class="task-title">${data.task.title}</span>
+                            <span class="task-status todo">To-Do</span>
+                        </div>
+                        <div class="task-description">${data.task.description}</div>
+                        <div class="task-meta">
+                            <span class="task-date">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <line x="9" y="9" x2="15" y2="9"/>
+                                </svg>
+                                ${data.task.due_date}
+                            </span>
+                            <span class="task-progress">&nbsp;</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="task-action start" data-id="${data.task.id}" data-status="in_progress">Start</button>
+                        </div>
+                    `;
+                    container.prepend(card);
+                    
+                    // Update tab counts
+                    updateTabCounts();
+                    
+                    setTimeout(function() {
+                        modal.style.display = 'none';
+                    }, 1200);
+                    form.reset();
+                } else if(data.success) {
+                    msgBox.style.color = '#22c55e';
+                    msgBox.innerHTML = 'Task created successfully!';
+                    setTimeout(function() {
+                        modal.style.display = 'none';
+                    }, 1200);
+                    form.reset();
+                } else {
+                    msgBox.style.color = '#ef4444';
+                    msgBox.innerHTML = data.message || 'Failed to create task.';
+                }
+            })
+            .catch(() => {
+                msgBox.style.color = '#ef4444';
+                msgBox.innerHTML = 'An error occurred. Please try again.';
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitText.style.display = 'inline';
+                submitSpinner.style.display = 'none';
+            });
+        };
+    }
+
+    // Tab switching logic
     var tabs = document.querySelectorAll('.tab');
     tabs.forEach(function(tab) {
         tab.addEventListener('click', function() {
             tabs.forEach(function(t) {
                 t.classList.remove('active');
-                t.style.borderBottom = '';
             });
             tab.classList.add('active');
-            tab.style.borderBottom = '3px solid #7c83e7';
-            tab.style.paddingBottom = '2px';
+            
             var status = tab.id.replace('tab-','');
-            // Normalize status mapping for all tabs
             if (status === 'inprogress' || status === 'in_progress') status = 'in_progress';
-            if (status === 'completed') status = 'completed';
-            if (status === 'todo') status = 'todo';
-            if (status === 'due') status = 'due';
+            
             var cards = document.querySelectorAll('.task-card');
             cards.forEach(function(card) {
                 card.style.display = card.getAttribute('data-status') === status ? '' : 'none';
             });
         });
     });
-    document.addEventListener('click', function() {
-    if (menu.style.display === 'block') menu.style.display = 'none';
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!profileDropdown.contains(event.target) && !logoutMenu.contains(event.target)) {
+            logoutMenu.style.display = 'none';
+            if (logoutUp && logoutDown) {
+                logoutUp.style.display = 'block';
+                logoutDown.style.display = 'none';
+            }
+        }
     });
+
+    // Function to update tab counts
+    function updateTabCounts() {
+        var todoCount = document.querySelectorAll('.task-card[data-status="todo"]').length;
+        var inProgressCount = document.querySelectorAll('.task-card[data-status="in_progress"]').length;
+        var completedCount = document.querySelectorAll('.task-card[data-status="completed"]').length;
+        var dueCount = document.querySelectorAll('.task-card[data-status="due"]').length;
+        
+        var todoTab = document.getElementById('tab-todo');
+        var inProgressTab = document.getElementById('tab-in_progress');
+        var completedTab = document.getElementById('tab-completed');
+        var dueTab = document.getElementById('tab-due');
+        
+        if(todoTab) todoTab.innerHTML = todoTab.innerHTML.replace(/\(\d+\)/, '(' + todoCount + ')');
+        if(inProgressTab) inProgressTab.innerHTML = inProgressTab.innerHTML.replace(/\(\d+\)/, '(' + inProgressCount + ')');
+        if(completedTab) completedTab.innerHTML = completedTab.innerHTML.replace(/\(\d+\)/, '(' + completedCount + ')');
+        if(dueTab) dueTab.innerHTML = dueTab.innerHTML.replace(/\(\d+\)/, '(' + dueCount + ')');
+        
+        // Update header stats
+        var todoStat = document.querySelector('.stat-item .value.todo');
+        var inProgressStat = document.querySelector('.stat-item .value.in-progress');
+        var completedStat = document.querySelector('.stat-item .value.completed');
+        
+        if(todoStat) todoStat.textContent = todoCount;
+        if(inProgressStat) inProgressStat.textContent = inProgressCount;
+        if(completedStat) completedStat.textContent = completedCount;
+    }
+
     // Task status change logic
     document.getElementById('tasks-container').addEventListener('click', function(e) {
         if(e.target.classList.contains('task-action')) {
@@ -571,6 +1061,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var id = btn.getAttribute('data-id');
             var newStatus = btn.getAttribute('data-status');
             var card = btn.closest('.task-card');
+            
             fetch('/student-tasks/' + id + '/status', {
                 method: 'POST',
                 headers: {
@@ -584,34 +1075,45 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     card.setAttribute('data-status', newStatus);
+                    
+                    // Update task status badge
+                    var statusBadge = card.querySelector('.task-status');
+                    statusBadge.textContent = newStatus === 'in_progress' ? 'In Progress' : 'Completed';
+                    statusBadge.className = 'task-status ' + newStatus;
+                    
                     // Update button
-                    var btn = card.querySelector('.task-action');
-                    if (btn) {
+                    var actionBtn = card.querySelector('.task-action');
+                    if (actionBtn) {
                         if (newStatus === 'in_progress') {
-                            btn.textContent = 'Complete';
-                            btn.setAttribute('data-status', 'completed');
-                            btn.style.background = '#22c55e';
+                            actionBtn.textContent = 'Complete';
+                            actionBtn.setAttribute('data-status', 'completed');
+                            actionBtn.className = 'task-action complete';
+                            
+                            // Update percentage to 0%
+                            var progressSpan = card.querySelector('.task-progress');
+                            if (progressSpan) {
+                                progressSpan.textContent = '0%';
+                            }
                         } else if (newStatus === 'completed') {
-                            btn.remove();
+                            // Update percentage to 100%
+                            var progressSpan = card.querySelector('.task-progress');
+                            if (progressSpan) {
+                                progressSpan.textContent = '100%';
+                            }
+                            actionBtn.remove();
                         }
                     }
-                    // Instantly show/hide card based on active tab
+                    
+                    // Show/hide card based on active tab
                     var activeTab = document.querySelector('.tab.active').id.replace('tab-','');
                     if (activeTab === newStatus) {
                         card.style.display = '';
                     } else {
                         card.style.display = 'none';
                     }
-                    // Update tab counts
-                    var todoTab = document.getElementById('tab-todo');
-                    var inProgressTab = document.getElementById('tab-in_progress');
-                    var completedTab = document.getElementById('tab-completed');
-                    var todoCount = document.querySelectorAll('.task-card[data-status="todo"]').length;
-                    var inProgressCount = document.querySelectorAll('.task-card[data-status="in_progress"]').length;
-                    var completedCount = document.querySelectorAll('.task-card[data-status="completed"]').length;
-                    todoTab.innerHTML = todoTab.innerHTML.replace(/\(\d+\)/, '(' + todoCount + ')');
-                    inProgressTab.innerHTML = inProgressTab.innerHTML.replace(/\(\d+\)/, '(' + inProgressCount + ')');
-                    completedTab.innerHTML = completedTab.innerHTML.replace(/\(\d+\)/, '(' + completedCount + ')');
+                    
+                    // Update tab counts and header stats
+                    updateTabCounts();
                 } else {
                     alert('Failed to update task status.');
                 }

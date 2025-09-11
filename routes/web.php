@@ -33,6 +33,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // Community join
+    Route::post('/community/join', [\App\Http\Controllers\CommunityGroupController::class, 'join'])->name('community.join');
     // Redirect root URL to login page
     Route::get('/', function () {
         return redirect()->route('login');
@@ -53,8 +56,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/studentdashboard', [\App\Http\Controllers\StudentTaskController::class, 'dashboard'])->name('student.dashboard');
     Route::post('/student-tasks/{id}/status', [\App\Http\Controllers\StudentTaskController::class, 'updateStatus'])->name('student.tasks.status');
     Route::post('/student-tasks/{id}/progress', [\App\Http\Controllers\StudentTaskController::class, 'updateProgress'])->name('student.tasks.progress');
-    Route::view('/student-community', 'students.community.index')->name('student.community');
-    Route::view('/student-reports', 'students.reports.index')->name('student.reports');
+    Route::get('/student-community', [\App\Http\Controllers\CommunityGroupController::class, 'index'])->name('student.community');
+    Route::post('/student-community', [\App\Http\Controllers\CommunityGroupController::class, 'store'])->name('student.community.create');
+    Route::post('/community/send-message', [App\Http\Controllers\CommunityGroupController::class, 'sendMessage'])->name('community.sendMessage');
+    Route::view('/student-calendar', 'students.calendar.index')->name('student.calendar');
     Route::view('/student-tasks/create', 'students.dashboard.create')->name('student.tasks.create');
     Route::post('/student-tasks', [\App\Http\Controllers\StudentTaskController::class, 'store'])->name('student.tasks.store');
     // Add more student routes here as needed

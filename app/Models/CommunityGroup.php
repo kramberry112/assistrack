@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class CommunityGroup extends Model
+{
+    protected $fillable = [
+        'name',
+        'description',
+        'owner_id',
+    ];
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    // Example relationship for member count
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'community_group_user');
+    }
+
+    public function getMembersCountAttribute()
+    {
+        return $this->members()->count();
+    }
+}

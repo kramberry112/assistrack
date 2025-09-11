@@ -44,7 +44,7 @@ class RegisteredUserController extends Controller
         } elseif (str_ends_with($email, '.head@cdd.edu.ph')) {
             $role = 'head';
         } elseif (str_ends_with($email, '.stud@cdd.edu.ph')) {
-            $role = 'stud';
+            $role = 'student';
         }
         if (!$role) {
             return back()->withErrors(['email' => 'Email must follow the format: username.role@cdd.edu.ph']);
