@@ -45,7 +45,7 @@ class StudentListController extends Controller
 
     public function index()
     {
-        $students = Student::all();
+    $students = Student::paginate(9);
         return view('admin.studentlists.index', compact('students'));
     }
     public function show(Student $student)

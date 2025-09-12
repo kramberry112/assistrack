@@ -317,14 +317,14 @@
                     </svg>
                 </button>
             </div>
-        </div>
-
-        <div id="logoutMenu">
-            <a href="{{ route('profile.edit') }}" style="display:block;margin-bottom:8px;text-align:center;background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:0.9rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background 0.2s;">Settings</a>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="logout-btn">Logout</button>
-            </form>
+            <!-- Profile Dropdown Menu: Always at top -->
+            <div id="logoutMenu" style="display:none; position:absolute; top:0; left:100%; transform:translateX(-100%); background:#fff; border:none; border-radius:18px; box-shadow:0 8px 32px rgba(0,0,0,0.12); padding:24px 20px 16px 20px; min-width:220px; z-index:100; text-align:center;">
+                <a href="{{ route('profile.edit') }}" style="display:block;margin-bottom:8px;text-align:center;background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:0.9rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background 0.2s;">Settings</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
         </div>
     </aside>
 
@@ -340,9 +340,36 @@
                 </span>
                 Student Official List
             </div>
-            <div class="studentlist-title">Student Official List</div>
-            <div class="studentlist-desc">This list contains Official Student Assistants of Universidad de Dagupan</div>
-            <div class="table-container">
+            <div style="width: 100%; margin-bottom: 12px; position: relative; padding: 0 24px;">
+                <div>
+                    <div class="studentlist-title" style="margin-bottom:0;">Student Official List</div>
+                    <div class="studentlist-desc" style="margin-bottom:0;">This list contains Official Student Assistants of Universidad de Dagupan</div>
+                </div>
+                <div style="position: absolute; top: 0; right: 24px; display: flex; align-items: center; gap: 8px; height: 100%;">
+                    <span style="font-size:1rem;color:#374151;padding:6px 18px;border-radius:18px;background:#f3f4f6;display:inline-flex;align-items:center;gap:12px;">
+                        @if ($students->onFirstPage())
+                            <span style="color:#d1d5db;cursor:not-allowed;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                            </span>
+                        @else
+                            <a href="{{ $students->previousPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                            </a>
+                        @endif
+                        <span style="font-size:1rem;color:#374151;">Page {{ $students->currentPage() }} of {{ $students->lastPage() }}</span>
+                        @if ($students->hasMorePages())
+                            <a href="{{ $students->nextPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                            </a>
+                        @else
+                            <span style="color:#d1d5db;cursor:not-allowed;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                            </span>
+                        @endif
+                    </span>
+                </div>
+            </div>
+            <div class="table-container" style="margin-top:0;">
                 <table class="student-table">
                     <thead>
                         <tr>
@@ -361,7 +388,49 @@
                                 <td>{{ $student->course }}</td>
                                 <td>{{ $student->year_level }}</td>
                                 <td>{{ $student->id_number }}</td>
-                                <td>{{ $student->designated_office ?? 'N/A' }}</td>
+                                <td style="overflow: visible; position: relative;">
+                                    <div class="searchable-dropdown" style="position:relative; width:180px; overflow: visible;">
+                                        <div style="position:relative;">
+                                            <input type="text" class="office-combo-input" placeholder="Select or search office..." style="width:100%;padding:6px 32px 6px 10px;border-radius:5px;border:1px solid #bbb;font-size:14px;" autocomplete="off" readonly>
+                                            <span class="office-combo-arrow" style="position:absolute;top:8px;right:10px;width:18px;height:18px;pointer-events:auto;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100;background:#fff;">
+                                                <svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="#555" stroke-width="2" fill="none"/></svg>
+                                            </span>
+                                        </div>
+                                        <div class="office-combo-list" style="display:none;position:absolute;top:40px;left:0;width:100%;background:#fff;border:1px solid #bbb;border-radius:5px;box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:9999;max-height:220px;overflow-y:auto;">
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LIBRARY</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ACADS</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">REGISTRAR</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">CANTEEN</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">KUWAGO</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">QUEUING</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">HRD</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SAO</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">GUIDANCE</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">CLINIC</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">OPEN LAB</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LINKAGES</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">XACTO</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SITE FACULTY</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOHS FACULTY</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOH FACULTY</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">STE FACULTY</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOC FACULTY</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SBA FACULTY</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOE FACULTY</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SIHM FACULTY</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">STE DEAN'S OFFICE</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">FINANCE</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LCR</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">STEEDS</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SPORTS AND CULTURE</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">QUALITY ASSURANCE</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ARCHIVING</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">PRESIDENT'S OFFICE</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">MARKETING</div>
+                                            <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ALUMNI OFFICE</div>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td class="action-cell">
                                     <a href="{{ route('students.show', $student->id) }}">View</a>
                                     <form method="POST" action="{{ route('students.delete', $student->id) }}" style="display:inline-block; margin-left:8px;">
@@ -381,15 +450,78 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const profile = document.getElementById('profileDropdown');
-    const menu = document.getElementById('logoutMenu');
-    profile.addEventListener('click', function(e) {
-        e.stopPropagation();
-        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    // Custom searchable dropdown for Designated Office
+    document.querySelectorAll('.searchable-dropdown').forEach(function(dropdownDiv) {
+        const input = dropdownDiv.querySelector('.office-combo-input');
+        const list = dropdownDiv.querySelector('.office-combo-list');
+        const items = Array.from(list.querySelectorAll('.office-combo-item'));
+        const arrow = dropdownDiv.querySelector('.office-combo-arrow');
+        let portalList = null;
+        function showList() {
+            if (!portalList) {
+                portalList = list.cloneNode(true);
+                portalList.classList.add('office-combo-list-portal');
+                document.body.appendChild(portalList);
+                portalList.style.position = 'fixed';
+                portalList.style.zIndex = '99999';
+                portalList.style.background = '#fff';
+                portalList.style.border = '1px solid #bbb';
+                portalList.style.borderRadius = '5px';
+                portalList.style.boxShadow = '0 8px 32px rgba(0,0,0,0.18)';
+                portalList.style.maxHeight = '224px';
+                portalList.style.overflowY = 'auto';
+                portalList.style.width = dropdownDiv.offsetWidth + 'px';
+                const rect = input.getBoundingClientRect();
+                portalList.style.left = rect.left + 'px';
+                portalList.style.top = (rect.bottom + 2) + 'px';
+                input.addEventListener('input', function() {
+                    Array.from(portalList.children).forEach(function(item) {
+                        item.style.display = item.textContent.toLowerCase().includes(input.value.toLowerCase()) ? '' : 'none';
+                    });
+                });
+                Array.from(portalList.children).forEach(function(item) {
+                    item.addEventListener('mousedown', function(e) {
+                        e.preventDefault();
+                        input.value = item.textContent;
+                        hideList();
+                        input.setAttribute('readonly', true);
+                    });
+                });
+            }
+            portalList.style.display = 'block';
+            input.removeAttribute('readonly');
+            input.focus();
+        }
+        function hideList() {
+            if (portalList) portalList.style.display = 'none';
+            input.setAttribute('readonly', true);
+        }
+        input.addEventListener('focus', showList);
+        input.addEventListener('blur', function() { setTimeout(hideList, 150); });
+        arrow.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            if (portalList && portalList.style.display === 'block') {
+                hideList();
+            } else {
+                showList();
+            }
+        });
     });
-    document.addEventListener('click', function() {
-        if (menu.style.display === 'block') menu.style.display = 'none';
-    });
+
+    // Sidebar profile dropdown logic (settings/logout)
+    var profile = document.getElementById('profileDropdown');
+    var menu = document.getElementById('logoutMenu');
+    if (profile && menu) {
+        profile.addEventListener('click', function(e) {
+            e.stopPropagation();
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        });
+        document.addEventListener('click', function(e) {
+            if (!profile.contains(e.target) && menu.style.display === 'block') {
+                menu.style.display = 'none';
+            }
+        });
+    }
 });
 </script>
 @endsection

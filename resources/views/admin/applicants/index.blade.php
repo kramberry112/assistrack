@@ -351,10 +351,37 @@
                         <path d="m22 21-3-3 3-3"/>
                     </svg>
                 </span>
-                New Applicants
+                <span style="font-weight:600; font-size:1.1rem;">New Applicants</span>
             </div>
-            <div class="applicants-title">New Applicants</div>
-            <div class="applicants-desc">This page contains new applicants for student assistantship.</div>
+            <div style="display: flex; flex-direction: row; align-items: center; padding: 0 24px; margin-bottom: 12px;">
+                <div style="flex: 1 1 auto;">
+                    <div class="applicants-title" style="margin-bottom:0;">New Applicants</div>
+                    <div class="applicants-desc" style="margin-bottom:0;">This page contains new applicants for student assistantship.</div>
+                </div>
+                <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
+                        <span style="font-size:1rem;color:#374151;padding:6px 18px;border-radius:18px;background:#f3f4f6;display:inline-flex;align-items:center;gap:12px;">
+                            @if ($applications->onFirstPage())
+                                <span style="color:#d1d5db;cursor:not-allowed;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                                </span>
+                            @else
+                                <a href="{{ $applications->previousPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                                </a>
+                            @endif
+                            <span style="font-size:1rem;color:#374151;">Page {{ $applications->currentPage() }} of {{ $applications->lastPage() }}</span>
+                            @if ($applications->hasMorePages())
+                                <a href="{{ $applications->nextPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                                </a>
+                            @else
+                                <span style="color:#d1d5db;cursor:not-allowed;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                                </span>
+                            @endif
+                        </span>
+                </div>
+            </div>
             <div class="table-container">
                 <table class="applicants-table">
                     <thead>
@@ -377,7 +404,7 @@
                                 <td>Pending</td>
                                 <td class="action-cell">
                                     <a href="{{ route('applications.show', $applicant->id) }}">View</a>
-                                    <form method="POST" action="{{ route('studentlist.add', $applicant->id) }}">
+                                    <form method="POST" action="{{ route('studentlist.add', $applicant->id) }}" style="display:inline;">
                                         @csrf
                                         <button type="submit">Add to Student List</button>
                                     </form>
@@ -386,6 +413,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                <!-- Pagination moved to header section above -->
             </div>
         </div>
     </section>
