@@ -487,34 +487,39 @@
                             <button class="join-btn" data-group-id="{{ $group->id }}">JOIN</button>
                         </div>
                         <!-- Replace the existing chat-box div with this fixed version -->
-<div class="chat-box" style="display:none; margin-top:12px;" data-group-id="{{ $group->id }}">
-    <div style="background:#f9fafb;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.10);width:100%;max-width:400px;">
-        <div style="font-weight:700;color:#2563eb;margin-bottom:12px;font-size:1.1rem;display:flex;align-items:center;gap:8px;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg>
-            Group Chat
-        </div>
-        <div class="chat-messages" style="height:220px;overflow-y:auto;background:#fff;border-radius:8px;padding:12px;margin-bottom:10px;border:1px solid #e5e7eb;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;">
-            @if(isset($groupMessages[$group->id]))
-                @foreach($groupMessages[$group->id] as $msg)
-                    @php $isMe = (auth()->user() && $msg->user_id == auth()->user()->id); @endphp
-                    @if($isMe)
-                        <div style="display:flex;justify-content:flex-end;">
-                            <span style="background:#2563eb;color:#fff;padding:8px 14px;border-radius:16px 16px 0 16px;font-size:1rem;max-width:70%;word-break:break-word;">{{ $msg->message }}</span>
+                        <div class="chat-box" style="display:none; margin-top:12px; position:relative;" data-group-id="{{ $group->id }}">
+                            <div style="background:#f9fafb;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.10);width:100%;max-width:400px;position:relative;">
+                                <div style="font-weight:700;color:#2563eb;margin-bottom:12px;font-size:1.1rem;display:flex;align-items:center;gap:8px;justify-content:space-between;">
+                                    <span style="display:flex;align-items:center;gap:8px;">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg>
+                                        Group Chat
+                                    </span>
+                                    <button class="minimize-chat" style="background:none;border:none;cursor:pointer;padding:0;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    </button>
+                                </div>
+                            <div class="chat-messages" style="height:220px;overflow-y:auto;background:#fff;border-radius:8px;padding:12px;margin-bottom:10px;border:1px solid #e5e7eb;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;">
+                                @if(isset($groupMessages[$group->id]))
+                                    @foreach($groupMessages[$group->id] as $msg)
+                                        @php $isMe = (auth()->user() && $msg->user_id == auth()->user()->id); @endphp
+                                        @if($isMe)
+                                            <div style="display:flex;justify-content:flex-end;">
+                                                <span style="background:#2563eb;color:#fff;padding:8px 14px;border-radius:16px 16px 0 16px;font-size:1rem;max-width:70%;word-break:break-word;">{{ $msg->message }}</span>
+                                            </div>
+                                        @else
+                                            <div style="display:flex;justify-content:flex-start;align-items:center;gap:8px;">
+                                                <span style="background:#e5e7eb;color:#2563eb;padding:8px 14px;border-radius:16px 16px 16px 0;font-size:1rem;max-width:70%;word-break:break-word;">{{ $msg->user->name ?? 'User' }}: {{ $msg->message }}</span>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
+                                </div>
+                                <form class="chat-form" style="display:flex;gap:8px;align-items:center;">
+                                    <input type="text" class="chat-input" placeholder="Type a message..." style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid #e5e7eb;font-size:1rem;">
+                                    <button type="submit" style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-weight:600;font-size:1rem;box-shadow:0 2px 8px rgba(45,46,131,0.10);">Send</button>
+                                </form>
+                            </div>
                         </div>
-                    @else
-                        <div style="display:flex;justify-content:flex-start;align-items:center;gap:8px;">
-                            <span style="background:#e5e7eb;color:#2563eb;padding:8px 14px;border-radius:16px 16px 16px 0;font-size:1rem;max-width:70%;word-break:break-word;">{{ $msg->user->name ?? 'User' }}: {{ $msg->message }}</span>
-                        </div>
-                    @endif
-                @endforeach
-            @endif
-        </div>
-        <form class="chat-form" style="display:flex;gap:8px;align-items:center;">
-            <input type="text" class="chat-input" placeholder="Type a message..." style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid #e5e7eb;font-size:1rem;">
-            <button type="submit" style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-weight:600;font-size:1rem;box-shadow:0 2px 8px rgba(45,46,131,0.10);">Send</button>
-        </form>
-    </div>
-</div>
                     </div>
                 @endforeach
             </div>
@@ -626,6 +631,21 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+        // Minimize chat box and show join button again
+        document.querySelectorAll('.minimize-chat').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                var chatBox = btn.closest('.chat-box');
+                if (chatBox) {
+                    chatBox.style.display = 'none';
+                    var communityItem = chatBox.closest('.community-item');
+                    if (communityItem) {
+                        var joinBtn = communityItem.querySelector('.join-btn');
+                        if (joinBtn) joinBtn.style.display = '';
+                    }
+                }
+            });
+        });
 
     document.querySelectorAll('.chat-form').forEach(function(form) {
         form.addEventListener('submit', function(e) {
