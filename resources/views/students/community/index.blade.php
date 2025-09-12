@@ -486,7 +486,6 @@
                             <span class="member-count">{{ $group->members_count }} Member{{ $group->members_count == 1 ? '' : 's' }}</span>
                             <button class="join-btn" data-group-id="{{ $group->id }}">JOIN</button>
                         </div>
-                        <!-- Replace the existing chat-box div with this fixed version -->
                         <div class="chat-box" style="display:none; margin-top:12px; position:relative;" data-group-id="{{ $group->id }}">
                             <div style="background:#f9fafb;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.10);width:100%;max-width:400px;position:relative;">
                                 <div style="font-weight:700;color:#2563eb;margin-bottom:12px;font-size:1.1rem;display:flex;align-items:center;gap:8px;justify-content:space-between;">

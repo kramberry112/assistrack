@@ -200,12 +200,14 @@
                     <input type="radio" name="is_literate" value="0" required> No
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
-                    <label>If Yes, what tools can you use? (Select all that apply)</label><br>
-                    <input type="checkbox" name="tools[]" value="office"> Can you use Microsoft Office Suite (e.g. Word, Excel, Powerpoint)<br>
-                    <input type="checkbox" name="tools[]" value="design"> Can you use Design Software (e.g. Canva, Adobe Photoshop)<br>
-                    <input type="checkbox" name="tools[]" value="video_conf"> Can you use email, video conferencing tools and other communication tool (e.g. Gmail, Google Meet, Facebook, Messenger)<br>
-                    <input type="checkbox" name="tools[]" value="social"> Can you use social media Platforms (e.g. Facebook, Twitter, Instagram)<br>
-                    <input type="checkbox" name="tools[]" value="cloud"> Can you use cloud storage services (e.g. Google Drive) to store and share files<br>
+                    <span id="literacy-label" style="color: #aaa;">If Yes, what tools can you use? (Select all that apply)</span><br>
+                    <span id="literacy-checkboxes" style="display: block; color: #aaa;">
+                        <input type="checkbox" name="tools[]" value="office" class="literacy-tool" disabled> Can you use Microsoft Office Suite (e.g. Word, Excel, Powerpoint)<br>
+                        <input type="checkbox" name="tools[]" value="design" class="literacy-tool" disabled> Can you use Design Software (e.g. Canva, Adobe Photoshop)<br>
+                        <input type="checkbox" name="tools[]" value="video_conf" class="literacy-tool" disabled> Can you use email, video conferencing tools and other communication tool (e.g. Gmail, Google Meet, Facebook, Messenger)<br>
+                        <input type="checkbox" name="tools[]" value="social" class="literacy-tool" disabled> Can you use social media Platforms (e.g. Facebook, Twitter, Instagram)<br>
+                        <input type="checkbox" name="tools[]" value="cloud" class="literacy-tool" disabled> Can you use cloud storage services (e.g. Google Drive) to store and share files<br>
+                    </span>
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
                     <label>ARE YOU ABLE TO COMMIT TO WORKING A MINIMUM NUMBER OF HOURS PER WEEK AS REQUIRED BY THE POSITION?</label><br>
@@ -342,6 +344,28 @@
             </div>
         </div>
         <script>
+        // Computer Literacy logic: disable checkboxes and gray out text unless 'Yes' is selected
+        document.addEventListener('DOMContentLoaded', function() {
+            const yesRadio = document.querySelector('input[name="is_literate"][value="1"]');
+            const noRadio = document.querySelector('input[name="is_literate"][value="0"]');
+            const toolCheckboxes = document.querySelectorAll('.literacy-tool');
+            const label = document.getElementById('literacy-label');
+            const checkboxesBlock = document.getElementById('literacy-checkboxes');
+            function updateToolCheckboxes() {
+                if (yesRadio.checked) {
+                    toolCheckboxes.forEach(cb => cb.disabled = false);
+                    label.style.color = '#222';
+                    checkboxesBlock.style.color = '#222';
+                } else {
+                    toolCheckboxes.forEach(cb => { cb.checked = false; cb.disabled = true; });
+                    label.style.color = '#aaa';
+                    checkboxesBlock.style.color = '#aaa';
+                }
+            }
+            yesRadio.addEventListener('change', updateToolCheckboxes);
+            noRadio.addEventListener('change', updateToolCheckboxes);
+            updateToolCheckboxes();
+        });
         const form = document.getElementById('applicationForm');
         const modal = document.getElementById('modalConfirm');
         const btnYes = document.getElementById('modalYes');
@@ -351,11 +375,18 @@
         const btnPrintNo = document.getElementById('modalPrintNo');
         let allowSubmit = false;
         let submitted = false;
-
+        // For photo upload validation
+        function isPhotoUploaded() {
+            return !!document.getElementById('cropped-picture').value;
+        }
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             if (!form.checkValidity()) {
                 alert('Please fill out all required fields before submitting the form.');
+                return;
+            }
+            if (!isPhotoUploaded()) {
+                alert('Please upload and crop your photo before submitting the form.');
                 return;
             }
             if (!allowSubmit) {
@@ -452,7 +483,7 @@
             pictureInput.click();
         });
         const profilePreview = document.getElementById('profile-preview');
-    // Removed label for minimal UI
+        // Removed label for minimal UI
         const cropperModal = document.getElementById('cropperModal');
         const modalImage = document.getElementById('modal-image');
         pictureInput.addEventListener('change', function(e) {
@@ -503,25 +534,24 @@
             }
             if (cropper) cropper.destroy();
         }
-</script>
-<!-- Cropper.js CSS & JS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-</script>
-<!-- Cropper.js CSS & JS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+        </script>
+        <!-- Cropper.js CSS & JS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+        </script>
+        <!-- Cropper.js CSS & JS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
         </script>
 
 
         </form>
-        </div>
-    </main>
+    </div>
+</main>
 
-            <!-- Footer -->
-            <footer style="background: #1a237e; color: #fff; text-align: center; font-size: 13px; padding: 18px 0; margin-top: 0; letter-spacing: 1px;">
-                &copy; 2023 - 2024 by MRCY Inc., a non-profit organization. All rights reserved.
-            </footer>
-
-</div>
+    <!-- Footer -->
+    <footer style="background: #1a237e; color: #fff; text-align: center; font-size: 13px; padding: 18px 0; margin-top: 0; letter-spacing: 1px;">
+            &copy; 2023 - 2024 by MRCY Inc., a non-profit organization. All rights reserved.
+        </footer>
+    </div>
 @endsection
