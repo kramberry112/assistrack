@@ -45,7 +45,33 @@ class StudentListController extends Controller
 
     public function index()
     {
-    $students = Student::paginate(9);
+        $query = Student::query();
+        if (request('keyword')) {
+            $keyword = request('keyword');
+            $query->where(function($q) use ($keyword) {
+                $q->where('student_name', 'like', "%$keyword%")
+                  ->orWhere('course', 'like', "%$keyword%")
+                  ->orWhere('year_level', 'like', "%$keyword%")
+                  ->orWhere('id_number', 'like', "%$keyword%")
+                  ->orWhere('designated_office', 'like', "%$keyword%");
+            });
+        }
+        if (request('student_name')) {
+            $query->where('student_name', 'like', '%' . request('student_name') . '%');
+        }
+        if (request('course')) {
+            $query->where('course', 'like', '%' . request('course') . '%');
+        }
+        if (request('year_level')) {
+            $query->where('year_level', 'like', '%' . request('year_level') . '%');
+        }
+        if (request('id_number')) {
+            $query->where('id_number', 'like', '%' . request('id_number') . '%');
+        }
+        if (request('designated_office')) {
+            $query->where('designated_office', 'like', '%' . request('designated_office') . '%');
+        }
+        $students = $query->paginate(9)->appends(request()->except('page'));
         return view('admin.studentlists.index', compact('students'));
     }
     public function show(Student $student)
