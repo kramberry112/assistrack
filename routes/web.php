@@ -37,6 +37,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Community join
     Route::post('/community/join', [\App\Http\Controllers\CommunityGroupController::class, 'join'])->name('community.join');
+    // Community group join requests
+    Route::post('/community/join-request', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'store'])->name('community.join_request');
+    Route::get('/community/join-requests', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'index'])->name('community.join_requests');
+    Route::post('/community/join-request/{id}/action', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'update'])->name('community.join_request.action');
+    
     // Redirect root URL to login page
     Route::get('/', function () {
         return redirect()->route('login');
@@ -55,6 +60,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Student pages (protected)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/studentdashboard', [\App\Http\Controllers\StudentTaskController::class, 'dashboard'])->name('student.dashboard');
+    Route::get('/student-tasks/month', [\App\Http\Controllers\StudentTaskController::class, 'tasksForMonth']);
+    Route::get('/student-tasks/week', [\App\Http\Controllers\StudentTaskController::class, 'tasksForWeek']);
     Route::post('/student-tasks/{id}/status', [\App\Http\Controllers\StudentTaskController::class, 'updateStatus'])->name('student.tasks.status');
     Route::post('/student-tasks/{id}/progress', [\App\Http\Controllers\StudentTaskController::class, 'updateProgress'])->name('student.tasks.progress');
     Route::get('/student-community', [\App\Http\Controllers\CommunityGroupController::class, 'index'])->name('student.community');

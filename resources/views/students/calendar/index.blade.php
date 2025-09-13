@@ -486,10 +486,16 @@
                 <div class="header-content">
                     <h1 class="community-title">CALENDAR</h1>
                     <div class="user-section">
-                        <svg class="notification-bell" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                        </svg>
+                        <div id="notificationBellContainer" style="position:relative;display:inline-block;cursor:pointer;">
+                            <svg class="notification-bell" id="notificationBell" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                            </svg>
+                            <span id="notificationCount" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border-radius:50%;padding:2px 7px;font-size:0.85rem;font-weight:700;display:inline-block;z-index:10;">0</span>
+                        </div>
+                        <div id="notificationDropdown" style="display:none;position:absolute;top:36px;right:0;background:#fff;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);min-width:320px;z-index:100;padding:16px;">
+                        <div id="notificationContent">Loading...</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -558,6 +564,105 @@
         });
 
         // Calendar functionality
+        // Notification logic (copied from community)
+        function updateNotificationCount() {
+            fetch('/community/join-requests')
+                .then(response => response.json())
+                .then(data => {
+                    const countSpan = document.getElementById('notificationCount');
+                    if (data.length > 0) {
+                        countSpan.textContent = data.length;
+                        countSpan.style.display = 'inline-block';
+                    } else {
+                        countSpan.textContent = '0';
+                        countSpan.style.display = 'inline-block';
+                    }
+                });
+        }
+        updateNotificationCount();
+        setInterval(updateNotificationCount, 30000);
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationBellContainer = document.getElementById('notificationBellContainer');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const notificationContent = document.getElementById('notificationContent');
+        notificationBellContainer.addEventListener('click', function(e) {
+        updateNotificationCount();
+        e.stopPropagation();
+        if (notificationDropdown.style.display === 'block') {
+            notificationDropdown.style.display = 'none';
+        } else {
+            notificationDropdown.style.display = 'block';
+            fetch('/community/join-requests')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        notificationContent.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
+                    } else {
+                        notificationContent.innerHTML = data.map(req => `
+                            <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">
+                                <div style="font-weight:600;color:#2563eb;">${req.user.name} (@${req.user.username})</div>
+                                <div style="color:#374151;font-size:0.95rem;">wants to join your group.</div>
+                                <div style="margin-top:8px;display:flex;gap:8px;">
+                                    <button class="accept-btn" data-request-id="${req.id}" data-user-id="${req.user.id}" style="background:#22c55e;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-weight:600;">Accept</button>
+                                    <button class="reject-btn" data-request-id="${req.id}" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-weight:600;">Reject</button>
+                                </div>
+                            </div>
+                        `).join('');
+                        setTimeout(() => {
+                            document.querySelectorAll('.accept-btn').forEach(function(btn) {
+                                btn.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    var reqId = btn.getAttribute('data-request-id');
+                                    var userId = btn.getAttribute('data-user-id');
+                                    fetch(`/community/join-request/${reqId}/action`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        },
+                                        body: JSON.stringify({ action: 'accept' })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            btn.closest('div').parentElement.innerHTML = '<span style="color:#22c55e;font-weight:600;">Accepted</span>';
+                                            location.reload();
+                                        }
+                                    });
+                                });
+                            });
+                            document.querySelectorAll('.reject-btn').forEach(function(btn) {
+                                btn.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    var reqId = btn.getAttribute('data-request-id');
+                                    fetch(`/community/join-request/${reqId}/action`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        },
+                                        body: JSON.stringify({ action: 'reject' })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            btn.closest('div').parentElement.innerHTML = '<span style="color:#ef4444;font-weight:600;">Rejected</span>';
+                                        }
+                                    });
+                                });
+                            });
+                        }, 100);
+                    }
+                });
+        }
+    });
+    document.addEventListener('click', function(event) {
+        if (!notificationBell.contains(event.target) && !notificationDropdown.contains(event.target)) {
+            notificationDropdown.style.display = 'none';
+        }
+    });
         // Calendar functionality with week/month toggle
         class Calendar {
             constructor() {
@@ -570,13 +675,31 @@
                     'January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December'
                 ];
-                this.events = {
-                    '2024-1-15': [{ title: 'Team Meeting', type: 'event-blue' }],
-                    '2024-1-18': [{ title: 'Project Deadline', type: 'event-red' }],
-                    '2024-1-22': [{ title: 'Workshop', type: 'event-green' }],
-                    '2024-1-25': [{ title: 'Review Session', type: 'event-purple' }]
-                };
+                this.events = {};
                 this.init();
+                this.fetchTasks();
+            }
+            fetchTasks() {
+                fetch('/student-tasks/month?year=' + this.currentYear + '&month=' + (this.currentMonth + 1))
+                    .then(response => response.json())
+                    .then(data => {
+                        this.events = {};
+                        data.forEach(task => {
+                            const key = task.due_date;
+                            if (!this.events[key]) this.events[key] = [];
+                            this.events[key].push({
+                                title: task.title + ' [' + task.priority.charAt(0).toUpperCase() + task.priority.slice(1) + ']',
+                                type: this.getPriorityClass(task.priority)
+                            });
+                        });
+                        this.render();
+                    });
+            }
+            getPriorityClass(priority) {
+                if (priority === 'critical') return 'event-red';
+                if (priority === 'medium') return 'event-green';
+                if (priority === 'not_urgent') return 'event-purple';
+                return 'event-blue';
             }
             init() {
                 this.render();
@@ -589,7 +712,7 @@
                         this.currentMonth = 11;
                         this.currentYear--;
                     }
-                    this.render();
+                    this.fetchTasks();
                 });
                 document.getElementById('nextMonth').addEventListener('click', () => {
                     this.currentMonth++;
@@ -597,7 +720,7 @@
                         this.currentMonth = 0;
                         this.currentYear++;
                     }
-                    this.render();
+                    this.fetchTasks();
                 });
                 document.getElementById('weekToggle').addEventListener('click', () => {
                     this.view = 'week';
@@ -650,7 +773,7 @@
                     }
                 }
             }
-            renderWeek() {
+            async renderWeek() {
                 const weekView = document.getElementById('weekView');
                 weekView.innerHTML = '';
                 // Find the current week (Monday-Sunday)
@@ -658,6 +781,23 @@
                 let weekStart = new Date(today);
                 // Set to Monday
                 weekStart.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+                let weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+                const startStr = `${weekStart.getFullYear()}-${weekStart.getMonth() + 1}-${weekStart.getDate()}`;
+                const endStr = `${weekEnd.getFullYear()}-${weekEnd.getMonth() + 1}-${weekEnd.getDate()}`;
+                // Fetch week tasks
+                let weekTasks = {};
+                await fetch(`/student-tasks/week?start=${startStr}&end=${endStr}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(task => {
+                            if (!weekTasks[task.due_date]) weekTasks[task.due_date] = [];
+                            weekTasks[task.due_date].push({
+                                title: task.title + ' [' + task.priority.charAt(0).toUpperCase() + task.priority.slice(1) + ']',
+                                type: this.getPriorityClass(task.priority)
+                            });
+                        });
+                    });
                 const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
                 for (let i = 0; i < 7; i++) {
                     const row = document.createElement('div');
@@ -665,6 +805,21 @@
                     const dayCell = document.createElement('div');
                     dayCell.className = 'week-day';
                     dayCell.textContent = days[i];
+                    // Date for this day
+                    let d = new Date(weekStart);
+                    d.setDate(weekStart.getDate() + i);
+                    const eventKey = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                    if (weekTasks[eventKey]) {
+                        const eventsDiv = document.createElement('div');
+                        eventsDiv.className = 'calendar-events';
+                        weekTasks[eventKey].forEach(event => {
+                            const eventDiv = document.createElement('div');
+                            eventDiv.className = `calendar-event ${event.type}`;
+                            eventDiv.textContent = event.title;
+                            eventsDiv.appendChild(eventDiv);
+                        });
+                        dayCell.appendChild(eventsDiv);
+                    }
                     row.appendChild(dayCell);
                     weekView.appendChild(row);
                 }

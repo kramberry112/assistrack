@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\StudentTask;
 
-class StudentTaskController extends Controller
-{
+class StudentTaskController extends Controller {
     public function dashboard()
     {
         $userId = Auth::id();
@@ -21,6 +20,27 @@ class StudentTaskController extends Controller
         ];
         return view('students.dashboard.index', compact('grouped'));
     }
+
+    public function tasksForWeek(Request $request)
+    {
+        $userId = Auth::id();
+        $start = $request->query('start'); // format: YYYY-MM-DD
+        $end = $request->query('end');     // format: YYYY-MM-DD
+        $tasks = StudentTask::where('user_id', $userId)
+            ->whereDate('due_date', '>=', $start)
+            ->whereDate('due_date', '<=', $end)
+            ->get(['title', 'priority', 'due_date']);
+        $tasks = $tasks->map(function($task) {
+            $date = date('Y-n-j', strtotime($task->due_date));
+            return [
+                'title' => $task->title,
+                'priority' => $task->priority,
+                'due_date' => $date
+            ];
+        });
+        return response()->json($tasks);
+    }
+
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
@@ -86,5 +106,25 @@ class StudentTaskController extends Controller
         $task->progress = $progress;
         $task->save();
         return response()->json(['success' => true, 'progress' => $progress]);
+    }
+    public function tasksForMonth(Request $request)
+    {
+        $userId = Auth::id();
+        $year = (int) $request->query('year');
+        $month = (int) $request->query('month');
+        $tasks = StudentTask::where('user_id', $userId)
+            ->whereYear('due_date', $year)
+            ->whereMonth('due_date', $month)
+            ->get(['title', 'priority', 'due_date']);
+        // Format due_date as YYYY-M-D for JS eventKey
+        $tasks = $tasks->map(function($task) {
+            $date = date('Y-n-j', strtotime($task->due_date));
+            return [
+                'title' => $task->title,
+                'priority' => $task->priority,
+                'due_date' => $date
+            ];
+        });
+        return response()->json($tasks);
     }
 }

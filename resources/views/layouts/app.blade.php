@@ -5,8 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>@yield('title', 'Universidad de Dagupan')</title>
-        <link rel="stylesheet" href="/css/app.css">
+    {{-- Removed broken direct CSS link. Vite will handle CSS asset loading. --}}
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <script>
+            window.PUSHER_APP_KEY = "{{ env('PUSHER_APP_KEY') }}";
+            window.PUSHER_APP_CLUSTER = "{{ env('PUSHER_APP_CLUSTER', 'mt1') }}";
+        </script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body style="font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; min-height: 100vh; margin: 0;">
