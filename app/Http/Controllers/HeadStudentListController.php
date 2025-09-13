@@ -9,7 +9,7 @@ class HeadStudentListController extends Controller
     // Show the list of students for Head Office
     public function index()
     {
-    $students = \App\Models\Student::all();
+    $students = \App\Models\Student::paginate(9);
     return view('headoffice.studentlists.index', compact('students'));
     }
 

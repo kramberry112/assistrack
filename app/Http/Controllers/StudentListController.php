@@ -57,4 +57,13 @@ class StudentListController extends Controller
         $student->delete();
         return redirect()->route('student.list')->with('success', 'Student deleted successfully!');
     }
+    public function updateOffice(Request $request, Student $student)
+    {
+        $request->validate([
+            'designated_office' => 'required|string|max:255',
+        ]);
+        $student->designated_office = $request->input('designated_office');
+        $student->save();
+        return response()->json(['success' => true, 'office' => $student->designated_office]);
+    }
 }

@@ -317,14 +317,14 @@
                     </svg>
                 </button>
             </div>
-            <!-- Profile Dropdown Menu: Always at top -->
-            <div id="logoutMenu" style="display:none; position:absolute; top:0; left:100%; transform:translateX(-100%); background:#fff; border:none; border-radius:18px; box-shadow:0 8px 32px rgba(0,0,0,0.12); padding:24px 20px 16px 20px; min-width:220px; z-index:100; text-align:center;">
-                <a href="{{ route('profile.edit') }}" style="display:block;margin-bottom:8px;text-align:center;background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:0.9rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background 0.2s;">Settings</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="logout-btn">Logout</button>
-                </form>
-            </div>
+        </div>
+
+        <div id="logoutMenu">
+            <a href="{{ route('profile.edit') }}">Settings</a>
+            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                @csrf
+                <button type="submit">Logout</button>
+            </form>
         </div>
     </aside>
 
@@ -391,7 +391,7 @@
                                 <td style="overflow: visible; position: relative;">
                                     <div class="searchable-dropdown" style="position:relative; width:180px; overflow: visible;">
                                         <div style="position:relative;">
-                                            <input type="text" class="office-combo-input" placeholder="Select or search office..." style="width:100%;padding:6px 32px 6px 10px;border-radius:5px;border:1px solid #bbb;font-size:14px;" autocomplete="off" readonly>
+                                            <input type="text" class="office-combo-input" value="{{ $student->designated_office }}" placeholder="Select or search office..." style="width:100%;padding:6px 32px 6px 10px;border-radius:5px;border:1px solid #bbb;font-size:14px;" autocomplete="off" readonly data-student-id="{{ $student->id }}">
                                             <span class="office-combo-arrow" style="position:absolute;top:8px;right:10px;width:18px;height:18px;pointer-events:auto;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100;background:#fff;">
                                                 <svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="#555" stroke-width="2" fill="none"/></svg>
                                             </span>
@@ -485,6 +485,23 @@ document.addEventListener('DOMContentLoaded', function() {
                         input.value = item.textContent;
                         hideList();
                         input.setAttribute('readonly', true);
+                        // AJAX PATCH request to save office
+                        var studentId = input.getAttribute('data-student-id');
+                        var token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                        fetch(`/students/${studentId}/office`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token
+                            },
+                            body: JSON.stringify({ designated_office: item.textContent })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                input.value = data.office;
+                            }
+                        });
                     });
                 });
             }
@@ -511,17 +528,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sidebar profile dropdown logic (settings/logout)
     var profile = document.getElementById('profileDropdown');
     var menu = document.getElementById('logoutMenu');
-    if (profile && menu) {
-        profile.addEventListener('click', function(e) {
-            e.stopPropagation();
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        });
-        document.addEventListener('click', function(e) {
-            if (!profile.contains(e.target) && menu.style.display === 'block') {
-                menu.style.display = 'none';
-            }
-        });
-    }
+    profile.addEventListener('click', function(e) {
+        e.stopPropagation();
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+    document.addEventListener('click', function() {
+        if (menu.style.display === 'block') menu.style.display = 'none';
+    });
 });
 </script>
 @endsection

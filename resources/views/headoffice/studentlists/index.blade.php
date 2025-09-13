@@ -327,9 +327,36 @@
                 </span>
                 Student Official List
             </div>
-            <div class="studentlist-title">Student Official List</div>
-            <div class="studentlist-desc">This list contains Official Student Assistants of Universidad de Dagupan</div>
-            <div class="table-container">
+            <div style="width: 100%; margin-bottom: 12px; position: relative; padding: 0 24px;">
+                <div>
+                    <div class="studentlist-title" style="margin-bottom:0;">Student Official List</div>
+                    <div class="studentlist-desc" style="margin-bottom:0;">This list contains Official Student Assistants of Universidad de Dagupan</div>
+                </div>
+                <div style="position: absolute; top: 0; right: 24px; display: flex; align-items: center; gap: 8px; height: 100%;">
+                    <span style="font-size:1rem;color:#374151;padding:6px 18px;border-radius:18px;background:#f3f4f6;display:inline-flex;align-items:center;gap:12px;">
+                        @if ($students->onFirstPage())
+                            <span style="color:#d1d5db;cursor:not-allowed;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                            </span>
+                        @else
+                            <a href="{{ $students->previousPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                            </a>
+                        @endif
+                        <span style="font-size:1rem;color:#374151;">Page {{ $students->currentPage() }} of {{ $students->lastPage() }}</span>
+                        @if ($students->hasMorePages())
+                            <a href="{{ $students->nextPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                            </a>
+                        @else
+                            <span style="color:#d1d5db;cursor:not-allowed;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                            </span>
+                        @endif
+                    </span>
+                </div>
+            </div>
+            <div class="table-container" style="margin-top:0;">
                 <table class="student-table">
                     <thead>
                         <tr>
@@ -349,6 +376,7 @@
                                 <td>{{ $student->year_level }}</td>
                                 <td>{{ $student->id_number }}</td>
                                 <td>{{ $student->designated_office ?? 'N/A' }}</td>
+                                </td>
                                 <td class="action-cell">
                                     <a href="{{ route('head.students.show', $student->id) }}">View</a>
                                     <form method="POST" action="{{ route('students.delete', $student->id) }}" style="display:inline-block; margin-left:8px;">
