@@ -8,6 +8,12 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         background: #f3f4f6;
     }
+    .highlight {
+        background: #fff59d;
+        color: #d97706;
+        padding: 0 2px;
+        border-radius: 4px;
+    }
 
     .dashboard-container {
         display: flex;
@@ -1247,6 +1253,67 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error:', error));
         }
     });
+
+        // Search and highlight logic for task titles
+        var searchInput = document.querySelector('.search-input');
+        var tabs = document.querySelectorAll('.tab');
+        var lastActiveTab = null;
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                var keyword = this.value.trim().toLowerCase();
+                var cards = document.querySelectorAll('.task-card');
+                var firstMatch = null;
+                if (keyword) {
+                    // Save last active tab and deactivate all tabs
+                    if (!lastActiveTab) {
+                        lastActiveTab = document.querySelector('.tab.active');
+                    }
+                    tabs.forEach(function(tab) { tab.classList.remove('active'); });
+                    // Show only matching cards
+                    cards.forEach(function(card) {
+                        var titleSpan = card.querySelector('.task-title');
+                        if (!titleSpan) return;
+                        var originalTitle = titleSpan.getAttribute('data-original') || titleSpan.textContent;
+                        if (!titleSpan.getAttribute('data-original')) {
+                            titleSpan.setAttribute('data-original', originalTitle);
+                        }
+                        if (originalTitle.toLowerCase().includes(keyword)) {
+                            card.style.display = '';
+                            var regex = new RegExp('('+keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+')', 'gi');
+                            titleSpan.innerHTML = originalTitle.replace(regex, '<span class="highlight">$1</span>');
+                            if (!firstMatch) firstMatch = card;
+                        } else {
+                            card.style.display = 'none';
+                            titleSpan.innerHTML = originalTitle;
+                        }
+                    });
+                    if (firstMatch) {
+                        firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    // Restore tab filter and remove highlights
+                    if (lastActiveTab) {
+                        lastActiveTab.classList.add('active');
+                    }
+                    var activeTab = document.querySelector('.tab.active');
+                    var status = activeTab ? activeTab.id.replace('tab-','') : 'todo';
+                    if (status === 'inprogress' || status === 'in_progress') status = 'in_progress';
+                    cards.forEach(function(card) {
+                        var titleSpan = card.querySelector('.task-title');
+                        if (!titleSpan) return;
+                        var originalTitle = titleSpan.getAttribute('data-original') || titleSpan.textContent;
+                        titleSpan.innerHTML = originalTitle;
+                        if (card.getAttribute('data-status') === status) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    lastActiveTab = null;
+                }
+            });
+        }
 });
 </script>
+
 @endsection

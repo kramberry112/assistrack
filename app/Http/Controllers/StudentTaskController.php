@@ -16,7 +16,10 @@ class StudentTaskController extends Controller {
             'todo' => $tasks->where('status', 'todo'),
             'in_progress' => $tasks->where('status', 'in_progress'),
             'completed' => $tasks->where('status', 'completed'),
-            'due' => $tasks->where('due_date', '<=', now()->toDateString()),
+            // Only show tasks that are NOT completed and due today or earlier
+            'due' => $tasks->filter(function($task) {
+                return $task->status !== 'completed' && $task->due_date <= now()->toDateString();
+            }),
         ];
         return view('students.dashboard.index', compact('grouped'));
     }
