@@ -897,7 +897,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                     .then(data => {
                                         if (data.success) {
                                             btn.closest('div').parentElement.innerHTML = '<span style="color:#22c55e;font-weight:600;">Accepted</span>';
-                                            location.reload();
+                                            // Decrease notification count
+                                            const countSpan = document.getElementById('notificationCount');
+                                            let currentCount = parseInt(countSpan.textContent);
+                                            if (!isNaN(currentCount) && currentCount > 0) {
+                                                countSpan.textContent = currentCount - 1;
+                                            }
+                                            // Optionally close dropdown
+                                            notificationDropdown.style.display = 'none';
                                         }
                                     });
                                 });
@@ -919,6 +926,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                     .then(data => {
                                         if (data.success) {
                                             btn.closest('div').parentElement.innerHTML = '<span style="color:#ef4444;font-weight:600;">Rejected</span>';
+                                            // Decrease notification count
+                                            const countSpan = document.getElementById('notificationCount');
+                                            let currentCount = parseInt(countSpan.textContent);
+                                            if (!isNaN(currentCount) && currentCount > 0) {
+                                                countSpan.textContent = currentCount - 1;
+                                            }
+                                            // Optionally close dropdown
+                                            notificationDropdown.style.display = 'none';
                                         }
                                     });
                                 });
@@ -931,6 +946,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(event) {
         if (!notificationBell.contains(event.target) && !notificationDropdown.contains(event.target)) {
             notificationDropdown.style.display = 'none';
+        }
+        if (logoutMenu.style.display === 'block' && !profileDropdown.contains(event.target) && !logoutMenu.contains(event.target)) {
+            logoutMenu.style.display = 'none';
+            logoutUp.style.display = 'block';
+            logoutDown.style.display = 'none';
         }
     });
     // Profile dropdown with up/down arrow logic (community style)
@@ -946,7 +966,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (profileDropdown && logoutMenu && logoutUp && logoutDown) {
-        profileDropdown.addEventListener('click', function() {
+        profileDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
             if (logoutMenu.style.display === 'block') {
                 logoutMenu.style.display = 'none';
                 logoutUp.style.display = 'block';

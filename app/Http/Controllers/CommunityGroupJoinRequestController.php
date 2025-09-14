@@ -77,6 +77,8 @@ class CommunityGroupJoinRequestController extends Controller
         } else {
             $joinRequest->status = 'rejected';
             $joinRequest->save();
+            // Notify the user that their request was rejected
+            $joinRequest->user->notify(new \App\Notifications\JoinRequestRejected($group->name));
         }
         return response()->json(['success' => true]);
     }

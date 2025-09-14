@@ -622,7 +622,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const notificationContent = document.getElementById('notificationContent');
     notificationBellContainer.addEventListener('click', function(e) {
         updateNotificationCount();
-        e.stopPropagation();
+        // Do NOT stop propagation here
         if (notificationDropdown.style.display === 'block') {
             notificationDropdown.style.display = 'none';
         } else {

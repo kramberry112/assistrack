@@ -474,10 +474,13 @@
             </div>
 
             <div id="logoutMenu">
-                <a href="#settings">Settings</a>
-                <button type="button">Logout</button>
-            </div>
-        </aside>
+            <a href="{{ route('profile.edit') }}">Settings</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+    </aside>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -543,6 +546,7 @@
             logoutUp.style.display = 'block';
 
             profileDropdown.addEventListener('click', function() {
+                event.stopPropagation();
                 if (logoutMenu.style.display === 'block') {
                     logoutMenu.style.display = 'none';
                     logoutUp.style.display = 'block';
@@ -586,8 +590,8 @@
         const notificationDropdown = document.getElementById('notificationDropdown');
         const notificationContent = document.getElementById('notificationContent');
         notificationBellContainer.addEventListener('click', function(e) {
-        updateNotificationCount();
         e.stopPropagation();
+        updateNotificationCount();
         if (notificationDropdown.style.display === 'block') {
             notificationDropdown.style.display = 'none';
         } else {
@@ -659,7 +663,13 @@
         }
     });
     document.addEventListener('click', function(event) {
-        if (!notificationBell.contains(event.target) && !notificationDropdown.contains(event.target)) {
+        // Close both dropdowns if clicking outside
+        if (!profileDropdown.contains(event.target) && !logoutMenu.contains(event.target)) {
+            logoutMenu.style.display = 'none';
+            logoutUp.style.display = 'block';
+            logoutDown.style.display = 'none';
+        }
+        if (!notificationBellContainer.contains(event.target) && !notificationDropdown.contains(event.target)) {
             notificationDropdown.style.display = 'none';
         }
     });
