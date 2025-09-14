@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ $item['title'] ?? 'News Detail' }}</title>
+    <title>{{ $item['title'] ?? 'Event Detail' }}</title>
     <style>
         body {
             background: #f4f7fb;
@@ -76,13 +76,11 @@
 </head>
 <body>
     <div class="container">
-        <a href="{{ url()->previous() ?? url('/news') }}" class="btn-back">&#8592; Back</a>
+        <a href="{{ url()->previous() }}" class="btn-back">&#8592; Back</a>
         <div class="header">
             <div class="title">{{ $item['title'] ?? '' }}</div>
             <div class="meta">{{ $item['date'] ?? '' }}</div>
-            @if(isset($item['image']))
-                <img src="{{ $item['image'] }}" alt="news Image" class="news-image">
-            @endif
+            <img src="{{ asset($item['images'][0]) }}" alt="Event Image" class="news-image">
         </div>
         <div class="desc">
             {{ $item['description'] ?? '' }}

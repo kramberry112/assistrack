@@ -125,6 +125,103 @@ Route::get('/news/{id}', function ($id) {
     return view('aboutpage.news_detail', ['item' => $news[$index]]);
 });
 
+// For event details page
+Route::get('/event/{id}', function ($id) {
+    $events = [
+        [
+            'id' => 1,
+            'title' => 'UdD hosts first Luzon leg of GMA Masterclass Series',
+            'date' => 'March 6, 2024',
+            'images' => ['images/event1.png'],
+            'description' => 'Universidad de Dagupan (UdD) hosted the first Luzon leg of the GMA Masterclass: Eleksyon 2025 Dapat Totoo Series, drawing an enthusiastic crowd at the UdD-Arzadon Gym. Students and learners engaged with top media personalities and industry experts.
+                            Speakers included GMA News Online Editor-at-Large Howie Severino, GMA Integrated News Broadcast Journalist Joseph Morong, GMA Integrated News Social Media AVP Aileen Perez, GMA Synergy sportscaster Martin Antonio, and GMA Digital Strategy Senior Manager Bernice Sibucao. Sparkle artist and Miss Universe Philippines Beatrice Luigi Gomez also shared insights on medias role in public awareness.'
+        ],
+        [
+            'id' => 2,
+            'title' => 'UdD holds 1st International Research Conference',
+            'date' => 'March 27, 2025',
+            'images' => ['images/event2.png'],
+            'description' => '"Robotics is more than just circuits and code—it\'s about creativity, problem-solving, and the power to shape the future. 🚀🤖 Whether you\'re competing on the grand stage or just beginning your journey, remember that every great inventor started with a simple idea and a passion to explore. Embrace challenges, learn from failures, and push the boundaries of what’s possible. The world needs innovators like you to create, inspire, and transform the future. Keep building, keep dreaming, and never stop believing in your potential!"'
+        ],
+        [
+            'id' => 3,
+            'title' => 'Intramural 2025',
+            'date' => 'March 31, 2025',
+            'images' => ['images/event3.png'],
+            'description' => 'Finally, it’s happening! The UdD Intramurals 2025 kicks off on March 31 at 7 AM in the UdD-Arzadon Gym—get ready for an electrifying showdown of sportsmanship and school spirit! This year’s Intrams promises intense competitions, thrilling performances, and unforgettable moments as students from different departments battle it out for pride and glory. Expect exciting games, cheering squads, and a week full of camaraderie, fun, and friendly rivalry that will showcase the true heart of the UdD community.'
+        ],
+        [
+            'id' => 4,
+            'title' => 'Hear the Roar of the Savannah! Universidad de Dagupan Cheerdance Competition 2024 Electrifies Universidad de Dagupan Intramurals',
+            'date' => 'April 15, 2025',
+            'images' => ['images/event4.png'],
+            'description' => 'The Universidad de Dagupan Intramurals 2024 roared with excitement as the Cheerdance Competition 2024 took center stage. The event showcased the athleticism, teamwork, and vibrant spirit of the UdD community, leaving the audience in awe with electrifying performances.
+                            Competing teams brought their best, displaying intricate formations, synchronized stunts, and high-energy routines. The atmosphere was electric as cheers erupted from the crowd, each team vying for the coveted championship title.
+                            The competition served as a platform for students to showcase their talents and dedication to their respective colleges and departments. The synchronized movements, powerful stunts, and infectious enthusiasm were a testament to the hard work and commitment of each team.
+                            Beyond the competitive spirit, the Cheerdance Competition fostered a sense of unity and camaraderie within the UdD community. Students came together to support their teams, creating a vibrant and energetic atmosphere that transcended departmental boundaries.
+                            As the competition concluded, the judges crowned the champions, recognizing the outstanding performances and unwavering dedication of The School of Information Technology Education (SITE), solidifying their reign as back-to-back champions from last year cheerdance competition. The crowd erupted in a thunderous roar as SITE students celebrated their victory. The event left a lasting impression on everyone involved, further solidifying the importance of teamwork, sportsmanship, and school spirit within the UdD community.'
+        ],
+        [
+            'id' => 5,
+            'title' => 'Binibining Universidad de Dagupan 2024: The Grand Coronation',
+            'date' => 'April 12, 2024',
+            'images' => ['images/event5.png'],
+            'description' => 'The Universidad de Dagupan successfully held the Binibining Universidad de Dagupan 2024 pageant, a night of beauty, grace, and talent. The event featured various competitions and was graced by Miss Earth Air 2023, Yllana Marie Aduana, as a special judge. After an evening of elegance and advocacy, Allyssa Marie Tucay from the School of Business and Accountancy was crowned Binibining Universidad de Dagupan 2024, succeeding Donna Rein Nuguid. The pageant not only highlighted beauty and talent but also empowered young women to promote social causes, academic excellence, and community service, leaving a lasting mark of pride and inspiration on the UdD community.'
+        ],
+        [
+            'id' => 6,
+            'title' => '40 Years of UdD Excellence: UdD launches their first ever Coffee Table Book!',
+            'date' => 'March, 2024',
+            'images' => ['images/event6.png'],
+            'description' => 'The University of Dagupan (UdD) is celebrating its 40th anniversary with the launch of its first coffee table book, a visual and historical chronicle of the institution’s growth since 1984. The publication highlights UdD’s milestones, achievements, and community impact through photos, stories, and detailed accounts of its evolution. Serving as both a commemorative keepsake and an inspiring record, the book honors the dedication of UdD’s founders, faculty, staff, students, and alumni, marking a proud moment in the university’s legacy.'
+        ],
+        [
+            'id' => 7,
+            'title' => 'UdD Celebrates 2nd Year as a University: Another Year of Recollection',
+            'date' => 'December 18, 2023',
+            'images' => ['images/event7.png'],
+            'description' => 'On December 14, 2023, the University of Dagupan (UdD) celebrated its second anniversary as a full-fledged university. From its beginnings as Computronix in 1984 to gaining university status in 2021, UdD has grown through expanded academic programs, research initiatives, and community engagement. The anniversary celebration featured student showcases, food stalls, performances, and the much-anticipated Bandmania, where the School of Humanities emerged as champion. The event highlighted UdD’s commitment to academic excellence, innovation, and community service, marking a vibrant milestone in its journey toward a bright future.'
+        ],
+        [
+            'id' => 8,
+            'title' => 'Light Up the Night! UdD Celebrate Our 2nd Uni Anni Lighting Ceremony',
+            'date' => 'December 14, 2023',
+            'images' => ['images/event8.png'],
+            'description' => 'The Universidad de Dagupan (UdD) celebrated its 2nd Uni Anni Lighting Ceremony, marking two years of academic excellence, community engagement, and student success. The event featured a thrilling countdown that lit up the entire campus quadrangle with dazzling LED lights, transforming it into a vibrant spectacle of music and celebration. Beyond the festivities, the ceremony highlighted UdD’s achievements and strengthened unity among students, faculty, staff, alumni, and supporters—serving as both a proud reflection of progress and an inspiring start to future possibilities.
+                            Overall, the International Research Conference was a resounding success, showcasing UdD’s dedication to academic excellence and its role as a hub for research and innovation in the region.'
+        ],
+        [
+            'id' => 9,
+            'title' => 'Pamaskong Handog 2023: Spreading Holiday Cheer One Blessing at a Time.',
+            'date' => 'December 13, 2023',
+            'images' => ['images/event9.png'],
+            'description' => 'The Universidad de Dagupan (UdD), through its Supreme Student Council, celebrated the holiday season with “Pamaskong Handog 2023” under the theme Liwanag ng Pasko, Kasiyahan sa Bawat Puso (Light of Christmas, Joy in Every Heart). The initiative united students, faculty, and staff in preparing and distributing gift packages to underprivileged families, spreading compassion and holiday cheer. Beyond the gifts, the event fostered unity and highlighted UdD’s commitment to social responsibility, leaving a lasting reminder of the true spirit of giving. The Universidad de Dagupan Robotics Team made a remarkable showing at the 2024 National Robotics Competition held in Manila. Competing against top teams from across the country, the UdD team showcased their innovative designs and technical skills, earning accolades for their creativity and problem-solving abilities. Their performance not only highlighted the university\'s commitment to STEM education but also inspired fellow students to pursue excellence in robotics and technology.'
+        ],
+        [
+            'id' => 10,
+            'title' => 'Kick-Off Party for Freshmen and Transferees',
+            'date' => 'August 15, 2024',
+            'images' => ['images/event10.png'],
+            'description' => 'The Universidad de Dagupan is rolling out the red carpet for all freshmen and transferees this Academic Year 2025–2026. Join us for the much-awaited Kick-Off Party on August 4, 8 AM at Leisure Coast Resort, Bonuan Binloc, Dagupan City.
+                            Expect a day filled with fun, music, games, and unforgettable memories as we celebrate the beginning of your UdD journey. Don’t miss the chance to meet new friends, bond with fellow Titans, and experience the true UdD spirit.
+                            Save the date and let’s make this kick-off an event to remember!
+                            #UdDKickOff2025 #TitanSpirit'
+        ],
+        [
+            'id' => 11,
+            'title' => 'Freshmen Kick-Off Orientation 2023: U Dare to Dream!',
+            'date' => 'September 9, 2023',
+            'images' => ['images/event11.png'],
+            'description' => 'The Universidad de Dagupan Freshmen Kick-Off Orientation welcomed new students with an exciting mix of performances from the SITE Pep Squad, Koro Universidad, and Steed Dance Company, alongside raffles where 100 tablets were given away. Highlights included a parade for Intramurals 2023 champions, the awarding of Presidential Scholars, and lively campus activities like Banda Mania, a disco party, pool fun, and parlor games. Freshmen also explored student organizations and department booths, giving them a firsthand look at UdD’s vibrant culture. More than just an orientation, the event fostered pride, friendships, and a strong start to their college journey.'
+        ],
+    ];
+    $index = $id - 1;
+    if (!isset($events[$index])) {
+        abort(404);
+    }
+    return view('aboutpage.event_detail', ['item' => $events[$index]]);
+});
+
 // Application form
 Route::get('/apply', [ApplicationController::class, 'create'])->name('application.create');
 Route::post('/apply', [ApplicationController::class, 'store'])->name('application.store');
