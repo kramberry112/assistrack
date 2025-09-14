@@ -85,4 +85,4 @@
             </div>
         </div>
         <div style="margin-top:32px;text-align:center;">
-            <a href="/index" style="background:#23408e;color:#fff;font-weight:bold;border-radius:6px;padding:8px
+            <a href="/about" style="background:#23408e;color:#fff;font-weight:bold;border-radius:6px;padding:8px
