@@ -38,6 +38,8 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('Head');
             case 'student':
                 return redirect()->route('student.dashboard');
+            case 'offices':
+                return redirect()->route('offices.dashboard');
             default:
                 Auth::logout();
                 return redirect()->route('login')->withErrors(['email' => 'Your account type is not recognized.']);

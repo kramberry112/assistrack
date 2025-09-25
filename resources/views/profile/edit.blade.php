@@ -3,7 +3,17 @@
 @section('content')
     @php
         $role = auth()->user()->role ?? null;
-        $dashboardRoute = $role === 'admin' ? route('Admin') : ($role === 'head' ? route('Head') : ($role === 'student' ? route('student.dashboard') : '/'));
+        if ($role === 'admin') {
+            $dashboardRoute = route('Admin');
+        } elseif ($role === 'head') {
+            $dashboardRoute = route('Head');
+        } elseif ($role === 'student') {
+            $dashboardRoute = route('student.dashboard');
+        } elseif ($role === 'offices') {
+            $dashboardRoute = route('offices.dashboard');
+        } else {
+            $dashboardRoute = '/';
+        }
     @endphp
     <a href="{{ $dashboardRoute }}" class="back-btn">&#8592; Back to Dashboard</a>
 <style>

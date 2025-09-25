@@ -284,6 +284,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Add more student routes here as needed
 });
 
+// Offices pages (protected)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('/offices-dashboard', 'offices.dashboard.index')->name('offices.dashboard');
+    Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/evaluation', [\App\Http\Controllers\EvaluationController::class, 'index'])->name('evaluation.index');
+    Route::get('/tasks', [\App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
+});
+
 // Resource route for applications (for admin CRUD)
 Route::resource('applications', ApplicationController::class);
 
