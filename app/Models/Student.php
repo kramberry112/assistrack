@@ -9,4 +9,10 @@ class Student extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    // Add office field accessor for compatibility
+    public function getOfficeAttribute()
+    {
+        return $this->attributes['office'] ?? null;
+    }
 }

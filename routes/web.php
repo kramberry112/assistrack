@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Route;
 
 // Public pages
@@ -238,20 +239,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/applicants', [ApplicationController::class, 'index'])->name('applicants.list');
     Route::get('/applicants/{application}', [ApplicationController::class, 'show'])->name('applicants.show');
     Route::view('/reports', 'admin.reports.index')->name('reports.list');
+    // AJAX partials for admin reports dropdown
+        Route::get('/admin/reports/attendance', [\App\Http\Controllers\AttendanceController::class, 'records'])->name('admin.attendance.report');
+    Route::get('/admin/reports/evaluation', function() {
+        return view('admin.reports.evaluation');
+    });
+    Route::get('/admin/reports/tasks', function() {
+        return view('admin.reports.tasks');
+    });
     Route::post('/student-list/add/{id}', [\App\Http\Controllers\StudentListController::class, 'add'])->name('studentlist.add');
     Route::patch('/students/{student}/office', [\App\Http\Controllers\StudentListController::class, 'updateOffice'])->name('students.updateOffice');
+    
     // Profile management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Community join
-    Route::post('/community/join', [\App\Http\Controllers\CommunityGroupController::class, 'join'])->name('community.join');
-    // Community group join requests
-    Route::post('/community/join-request', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'store'])->name('community.join_request');
-    Route::get('/community/join-requests', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'index'])->name('community.join_requests');
-    Route::post('/community/join-request/{id}/action', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'update'])->name('community.join_request.action');
     
     // Redirect root URL to login page
     Route::get('/', function () {
@@ -281,6 +285,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/student-calendar', 'students.calendar.index')->name('student.calendar');
     Route::view('/student-tasks/create', 'students.dashboard.create')->name('student.tasks.create');
     Route::post('/student-tasks', [\App\Http\Controllers\StudentTaskController::class, 'store'])->name('student.tasks.store');
+
+     // Community join
+    Route::post('/community/join', [\App\Http\Controllers\CommunityGroupController::class, 'join'])->name('community.join');
+    // Community group join requests
+    Route::post('/community/join-request', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'store'])->name('community.join_request');
+    Route::get('/community/join-requests', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'index'])->name('community.join_requests');
+    Route::post('/community/join-request/{id}/action', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'update'])->name('community.join_request.action');
     // Add more student routes here as needed
 });
 
@@ -290,6 +301,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/evaluation', [\App\Http\Controllers\EvaluationController::class, 'index'])->name('evaluation.index');
     Route::get('/tasks', [\App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
+
+    // DTR System Routes
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
+    Route::get('/api/attendance/today', [AttendanceController::class, 'getTodayRecords'])->name('attendance.today');
+    Route::post('/api/attendance/check', [AttendanceController::class, 'checkLastAction'])->name('attendance.check');
+
 });
 
 // Resource route for applications (for admin CRUD)
