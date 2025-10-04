@@ -334,6 +334,120 @@
                 <div>
                     <div class="studentlist-title" style="margin-bottom:0;">Student Official List</div>
                     <div class="studentlist-desc" style="margin-bottom:0;">This list contains Official Student Assistants of Universidad de Dagupan</div>
+                    {{-- Google-style filter dropdown --}}
+                    <div style="padding: 0 24px; margin-bottom: 12px; position: relative;">
+                        <button id="filterDropdownBtn" style="padding: 7px 18px; border-radius: 6px; background: #2563eb; color: #fff; border: none; font-size: 15px; cursor: pointer;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px;">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                <line x1="1" y1="14" x2="7" y2="14"></line>
+                                <line x1="9" y1="8" x2="15" y2="8"></line>
+                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                            </svg>
+                            Filter
+                        </button>
+                            <div id="filterDropdownMenu" style="display:none;position:absolute;top:40px;left:0;z-index:1000;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-width:220px;">
+                            <div class="filter-menu-item" style="padding:10px 18px;cursor:pointer;position:relative;">
+                        Course
+                        <div class="filter-submenu" style="display:none;position:absolute;top:0;left:100%;background:#fff;border:1px solid #e5e7eb;border-radius:8px;min-width:180px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                            <div class="filter-submenu-item" data-filter="course" data-value="BSIT" style="padding:8px 18px;cursor:pointer;">BSIT</div>
+                            <div class="filter-submenu-item" data-filter="course" data-value="BSCS" style="padding:8px 18px;cursor:pointer;">BSCS</div>
+                            <div class="filter-submenu-item" data-filter="course" data-value="BSBA" style="padding:8px 18px;cursor:pointer;">BSBA</div>
+                            <div class="filter-submenu-item" data-filter="course" data-value="BSN" style="padding:8px 18px;cursor:pointer;">BSN</div>
+                            <div class="filter-submenu-item" data-filter="course" data-value="BSED" style="padding:8px 18px;cursor:pointer;">BSED</div>
+                            <div class="filter-submenu-item" data-filter="course" data-value="BEED" style="padding:8px 18px;cursor:pointer;">BEED</div>
+                            <div class="filter-submenu-item" data-filter="course" data-value="BSHM" style="padding:8px 18px;cursor:pointer;">BSHM</div>
+                            <div class="filter-submenu-item" data-filter="course" data-value="BSTM" style="padding:8px 18px;cursor:pointer;">BSTM</div>
+                        </div>
+                    </div>
+                    <div class="filter-menu-item" style="padding:10px 18px;cursor:pointer;position:relative;">
+                        Year Level
+                        <div class="filter-submenu" style="display:none;position:absolute;top:0;left:100%;background:#fff;border:1px solid #e5e7eb;border-radius:8px;min-width:180px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                            <div class="filter-submenu-item" data-filter="year_level" data-value="First Year" style="padding:8px 18px;cursor:pointer;">First Year</div>
+                            <div class="filter-submenu-item" data-filter="year_level" data-value="Second Year" style="padding:8px 18px;cursor:pointer;">Second Year</div>
+                            <div class="filter-submenu-item" data-filter="year_level" data-value="Third Year" style="padding:8px 18px;cursor:pointer;">Third Year</div>
+                            <div class="filter-submenu-item" data-filter="year_level" data-value="Fourth Year" style="padding:8px 18px;cursor:pointer;">Fourth Year</div>
+                            <div class="filter-submenu-item" data-filter="year_level" data-value="Fifth Year" style="padding:8px 18px;cursor:pointer;">Fifth Year</div>
+                        </div>
+                    </div>
+                    <div class="filter-menu-item" style="padding:10px 18px;cursor:pointer;position:relative;">
+                        Office
+                            <div class="filter-submenu" style="display:none;position:absolute;top:0;left:100%;background:#fff;border:1px solid #e5e7eb;border-radius:8px;min-width:180px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                                <div style="max-height: 294px; overflow-y: auto;">
+                                    <div class="filter-submenu-item" data-filter="office" data-value="LIBRARY" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">LIBRARY</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="ACADS" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">ACADS</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="REGISTRAR" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">REGISTRAR</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="CANTEEN" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">CANTEEN</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="KUWAGO" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">KUWAGO</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="QUEUING" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">QUEUING</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="HRD" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">HRD</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SAO" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SAO</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="GUIDANCE" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">GUIDANCE</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="CLINIC" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">CLINIC</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="OPEN LAB" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">OPEN LAB</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="LINKAGES" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">LINKAGES</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="XACTO" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">XACTO</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SITE FACULTY" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SITE FACULTY</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SOHS FACULTY" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SOHS FACULTY</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SOH FACULTY" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SOH FACULTY</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="STE FACULTY" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">STE FACULTY</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SOC FACULTY" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SOC FACULTY</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SBA FACULTY" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SBA FACULTY</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SOE FACULTY" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SOE FACULTY</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SIMH FACULTY" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SIMH FACULTY</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SITE DEAN'S OFFICE" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SITE DEAN'S OFFICE</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="FINANCE" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">FINANCE</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="LCR" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">LCR</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="STEEDS" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">STEEDS</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="SPORTS AND CULTURE" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">SPORTS AND CULTURE</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="QUALITY ASSURANCE" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">QUALITY ASSURANCE</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="ARCHIVING" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">ARCHIVING</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="PRESIDENT'S OFFICE" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">PRESIDENT'S OFFICE</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="MARKETING" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">MARKETING</div>
+                                    <div class="filter-submenu-item" data-filter="office" data-value="ALUMNI OFFICE" style="padding:10px 22px;cursor:pointer;font-size:14px;transition:background 0.15s;">ALUMNI OFFICE</div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('filterDropdownBtn');
+    const menu = document.getElementById('filterDropdownMenu');
+    const items = menu.querySelectorAll('.filter-menu-item');
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+    items.forEach(function(item) {
+        item.addEventListener('mouseenter', function() {
+            menu.querySelectorAll('.filter-submenu').forEach(sub => sub.style.display = 'none');
+            const submenu = item.querySelector('.filter-submenu');
+            if(submenu) submenu.style.display = 'block';
+        });
+        item.addEventListener('mouseleave', function() {
+            const submenu = item.querySelector('.filter-submenu');
+            if(submenu) submenu.style.display = 'none';
+        });
+    });
+    menu.querySelectorAll('.filter-submenu-item').forEach(function(subitem) {
+        subitem.addEventListener('click', function() {
+            const filter = subitem.getAttribute('data-filter');
+            const value = subitem.getAttribute('data-value');
+            const url = new URL(window.location.href);
+            url.searchParams.set(filter, value);
+            window.location.href = url.toString();
+        });
+    });
+    document.addEventListener('click', function(e) {
+        if(!menu.contains(e.target) && e.target !== btn) menu.style.display = 'none';
+    });
+});
+</script>
                 </div>
                 <div style="position: absolute; top: 0; right: 24px; display: flex; align-items: center; gap: 8px; height: 100%;">
                     <div style="display: flex; align-items: center; gap: 12px;">
@@ -531,6 +645,40 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Filter dropdown logic
+    document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('filterDropdownBtn');
+    const menu = document.getElementById('filterDropdownMenu');
+    const items = menu.querySelectorAll('.filter-menu-item');
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+    items.forEach(function(item) {
+        item.addEventListener('mouseenter', function() {
+            menu.querySelectorAll('.filter-submenu').forEach(sub => sub.style.display = 'none');
+            const submenu = item.querySelector('.filter-submenu');
+            if(submenu) submenu.style.display = 'block';
+        });
+        item.addEventListener('mouseleave', function() {
+            const submenu = item.querySelector('.filter-submenu');
+            if(submenu) submenu.style.display = 'none';
+        });
+    });
+    menu.querySelectorAll('.filter-submenu-item').forEach(function(subitem) {
+        subitem.addEventListener('click', function() {
+            const filter = subitem.getAttribute('data-filter');
+            const value = subitem.getAttribute('data-value');
+            const url = new URL(window.location.href);
+            url.searchParams.set(filter, value);
+            window.location.href = url.toString();
+        });
+    });
+    document.addEventListener('click', function(e) {
+        if(!menu.contains(e.target) && e.target !== btn) menu.style.display = 'none';
+    });
+});
 
     // Sidebar profile dropdown logic (settings/logout)
     var profile = document.getElementById('profileDropdown');

@@ -60,16 +60,16 @@ class StudentListController extends Controller
             $query->where('student_name', 'like', '%' . request('student_name') . '%');
         }
         if (request('course')) {
-            $query->where('course', 'like', '%' . request('course') . '%');
+            $query->where('course', request('course'));
         }
         if (request('year_level')) {
-            $query->where('year_level', 'like', '%' . request('year_level') . '%');
+            $query->where('year_level', request('year_level'));
         }
         if (request('id_number')) {
-            $query->where('id_number', 'like', '%' . request('id_number') . '%');
+            $query->where('id_number', request('id_number'));
         }
-        if (request('designated_office')) {
-            $query->where('designated_office', 'like', '%' . request('designated_office') . '%');
+        if (request('office')) {
+            $query->where('designated_office', request('office'));
         }
         $students = $query->paginate(9)->appends(request()->except('page'));
         return view('admin.studentlists.index', compact('students'));
