@@ -540,6 +540,7 @@
 
     .task-status.todo {
         background: #ef4444;
+        color: #fff;
     }
 
     .task-status.in_progress {
@@ -757,20 +758,48 @@
                         <div class="task-card" data-status="{{ $tab }}" style="display:{{ $tab == 'todo' ? '' : 'none' }};">
                             <div class="task-header">
                                 <span class="task-title" style="font-size:1.1rem;font-weight:700;color:#111827;">{{ $task->title }}</span>
-                                <span class="task-status {{ $tab }}" style="font-size:0.95rem;color:#6b7280;">{{ ucfirst(str_replace('_',' ', $tab)) }}</span>
+                                <span class="task-status {{ $tab }}" style="font-size:0.95rem;color:#6b7280;">
+                                    @if($tab === 'todo')
+                                        To-Do
+                                    @elseif($tab === 'in_progress')
+                                        In Progress
+                                    @elseif($tab === 'completed')
+                                        Completed
+                                    @elseif($tab === 'due')
+                                        Due
+                                    @else
+                                        {{ ucfirst(str_replace('_',' ', $tab)) }}
+                                    @endif
+                                </span>
                             </div>
                             <div class="task-description" style="font-size:0.95rem;color:#6b7280;margin-bottom:12px;">{{ $task->description }}</div>
-                            <div class="task-meta">
-                                <span class="task-date" style="font-size:0.85rem;color:#374151;">
+                            <div class="task-meta" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:0.85rem;">
+                                <div style="display:flex;align-items:center;gap:6px;">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                        <line x="9" y="9" x2="15" y2="9"/>
+                                        <line x1="9" y1="9" x2="15" y2="9"/>
                                     </svg>
-                                    {{ \Carbon\Carbon::parse($task->due_date)->format('M d, Y') }}
-                                </span>
-                                <span class="task-progress" style="font-size:0.85rem;color:#374151;">
+                                    <span style="color:#374151;">
+                                        <span style="font-weight:500;">Due:</span>
+                                        {{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}
+                                    </span>
+                                </div>
+                                <div style="text-align:right;color:#374151;">
                                     @if($task->status == 'completed')100%@elseif($task->status == 'in_progress')0%@else&nbsp;@endif
-                                </span>
+                                </div>
+                                @if(($task->status == 'in_progress' || $task->status == 'completed') && $task->started_date && $task->started_time)
+                                    <div style="grid-column:1/-1;padding-top:8px;border-top:1px solid #e5e7eb;display:flex;align-items:center;gap:6px;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                            <line x1="9" y1="9" x2="15" y2="9"/>
+                                        </svg>
+                                        <span style="color:#374151;">
+                                            <span style="font-weight:600;">Started:</span>
+                                            {{ \Carbon\Carbon::parse($task->started_date)->format('F d, Y') }}
+                                            {{ date('g:i A', strtotime($task->started_time)) }}
+                                        </span>
+                                    </div>
+                                @endif
                             </div>
                             <div class="task-actions">
                                 @if($task->status == 'todo')
@@ -1207,12 +1236,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     card.setAttribute('data-status', newStatus);
-                    
+
                     // Update task status badge
                     var statusBadge = card.querySelector('.task-status');
                     statusBadge.textContent = newStatus === 'in_progress' ? 'In Progress' : 'Completed';
                     statusBadge.className = 'task-status ' + newStatus;
-                    
+
                     // Update button
                     var actionBtn = card.querySelector('.task-action');
                     if (actionBtn) {
@@ -1220,7 +1249,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             actionBtn.textContent = 'Complete';
                             actionBtn.setAttribute('data-status', 'completed');
                             actionBtn.className = 'task-action complete';
-                            
+
                             // Update percentage to 0%
                             var progressSpan = card.querySelector('.task-progress');
                             if (progressSpan) {
@@ -1235,7 +1264,32 @@ document.addEventListener('DOMContentLoaded', function() {
                             actionBtn.remove();
                         }
                     }
-                    
+
+                    // Show started date/time if available
+                    if ((newStatus === 'in_progress' || newStatus === 'completed') && data.started_date && data.started_time) {
+                        let startedRow = card.querySelector('.task-started-row');
+                        if (!startedRow) {
+                            startedRow = document.createElement('div');
+                            startedRow.className = 'task-started-row';
+                            startedRow.style.marginTop = '8px';
+                            startedRow.style.paddingTop = '8px';
+                            startedRow.style.borderTop = '1px solid #e5e7eb';
+                            startedRow.style.display = 'flex';
+                            startedRow.style.alignItems = 'center';
+                            startedRow.style.gap = '8px';
+                            startedRow.innerHTML = `
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" style="vertical-align:middle;">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <line x="9" y="9" x2="15" y2="9"/>
+                                </svg>
+                                <span style="font-weight:600;color:#059669;">Started:</span>
+                                <span style="color:#059669;">${data.started_date}</span>
+                                <span style="color:#059669;">${data.started_time}</span>
+                            `;
+                            card.querySelector('.task-meta').after(startedRow);
+                        }
+                    }
+
                     // Show/hide card based on active tab
                     var activeTab = document.querySelector('.tab.active').id.replace('tab-','');
                     if (activeTab === newStatus) {
@@ -1243,7 +1297,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         card.style.display = 'none';
                     }
-                    
+
                     // Update tab counts and header stats
                     updateTabCounts();
                 } else {

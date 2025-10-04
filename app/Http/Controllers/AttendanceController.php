@@ -93,8 +93,15 @@ class AttendanceController extends Controller {
     // Attendance records with filtering and pagination
     public function records(Request $request)
     {
-        $records = Attendance::getTodayGroupedRecords();
-        $stats = Attendance::getTodayStats();
+    $date = $request->input('date') ?? now()->toDateString();
+    $records = Attendance::getGroupedRecordsByDate($date);
+        // Calculate stats for selected date
+        $stats = [
+            'total' => count($records),
+            'clock_ins' => collect($records)->whereNotNull('time_in')->count(),
+            'clock_outs' => collect($records)->whereNotNull('time_out')->count(),
+            'unique_users' => collect($records)->pluck('id_number')->unique()->count(),
+        ];
         return view('admin.reports.attendance', compact('records', 'stats'));
     }
 }

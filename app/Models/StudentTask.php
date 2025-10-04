@@ -10,6 +10,6 @@ class StudentTask extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'title', 'description', 'priority', 'due_date', 'status', 'progress'
+        'user_id', 'title', 'description', 'priority', 'due_date', 'status', 'progress', 'started_date', 'started_time'
     ];
 }

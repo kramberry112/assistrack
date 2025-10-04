@@ -9,6 +9,13 @@
         <p class="text-gray-600 mt-1">Monitor and track student attendance records</p>
     </div>
 
+    <!-- Date Filter Form for History Viewing -->
+    <form method="GET" action="{{ route('admin.attendance.report') }}" class="mb-8 flex flex-wrap items-center gap-4">
+        <label for="date" class="text-sm font-medium text-gray-700">Select Date:</label>
+        <input type="date" id="date" name="date" value="{{ request('date', now()->format('Y-m-d')) }}" class="border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:border-indigo-300">
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">View</button>
+    </form>
+
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-transform duration-200">

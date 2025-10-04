@@ -97,8 +97,16 @@ class StudentTaskController extends Controller {
             ], 422);
         }
         $task->status = $request->status;
+        if ($request->status === 'in_progress' && !$task->started_date && !$task->started_time) {
+            $task->started_date = now()->toDateString(); // Y-m-d
+            $task->started_time = now()->toTimeString(); // H:i:s
+        }
         $task->save();
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'started_date' => $task->started_date ? (\Carbon\Carbon::parse($task->started_date)->format('F d, Y')) : null,
+            'started_time' => $task->started_time ? (date('g:i A', strtotime($task->started_time))) : null
+        ]);
     }
 
     public function updateProgress(Request $request, $id)
