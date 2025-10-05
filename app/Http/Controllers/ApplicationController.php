@@ -10,9 +10,16 @@ class ApplicationController extends Controller
     /**
      * Display a listing of the resource (all applicants).
      */
-    public function index()
+    public function index(Request $request)
     {
-    $applications = Application::paginate(10);
+        $query = Application::query();
+        if ($request->has('course') && $request->course != '') {
+            $query->where('course', $request->course);
+        }
+        if ($request->has('year') && $request->year != '') {
+            $query->where('year_level', $request->year);
+        }
+        $applications = $query->paginate(10);
         return view('admin.applicants.index', compact('applications'));
     }
 
