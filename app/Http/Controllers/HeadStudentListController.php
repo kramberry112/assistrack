@@ -20,6 +20,15 @@ class HeadStudentListController extends Controller
                   ->orWhere('designated_office', 'like', "%$keyword%");
             });
         }
+        if (request('course')) {
+            $query->where('course', request('course'));
+        }
+        if (request('year_level')) {
+            $query->where('year_level', request('year_level'));
+        }
+        if (request('office')) {
+            $query->where('designated_office', request('office'));
+        }
         $students = $query->paginate(9)->appends(request()->except('page'));
         return view('headoffice.studentlists.index', compact('students'));
     }
