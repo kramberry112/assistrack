@@ -72,14 +72,14 @@
                                <label style="font-size: 16px; font-weight: bold; text-align: left;">Course:</label>
                                <select name="course" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
                                    <option value="">Select</option>
-                                   <option value="BSIT">SOH</option>
-                                   <option value="BSBA">STE</option>
-                                   <option value="BSED">SBA</option>
-                                   <option value="BSN">SOHS</option>
-                                   <option value="BSN">SOE</option>
-                                   <option value="BSN">SITE</option>
-                                   <option value="BSN">SIHM</option>
-                                   <option value="BSN">SOC</option>
+                                   <option value="SOH">SOH</option>
+                                   <option value="STE">STE</option>
+                                   <option value="SBA">SBA</option>
+                                   <option value="SOHS">SOHS</option>
+                                   <option value="SOE">SOE</option>
+                                   <option value="SITE">SITE</option>
+                                   <option value="SIHM">SIHM</option>
+                                   <option value="SOC">SOC</option>
                                </select>
                            </div>
                            <div style="flex: 1;">

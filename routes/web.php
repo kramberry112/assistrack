@@ -278,6 +278,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/student-tasks/month', [\App\Http\Controllers\StudentTaskController::class, 'tasksForMonth']);
     Route::get('/student-tasks/week', [\App\Http\Controllers\StudentTaskController::class, 'tasksForWeek']);
     Route::post('/student-tasks/{id}/status', [\App\Http\Controllers\StudentTaskController::class, 'updateStatus'])->name('student.tasks.status');
+    Route::post('/tasks/{id}/reject', [\App\Http\Controllers\StudentTaskController::class, 'rejectTask'])->name('tasks.reject');
     Route::post('/student-tasks/{id}/progress', [\App\Http\Controllers\StudentTaskController::class, 'updateProgress'])->name('student.tasks.progress');
     Route::get('/student-community', [\App\Http\Controllers\CommunityGroupController::class, 'index'])->name('student.community');
     Route::post('/student-community', [\App\Http\Controllers\CommunityGroupController::class, 'store'])->name('student.community.create');

@@ -774,7 +774,9 @@ window.currentUserId = {{ auth()->id() }};
                                         {{ ucfirst(str_replace('_',' ', $tab)) }}
                                     @endif
                                 </span>
-                                @if(isset($task->verified) && $task->verified)
+                                @if($task->status === 'rejected')
+                                    <span class="status-badge" style="background:#fee2e2;color:#b91c1c;margin-left:10px;">Rejected</span>
+                                @elseif(isset($task->verified) && $task->verified)
                                     <span class="status-badge status-completed" style="margin-left:10px;">Verified</span>
                                 @else
                                     <span class="status-badge status-pending" style="margin-left:10px;">Not Verified</span>
@@ -810,8 +812,12 @@ window.currentUserId = {{ auth()->id() }};
                                 @endif
                             </div>
                             <div class="task-actions">
-                                @if($task->status == 'todo')
-                                    <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" data-verified="{{ $task->verified ? '1' : '0' }}" @if(!isset($task->verified) || !$task->verified) disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;" @endif>Start</button>
+                                @if($tab == 'todo')
+                                    @if($task->status === 'rejected')
+                                        <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;">Start</button>
+                                    @else
+                                        <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" data-verified="{{ $task->verified ? '1' : '0' }}" @if(!isset($task->verified) || !$task->verified) disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;" @endif>Start</button>
+                                    @endif
                                 @elseif($task->status == 'in_progress')
                                     <button class="task-action complete" data-id="{{ $task->id }}" data-status="completed">Complete</button>
                                 @endif
@@ -1261,20 +1267,15 @@ document.addEventListener('DOMContentLoaded', function() {
                             actionBtn.textContent = 'Complete';
                             actionBtn.setAttribute('data-status', 'completed');
                             actionBtn.className = 'task-action complete';
-
-                            // Update percentage to 0%
-                            var progressSpan = card.querySelector('.task-progress');
-                            if (progressSpan) {
-                                progressSpan.textContent = '0%';
-                            }
                         } else if (newStatus === 'completed') {
-                            // Update percentage to 100%
-                            var progressSpan = card.querySelector('.task-progress');
-                            if (progressSpan) {
-                                progressSpan.textContent = '100%';
-                            }
                             actionBtn.remove();
                         }
+                    }
+
+                    // Instantly update percentage
+                    var progressSpan = card.querySelector('.task-progress');
+                    if (progressSpan) {
+                        progressSpan.textContent = newStatus === 'in_progress' ? '0%' : (newStatus === 'completed' ? '100%' : progressSpan.textContent);
                     }
 
                     // Show started date/time if available
@@ -1292,7 +1293,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             startedRow.innerHTML = `
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" style="vertical-align:middle;">
                                     <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                    <line x="9" y="9" x2="15" y2="9"/>
+                                    <line x1="9" y1="9" x2="15" y2="9"/>
                                 </svg>
                                 <span style="font-weight:600;color:#059669;">Started:</span>
                                 <span style="color:#059669;">${data.started_date}</span>

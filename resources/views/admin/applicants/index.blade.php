@@ -476,11 +476,14 @@
                             </div>
                             <div class="filter-cascade filter-cascade-course">
                                 <div class="filter-option" data-filter="course" data-value="">All Courses</div>
-                                <div class="filter-option" data-filter="course" data-value="BSIT">BSIT</div>
-                                <div class="filter-option" data-filter="course" data-value="BSCS">BSCS</div>
-                                <div class="filter-option" data-filter="course" data-value="BSIS">BSIS</div>
-                                <div class="filter-option" data-filter="course" data-value="BSBA">BSBA</div>
-                                <div class="filter-option" data-filter="course" data-value="BSA">BSA</div>
+                                <div class="filter-option" data-filter="course" data-value="SOH">SOH</div>
+                                <div class="filter-option" data-filter="course" data-value="STE">STE</div>
+                                <div class="filter-option" data-filter="course" data-value="SBA">SBA</div>
+                                <div class="filter-option" data-filter="course" data-value="SOHS">SOHS</div>
+                                <div class="filter-option" data-filter="course" data-value="SOE">SOE</div>
+                                <div class="filter-option" data-filter="course" data-value="SITE">SITE</div>
+                                <div class="filter-option" data-filter="course" data-value="SIHM">SIHM</div>
+                                <div class="filter-option" data-filter="course" data-value="SOC">SOC</div>
                             </div>
                             <div class="filter-label cascading-label" data-cascade="year">
                                 <span>Year Level</span>

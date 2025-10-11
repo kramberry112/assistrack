@@ -14,7 +14,9 @@ class StudentTaskController extends Controller {
         $userId = Auth::id();
         $tasks = StudentTask::where('user_id', $userId)->orderBy('due_date')->get();
         $grouped = [
-            'todo' => $tasks->where('status', 'todo'),
+            'todo' => $tasks->filter(function($task) {
+                return $task->status === 'todo' || $task->status === 'rejected';
+            }),
             'in_progress' => $tasks->where('status', 'in_progress'),
             'completed' => $tasks->where('status', 'completed'),
             // Only show tasks that are NOT completed and due today or earlier
@@ -128,6 +130,16 @@ class StudentTaskController extends Controller {
         $task->progress = $progress;
         $task->save();
         return response()->json(['success' => true, 'progress' => $progress]);
+    }
+
+    // Reject a task (AJAX)
+    public function rejectTask(Request $request, $id)
+    {
+    $task = StudentTask::findOrFail($id);
+    // Office users can reject any task
+    $task->status = 'rejected';
+    $task->save();
+    return response()->json(['success' => true, 'status' => 'rejected']);
     }
     public function tasksForMonth(Request $request)
     {

@@ -433,14 +433,18 @@
                             <td>{{ ucfirst(str_replace('_', ' ', $task->priority)) }}</td>
                             <td>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</td>
                             <td>
-                                @if($task->verified)
+                                @if($task->status === 'rejected')
+                                    <span class="status-badge" style="background:#fee2e2;color:#b91c1c;">Rejected</span>
+                                @elseif($task->verified)
                                     <span class="status-badge status-completed">Verified</span>
                                 @else
                                     <span class="status-badge status-pending">Pending</span>
                                 @endif
                             </td>
                             <td>
-                                @if(!$task->verified)
+                                @if($task->status === 'rejected')
+                                    <button class="btn-view" disabled style="background:#fee2e2;color:#b91c1c;cursor:not-allowed;">Rejected</button>
+                                @elseif(!$task->verified)
                                     <button type="button" class="btn-verify" data-task-id="{{ $task->id }}">Verify</button>
                                     <button type="button" class="btn-reject" data-task-id="{{ $task->id }}">Reject</button>
                                 @else
@@ -558,12 +562,14 @@
                         <td>${task.priority ? (task.priority.charAt(0).toUpperCase() + task.priority.slice(1).replace('_', ' ')) : ''}</td>
                         <td>${task.due_date_formatted}</td>
                         <td>
-                            ${task.verified ? '<span class="status-badge status-completed">Verified</span>' : '<span class="status-badge status-pending">Pending</span>'}
+                            ${task.status === 'rejected' ? '<span class="status-badge" style="background:#fee2e2;color:#b91c1c;">Rejected</span>' : (task.verified ? '<span class="status-badge status-completed">Verified</span>' : '<span class="status-badge status-pending">Pending</span>')}
                         </td>
                         <td>
-                            ${task.verified
-                                ? `<button class='btn-view' disabled style='background:#93c5fd;color:#fff;cursor:not-allowed;'>Verified</button>`
-                                : `<button type='button' class='btn-verify' data-task-id='${task.id}'>Verify</button> <button type='button' class='btn-reject' data-task-id='${task.id}'>Reject</button>`}
+                            ${task.status === 'rejected'
+                                ? `<button class='btn-view' disabled style='background:#fee2e2;color:#b91c1c;cursor:not-allowed;'>Rejected</button>`
+                                : (!task.verified
+                                    ? `<button type='button' class='btn-verify' data-task-id='${task.id}'>Verify</button> <button type='button' class='btn-reject' data-task-id='${task.id}'>Reject</button>`
+                                    : `<button class='btn-view' disabled style='background:#93c5fd;color:#fff;cursor:not-allowed;'>Verified</button>`)}
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -579,7 +585,6 @@
             btn.onclick = function() {
                 const taskId = this.getAttribute('data-task-id');
                 const row = this.closest('tr');
-                // TODO: Implement backend route for rejection
                 fetch(`/tasks/${taskId}/reject`, {
                     method: 'POST',
                     headers: {
@@ -594,8 +599,13 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Remove row or update status as needed
-                    row.remove();
+                    // Instantly update row status and button
+                    if (data.success) {
+                        row.querySelector('td:nth-child(6)').innerHTML = `<span class="status-badge" style="background:#fee2e2;color:#b91c1c;">Rejected</span>`;
+                        row.querySelector('td:nth-child(7)').innerHTML = `<button class='btn-view' disabled style='background:#fee2e2;color:#b91c1c;cursor:not-allowed;'>Rejected</button>`;
+                    } else {
+                        alert('Failed to reject task.');
+                    }
                 })
                 .catch(() => {
                     alert('Failed to reject task.');
