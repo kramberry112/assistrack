@@ -298,8 +298,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Offices pages (protected)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/offices-dashboard', 'offices.dashboard.index')->name('offices.dashboard');
+    Route::get('/offices-student-list', [\App\Http\Controllers\OfficeStudentListController::class, 'index'])->name('offices.studentlists.index');
+    Route::get('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'show'])->name('evaluation.show');
+    Route::post('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'submit'])->name('evaluation.submit');
     Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');
-    Route::get('/evaluation', [\App\Http\Controllers\EvaluationController::class, 'index'])->name('evaluation.index');
     Route::get('/tasks', [\App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
     Route::post('/tasks/{id}/verify', [\App\Http\Controllers\TaskController::class, 'verify'])->name('tasks.verify');
 

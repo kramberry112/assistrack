@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 
 class EvaluationController extends Controller
 {
-    public function index()
+    public function show($id)
     {
-        // Render the evaluation view (create this view if needed)
-        return view('offices.evaluation.index');
+        $student = \App\Models\Student::findOrFail($id);
+        return view('offices.studentlists.evaluation', compact('student'));
     }
 }
