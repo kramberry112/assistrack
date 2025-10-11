@@ -153,15 +153,15 @@
         padding: 20px;
     }
     
-    /* Tasks Request Styles */
+     /* Tasks Request Styles */
     .tasks-header {
         background: #ffffff;
         padding: 20px 30px;
-        border-bottom: 2px solid #dc2626;
+        border-bottom: 2px solid #6366f1;
         margin: -20px -20px 20px -20px;
     }
     .tasks-header h1 {
-        color: #dc2626;
+        color: #6366f1;
         font-size: 1.5rem;
         font-weight: 700;
         margin: 0;

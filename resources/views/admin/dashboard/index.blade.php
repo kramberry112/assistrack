@@ -215,7 +215,7 @@
     }
 </style>
 
-<div class="dashboard-container">
+<div class="dashboard-container" style="overflow-x:hidden;">
     <!-- Sidebar -->
     <aside class="sidebar">
         <div>
@@ -293,9 +293,9 @@
     </aside>
 
     <!-- Main Content -->
-    <section class="main-content">
-        <div class="content-card">
-            <div id="mainContent">
+    <section class="main-content w-full">
+        <div class="content-card w-full">
+            <div id="mainContent" class="w-full">
                 <div class="content-header">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -325,6 +325,93 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     document.addEventListener('click', function() {
         if (menu.style.display === 'block') menu.style.display = 'none';
+    });
+    // Sidebar reports dropdown logic
+    const parentToggle = document.querySelector('.parent-toggle');
+    const parentLabel = document.querySelector('.parent-label');
+    const treeview = document.querySelector('.nav-treeview');
+    const arrow = document.querySelector('.nav-arrow');
+
+    if (parentToggle) {
+        parentToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (treeview) {
+                const isVisible = treeview.style.display !== 'none';
+                if (isVisible) {
+                    treeview.style.display = 'none';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    treeview.style.display = 'block';
+                    if (arrow) arrow.style.transform = 'rotate(90deg)';
+                }
+            }
+        });
+    }
+
+    document.querySelectorAll('.report-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-url');
+            const name = this.getAttribute('data-name');
+            if (parentLabel) parentLabel.textContent = name;
+            if (treeview) treeview.style.display = 'none';
+            if (arrow) arrow.style.transform = 'rotate(0deg)';
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const contentArea = document.getElementById('mainContent');
+                    if (contentArea) {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = html;
+                        const inner = tempDiv.querySelector('#mainContent');
+                        let loaded = false;
+                        try {
+                            if (inner) {
+                                contentArea.innerHTML = inner.innerHTML;
+                                loaded = true;
+                            }
+                        } catch (err) {
+                            console.error('Error extracting content:', err);
+                        }
+                        if (!loaded) {
+                            contentArea.innerHTML = html;
+                        }
+                    }
+                    history.pushState({path: url, name: name}, '', url);
+                    document.querySelectorAll('.report-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                })
+                .catch(error => {
+                    console.error('Error loading content:', error);
+                    window.location.href = url;
+                });
+        });
+    });
+
+    window.addEventListener('popstate', function(e) {
+        if (e.state) {
+            const path = e.state.path;
+            const name = e.state.name;
+            if (parentLabel && name) {
+                parentLabel.textContent = name;
+            } else if (parentLabel) {
+                parentLabel.textContent = 'Reports';
+            }
+            if (path) {
+                fetch(path)
+                    .then(response => response.text())
+                    .then(html => {
+                        const contentArea = document.getElementById('mainContent');
+                        if (contentArea) {
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+                            const inner = tempDiv.querySelector('#mainContent');
+                            contentArea.innerHTML = inner ? inner.innerHTML : html;
+                        }
+                    })
+                    .catch(() => location.reload());
+            }
+        }
     });
 });
 </script>

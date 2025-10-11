@@ -9,8 +9,15 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    // Relationship: completed student tasks
+    public function studentTasks()
+    {
+        return $this->hasMany(\App\Models\StudentTask::class, 'user_id');
+    }
 
     /**
      * The attributes that are mass assignable.
