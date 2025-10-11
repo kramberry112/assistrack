@@ -45,7 +45,7 @@ class StudentListController extends Controller
 
     public function index()
     {
-        $query = Student::query();
+    $query = Student::query()->orderBy('created_at', 'desc');
         if (request('keyword')) {
             $keyword = request('keyword');
             $query->where(function($q) use ($keyword) {
