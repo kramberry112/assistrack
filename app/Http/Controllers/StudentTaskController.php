@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\StudentTask;
+use App\Events\StudentTaskCreated;
 
 class StudentTaskController extends Controller {
     public function dashboard()
@@ -68,6 +69,16 @@ class StudentTaskController extends Controller {
             'due_date' => $request->due_date,
             'status' => 'todo',
         ]);
+
+        // Broadcast event for real-time office update
+        broadcast(new StudentTaskCreated([
+            'id' => $task->id,
+            'user_name' => $task->user ? $task->user->name : 'Unknown',
+            'title' => $task->title,
+            'priority' => $task->priority,
+            'due_date_formatted' => \Carbon\Carbon::parse($task->due_date)->format('F d, Y'),
+            'verified' => (bool)$task->verified,
+        ]))->toOthers();
 
         // Return the created task for AJAX instant display
         return response()->json([

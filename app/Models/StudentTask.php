@@ -10,6 +10,11 @@ class StudentTask extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'title', 'description', 'priority', 'due_date', 'status', 'progress', 'started_date', 'started_time'
+        'user_id', 'title', 'description', 'priority', 'due_date', 'status', 'progress', 'started_date', 'started_time', 'verified'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

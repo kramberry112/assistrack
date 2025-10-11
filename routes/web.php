@@ -301,12 +301,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/evaluation', [\App\Http\Controllers\EvaluationController::class, 'index'])->name('evaluation.index');
     Route::get('/tasks', [\App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
+    Route::post('/tasks/{id}/verify', [\App\Http\Controllers\TaskController::class, 'verify'])->name('tasks.verify');
+
+    // AJAX endpoint for polling office tasks
+    Route::get('/tasks/ajax', [\App\Http\Controllers\TaskController::class, 'ajaxTasks'])->name('tasks.ajax');
 
     // DTR System Routes
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
     Route::get('/api/attendance/today', [AttendanceController::class, 'getTodayRecords'])->name('attendance.today');
     Route::post('/api/attendance/check', [AttendanceController::class, 'checkLastAction'])->name('attendance.check');
+
+    // Tasks Verification
+    Route::post('/tasks/{id}/verify', [\App\Http\Controllers\TaskController::class, 'verify'])->name('tasks.verify');
 
 });
 

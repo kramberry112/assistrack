@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+window.currentUserId = {{ auth()->id() }};
+</script>
 <style>
     body {
         margin: 0;
@@ -755,7 +758,7 @@
             <div id="tasks-container" class="tasks-grid">
                 @foreach(['todo','in_progress','completed','due'] as $tab)
                     @foreach($grouped[$tab] as $task)
-                        <div class="task-card" data-status="{{ $tab }}" style="display:{{ $tab == 'todo' ? '' : 'none' }};">
+                        <div class="task-card" data-status="{{ $tab }}" data-task-id="{{ $task->id }}" style="display:{{ $tab == 'todo' ? '' : 'none' }};">
                             <div class="task-header">
                                 <span class="task-title" style="font-size:1.1rem;font-weight:700;color:#111827;">{{ $task->title }}</span>
                                 <span class="task-status {{ $tab }}" style="font-size:0.95rem;color:#6b7280;">
@@ -771,6 +774,11 @@
                                         {{ ucfirst(str_replace('_',' ', $tab)) }}
                                     @endif
                                 </span>
+                                @if(isset($task->verified) && $task->verified)
+                                    <span class="status-badge status-completed" style="margin-left:10px;">Verified</span>
+                                @else
+                                    <span class="status-badge status-pending" style="margin-left:10px;">Not Verified</span>
+                                @endif
                             </div>
                             <div class="task-description" style="font-size:0.95rem;color:#6b7280;margin-bottom:12px;">{{ $task->description }}</div>
                             <div class="task-meta" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:0.85rem;">
@@ -803,7 +811,7 @@
                             </div>
                             <div class="task-actions">
                                 @if($task->status == 'todo')
-                                    <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress">Start</button>
+                                    <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" data-verified="{{ $task->verified ? '1' : '0' }}" @if(!isset($task->verified) || !$task->verified) disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;" @endif>Start</button>
                                 @elseif($task->status == 'in_progress')
                                     <button class="task-action complete" data-id="{{ $task->id }}" data-status="completed">Complete</button>
                                 @endif
@@ -1098,7 +1106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(data.success && data.task) {
                     msgBox.style.color = '#22c55e';
                     msgBox.innerHTML = 'Task created successfully!';
-                    
+
                     // Add new task card to To-Do tab
                     var container = document.getElementById('tasks-container');
                     var card = document.createElement('div');
@@ -1109,6 +1117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="task-header">
                             <span class="task-title">${data.task.title}</span>
                             <span class="task-status todo">To-Do</span>
+                            <span class="status-badge status-pending" style="margin-left:10px;">Not Verified</span>
                         </div>
                         <div class="task-description">${data.task.description}</div>
                         <div class="task-meta">
@@ -1122,14 +1131,17 @@ document.addEventListener('DOMContentLoaded', function() {
                             <span class="task-progress">&nbsp;</span>
                         </div>
                         <div class="task-actions">
-                            <button class="task-action start" data-id="${data.task.id}" data-status="in_progress">Start</button>
+                            <button class="task-action start" data-id="${data.task.id}" data-status="in_progress" disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;">Start</button>
                         </div>
                     `;
                     container.prepend(card);
-                    
+
                     // Update tab counts
                     updateTabCounts();
-                    
+
+                    // Dispatch event for office tab instant update
+                    window.dispatchEvent(new Event('student-task-created'));
+
                     setTimeout(function() {
                         modal.style.display = 'none';
                     }, 1200);
@@ -1369,5 +1381,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 });
 </script>
+@vite(['resources/js/app.js'])
 
 @endsection
