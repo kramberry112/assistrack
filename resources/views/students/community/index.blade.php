@@ -425,6 +425,16 @@
                     </span>
                     Calendar
                 </a>
+                <a href="{{ route('student.grades') }}">
+                    <span class="icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="8" r="6" />
+                            <rect x="9" y="14" width="6" height="6" rx="2" />
+                            <path d="M12 12v2" />
+                        </svg>
+                    </span>
+                    Grades
+                </a>
             </nav>
         </div>
 
@@ -504,7 +514,7 @@
                                 <button class="join-btn" data-group-id="{{ $group->id }}">JOIN</button>
                             @endif
                         </div>
-                        <div class="chat-box" style="{{ (auth()->user() && $group->owner_id == auth()->user()->id) ? '' : 'display:none;' }} margin-top:12px; position:relative;" data-group-id="{{ $group->id }}">
+                        <div class="chat-box" style="display:none; margin-top:12px; position:relative;" data-group-id="{{ $group->id }}">
                             <div style="background:#f9fafb;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.10);width:100%;max-width:400px;position:relative;">
                                 <div style="font-weight:700;color:#2563eb;margin-bottom:12px;font-size:1.1rem;display:flex;align-items:center;gap:8px;justify-content:space-between;">
                                     <span style="display:flex;align-items:center;gap:8px;">

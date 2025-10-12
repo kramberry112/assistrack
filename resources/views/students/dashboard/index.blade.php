@@ -664,6 +664,16 @@ window.currentUserId = {{ auth()->id() }};
                     </span>
                     Calendar
                 </a>
+                <a href="{{ route('student.grades') }}">
+                    <span class="icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="8" r="6" />
+                            <rect x="9" y="14" width="6" height="6" rx="2" />
+                            <path d="M12 12v2" />
+                        </svg>
+                    </span>
+                    Grades
+                </a>
             </nav>
         </div>
 

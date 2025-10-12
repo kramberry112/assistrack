@@ -179,42 +179,69 @@
             background: #f3f4f6;
             padding: 0;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header (copied from community page) */
-        .community-header {
+        /* Page Header */
+        .page-header {
             background: #ffffff;
             border-bottom: 1px solid #e5e7eb;
-            padding: 20px 0;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 40px;
+            padding: 16px 32px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            height: 80px;
         }
 
-        .community-title {
-            font-size: 1.5rem;
+        .page-header h1 {
+            font-size: 2rem;
             font-weight: 700;
-            color: #2563eb;
-            letter-spacing: 0.5px;
+            color: #3b82f6;
+            margin: 0;
+            letter-spacing: 0.05em;
         }
 
-        .user-section {
+        .header-right {
             display: flex;
             align-items: center;
             gap: 16px;
+            height: 100%;
         }
 
-        .notification-bell {
+        .notification-badge {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .notification-badge:hover {
+            background: #e5e7eb;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
             width: 24px;
             height: 24px;
-            color: #6b7280;
-            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 10;
         }
 
         /* Calendar Styles */
@@ -223,6 +250,7 @@
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            margin: 24px;
         }
 
         .calendar-header {
@@ -381,14 +409,16 @@
             background: #f3e8ff;
             color: #9333ea;
         }
+
         /* Week view styles */
         .week-view {
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             padding: 16px 24px;
-            margin-top: 24px;
+            margin: 24px;
         }
+
         .week-row {
             border: 2px solid #222;
             border-radius: 4px;
@@ -398,6 +428,7 @@
             display: flex;
             align-items: flex-start;
         }
+
         .week-day {
             font-size: 1.1rem;
             font-weight: 500;
@@ -409,13 +440,13 @@
 
 <body>
     <div class="dashboard-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div>
-            <div class="logo">
-                <img src="/images/assistracklogo.png" alt="Logo">
-                <span>Assistrack Portal</span>
-            </div>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div>
+                <div class="logo">
+                    <img src="/images/assistracklogo.png" alt="Logo">
+                    <span>Assistrack Portal</span>
+                </div>
                 <nav class="nav">
                     <a href="{{ route('student.dashboard') }}">
                         <span class="icon">
@@ -449,6 +480,16 @@
                         </span>
                         Calendar
                     </a>
+                    <a href="{{ route('student.grades') }}">
+                        <span class="icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="8" r="6" />
+                                <rect x="9" y="14" width="6" height="6" rx="2" />
+                                <path d="M12 12v2" />
+                            </svg>
+                        </span>
+                        Grades
+                    </a>
                 </nav>
             </div>
 
@@ -474,35 +515,34 @@
             </div>
 
             <div id="logoutMenu">
-            <a href="{{ route('profile.edit') }}">Settings</a>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit">Logout</button>
-            </form>
-        </div>
-    </aside>
+                <a href="{{ route('profile.edit') }}">Settings</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
+        </aside>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <section class="main-content">
             <!-- Header -->
-            <div class="community-header">
-                <div class="header-content">
-                    <h1 class="community-title">CALENDAR</h1>
-                    <div class="user-section">
-                        <div id="notificationBellContainer" style="position:relative;display:inline-block;cursor:pointer;">
-                            <svg class="notification-bell" id="notificationBell" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                            </svg>
-                            <span id="notificationCount" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border-radius:50%;padding:2px 7px;font-size:0.85rem;font-weight:700;display:inline-block;z-index:10;">0</span>
-                        </div>
-                        <div id="notificationDropdown" style="display:none;position:absolute;top:36px;right:0;background:#fff;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);min-width:320px;z-index:100;padding:16px;">
+            <div class="page-header">
+                <h1>CALENDAR</h1>
+                <div class="header-right">
+                    <div class="notification-badge">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-count" id="notificationCount">0</span>
+                    </div>
+                     <div id="notificationDropdown" style="display:none;position:absolute;top:36px;right:0;background:#fff;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);min-width:320px;z-index:100;padding:16px;">
                         <div id="notificationContent">Loading...</div>
-                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Calendar Container -->
             <div class="calendar-container">
                 <div class="calendar-header">
                     <div class="calendar-nav">
@@ -531,7 +571,7 @@
                     <!-- Week view will be rendered by JS -->
                 </div>
             </div>
-        </main>
+        </section>
     </div>
 
     <script>
@@ -545,7 +585,7 @@
             logoutDown.style.display = 'none';
             logoutUp.style.display = 'block';
 
-            profileDropdown.addEventListener('click', function() {
+            profileDropdown.addEventListener('click', function(event) {
                 event.stopPropagation();
                 if (logoutMenu.style.display === 'block') {
                     logoutMenu.style.display = 'none';
@@ -565,114 +605,112 @@
                     logoutDown.style.display = 'none';
                 }
             });
+
+            // Notification dropdown functionality
+            const notificationBadge = document.querySelector('.notification-badge');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            const notificationContent = document.getElementById('notificationContent');
+
+            notificationBadge.addEventListener('click', function(event) {
+                event.stopPropagation();
+                if (notificationDropdown.style.display === 'block') {
+                    notificationDropdown.style.display = 'none';
+                } else {
+                    notificationDropdown.style.display = 'block';
+                    notificationContent.textContent = 'Loading...';
+                    fetch('/community/join-requests')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length === 0) {
+                                notificationContent.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
+                            } else {
+                                notificationContent.innerHTML = data.map(req => `
+                                    <div style="background:#fff;border-radius:10px;padding:14px 18px;box-shadow:0 2px 8px rgba(0,0,0,0.08);margin-bottom:12px;min-width:220px;max-width:350px;display:flex;flex-direction:column;align-items:center;">
+                                        <div style="font-size:1rem;color:#2563eb;font-weight:600;margin-bottom:4px;text-align:center;">
+                                            ${req.user.name} (@${req.user.username})
+                                        </div>
+                                        <div style="font-size:0.95rem;color:#374151;margin-bottom:10px;text-align:center;">wants to join your group.</div>
+                                        <div style="display:flex;gap:10px;justify-content:center;">
+                                            <button class="accept-btn" data-request-id="${req.id}" data-user-id="${req.user.id}" style="background:#22c55e;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-size:1rem;font-weight:500;">Accept</button>
+                                            <button class="reject-btn" data-request-id="${req.id}" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-size:1rem;font-weight:500;">Reject</button>
+                                        </div>
+                                    </div>
+                                `).join('');
+                                // Attach Accept/Reject handlers
+                                setTimeout(() => {
+                                    document.querySelectorAll('.accept-btn').forEach(function(btn) {
+                                        btn.addEventListener('click', function(e) {
+                                            e.preventDefault();
+                                            var reqId = btn.getAttribute('data-request-id');
+                                            var userId = btn.getAttribute('data-user-id');
+                                            fetch(`/community/join-request/${reqId}/action`, {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                                    'X-Requested-With': 'XMLHttpRequest'
+                                                },
+                                                body: JSON.stringify({ action: 'accept' })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    btn.closest('div').innerHTML = '<span style="color:#22c55e;font-weight:600;font-size:1.1rem;">Accepted</span>';
+                                                    document.getElementById('notificationDropdown').style.display = 'none';
+                                                }
+                                            });
+                                        });
+                                    });
+                                    document.querySelectorAll('.reject-btn').forEach(function(btn) {
+                                        btn.addEventListener('click', function(e) {
+                                            e.preventDefault();
+                                            var reqId = btn.getAttribute('data-request-id');
+                                            fetch(`/community/join-request/${reqId}/action`, {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                                    'X-Requested-With': 'XMLHttpRequest'
+                                                },
+                                                body: JSON.stringify({ action: 'reject' })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    btn.closest('div').innerHTML = '<span style="color:#ef4444;font-weight:600;font-size:1.1rem;">Rejected</span>';
+                                                    document.getElementById('notificationDropdown').style.display = 'none';
+                                                }
+                                            });
+                                        });
+                                    });
+                                }, 100);
+                            }
+                        })
+                        .catch(() => {
+                            notificationContent.textContent = 'Failed to load notifications.';
+                        });
+                }
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!notificationBadge.contains(event.target) && !notificationDropdown.contains(event.target)) {
+                    notificationDropdown.style.display = 'none';
+                }
+            });
         });
 
-        // Calendar functionality
-        // Notification logic (copied from community)
+        // Notification count update
         function updateNotificationCount() {
             fetch('/community/join-requests')
                 .then(response => response.json())
                 .then(data => {
                     const countSpan = document.getElementById('notificationCount');
-                    if (data.length > 0) {
-                        countSpan.textContent = data.length;
-                        countSpan.style.display = 'inline-block';
-                    } else {
-                        countSpan.textContent = '0';
-                        countSpan.style.display = 'inline-block';
-                    }
+                    countSpan.textContent = data.length > 0 ? data.length : '0';
                 });
         }
         updateNotificationCount();
         setInterval(updateNotificationCount, 30000);
-        const notificationBell = document.getElementById('notificationBell');
-        const notificationBellContainer = document.getElementById('notificationBellContainer');
-        const notificationDropdown = document.getElementById('notificationDropdown');
-        const notificationContent = document.getElementById('notificationContent');
-        notificationBellContainer.addEventListener('click', function(e) {
-        e.stopPropagation();
-        updateNotificationCount();
-        if (notificationDropdown.style.display === 'block') {
-            notificationDropdown.style.display = 'none';
-        } else {
-            notificationDropdown.style.display = 'block';
-            fetch('/community/join-requests')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length === 0) {
-                        notificationContent.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
-                    } else {
-                        notificationContent.innerHTML = data.map(req => `
-                            <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">
-                                <div style="font-weight:600;color:#2563eb;">${req.user.name} (@${req.user.username})</div>
-                                <div style="color:#374151;font-size:0.95rem;">wants to join your group.</div>
-                                <div style="margin-top:8px;display:flex;gap:8px;">
-                                    <button class="accept-btn" data-request-id="${req.id}" data-user-id="${req.user.id}" style="background:#22c55e;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-weight:600;">Accept</button>
-                                    <button class="reject-btn" data-request-id="${req.id}" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-weight:600;">Reject</button>
-                                </div>
-                            </div>
-                        `).join('');
-                        setTimeout(() => {
-                            document.querySelectorAll('.accept-btn').forEach(function(btn) {
-                                btn.addEventListener('click', function(e) {
-                                    e.preventDefault();
-                                    var reqId = btn.getAttribute('data-request-id');
-                                    var userId = btn.getAttribute('data-user-id');
-                                    fetch(`/community/join-request/${reqId}/action`, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                            'X-Requested-With': 'XMLHttpRequest'
-                                        },
-                                        body: JSON.stringify({ action: 'accept' })
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            btn.closest('div').parentElement.innerHTML = '<span style="color:#22c55e;font-weight:600;">Accepted</span>';
-                                            location.reload();
-                                        }
-                                    });
-                                });
-                            });
-                            document.querySelectorAll('.reject-btn').forEach(function(btn) {
-                                btn.addEventListener('click', function(e) {
-                                    e.preventDefault();
-                                    var reqId = btn.getAttribute('data-request-id');
-                                    fetch(`/community/join-request/${reqId}/action`, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                            'X-Requested-With': 'XMLHttpRequest'
-                                        },
-                                        body: JSON.stringify({ action: 'reject' })
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            btn.closest('div').parentElement.innerHTML = '<span style="color:#ef4444;font-weight:600;">Rejected</span>';
-                                        }
-                                    });
-                                });
-                            });
-                        }, 100);
-                    }
-                });
-        }
-    });
-    document.addEventListener('click', function(event) {
-        // Close both dropdowns if clicking outside
-        if (!profileDropdown.contains(event.target) && !logoutMenu.contains(event.target)) {
-            logoutMenu.style.display = 'none';
-            logoutUp.style.display = 'block';
-            logoutDown.style.display = 'none';
-        }
-        if (!notificationBellContainer.contains(event.target) && !notificationDropdown.contains(event.target)) {
-            notificationDropdown.style.display = 'none';
-        }
-    });
+
         // Calendar functionality with week/month toggle
         class Calendar {
             constructor() {
@@ -689,6 +727,7 @@
                 this.init();
                 this.fetchTasks();
             }
+
             fetchTasks() {
                 fetch('/student-tasks/month?year=' + this.currentYear + '&month=' + (this.currentMonth + 1))
                     .then(response => response.json())
@@ -705,16 +744,19 @@
                         this.render();
                     });
             }
+
             getPriorityClass(priority) {
                 if (priority === 'critical') return 'event-red';
                 if (priority === 'medium') return 'event-green';
                 if (priority === 'not_urgent') return 'event-purple';
                 return 'event-blue';
             }
+
             init() {
                 this.render();
                 this.bindEvents();
             }
+
             bindEvents() {
                 document.getElementById('prevMonth').addEventListener('click', () => {
                     this.currentMonth--;
@@ -724,6 +766,7 @@
                     }
                     this.fetchTasks();
                 });
+
                 document.getElementById('nextMonth').addEventListener('click', () => {
                     this.currentMonth++;
                     if (this.currentMonth > 11) {
@@ -732,12 +775,14 @@
                     }
                     this.fetchTasks();
                 });
+
                 document.getElementById('weekToggle').addEventListener('click', () => {
                     this.view = 'week';
                     document.getElementById('weekToggle').classList.add('active');
                     document.getElementById('monthToggle').classList.remove('active');
                     this.render();
                 });
+
                 document.getElementById('monthToggle').addEventListener('click', () => {
                     this.view = 'month';
                     document.getElementById('monthToggle').classList.add('active');
@@ -745,6 +790,7 @@
                     this.render();
                 });
             }
+
             render() {
                 const monthYear = `${this.months[this.currentMonth]} ${this.currentYear}`;
                 document.getElementById('currentMonth').textContent = monthYear;
@@ -758,14 +804,14 @@
                     this.renderWeek();
                 }
             }
+
             renderMonth() {
                 const firstDay = new Date(this.currentYear, this.currentMonth, 1);
                 const startDate = new Date(firstDay);
                 startDate.setDate(startDate.getDate() - firstDay.getDay());
                 const calendarGrid = document.getElementById('calendarGrid');
-                // Remove all children
                 calendarGrid.innerHTML = '';
-                // Header row
+
                 const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
                 for (let d = 0; d < 7; d++) {
                     const header = document.createElement('div');
@@ -773,7 +819,7 @@
                     header.textContent = days[d];
                     calendarGrid.appendChild(header);
                 }
-                // Generate 6 weeks of calendar cells
+
                 for (let week = 0; week < 6; week++) {
                     for (let day = 0; day < 7; day++) {
                         const cellDate = new Date(startDate);
@@ -783,19 +829,19 @@
                     }
                 }
             }
+
             async renderWeek() {
                 const weekView = document.getElementById('weekView');
                 weekView.innerHTML = '';
-                // Find the current week (Monday-Sunday)
                 const today = new Date(this.currentYear, this.currentMonth, this.currentDate.getDate());
                 let weekStart = new Date(today);
-                // Set to Monday
                 weekStart.setDate(today.getDate() - ((today.getDay() + 6) % 7));
                 let weekEnd = new Date(weekStart);
                 weekEnd.setDate(weekStart.getDate() + 6);
+
                 const startStr = `${weekStart.getFullYear()}-${weekStart.getMonth() + 1}-${weekStart.getDate()}`;
                 const endStr = `${weekEnd.getFullYear()}-${weekEnd.getMonth() + 1}-${weekEnd.getDate()}`;
-                // Fetch week tasks
+
                 let weekTasks = {};
                 await fetch(`/student-tasks/week?start=${startStr}&end=${endStr}`)
                     .then(response => response.json())
@@ -808,6 +854,7 @@
                             });
                         });
                     });
+
                 const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
                 for (let i = 0; i < 7; i++) {
                     const row = document.createElement('div');
@@ -815,10 +862,11 @@
                     const dayCell = document.createElement('div');
                     dayCell.className = 'week-day';
                     dayCell.textContent = days[i];
-                    // Date for this day
+
                     let d = new Date(weekStart);
                     d.setDate(weekStart.getDate() + i);
                     const eventKey = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                    
                     if (weekTasks[eventKey]) {
                         const eventsDiv = document.createElement('div');
                         eventsDiv.className = 'calendar-events';
@@ -834,22 +882,25 @@
                     weekView.appendChild(row);
                 }
             }
+
             createCalendarCell(date) {
                 const cell = document.createElement('div');
                 cell.className = 'calendar-cell';
                 const isCurrentMonth = date.getMonth() === this.currentMonth;
                 const isToday = date.toDateString() === this.today.toDateString();
+
                 if (!isCurrentMonth) {
                     cell.classList.add('other-month');
                 }
                 if (isToday) {
                     cell.classList.add('today');
                 }
+
                 const dateDiv = document.createElement('div');
                 dateDiv.className = 'calendar-date';
                 dateDiv.textContent = date.getDate().toString().padStart(2, '0');
                 cell.appendChild(dateDiv);
-                // Add events if any
+
                 const eventKey = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
                 if (this.events[eventKey]) {
                     const eventsDiv = document.createElement('div');
@@ -865,10 +916,10 @@
                 return cell;
             }
         }
-        // Initialize calendar when DOM is loaded
+
         document.addEventListener('DOMContentLoaded', function() {
             new Calendar();
         });
     </script>
+</body>
 @endsection
-

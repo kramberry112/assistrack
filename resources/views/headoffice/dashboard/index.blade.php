@@ -122,7 +122,6 @@
     }
 
     /* Logout dropdown */
-    /* Logout dropdown */
     #logoutMenu {
         display: none;
         position: absolute;

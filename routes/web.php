@@ -284,6 +284,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/student-community', [\App\Http\Controllers\CommunityGroupController::class, 'store'])->name('student.community.create');
     Route::post('/community/send-message', [App\Http\Controllers\CommunityGroupController::class, 'sendMessage'])->name('community.sendMessage');
     Route::view('/student-calendar', 'students.calendar.index')->name('student.calendar');
+    Route::view('/student-grades', 'students.grades.index')->name('student.grades');
     Route::view('/student-tasks/create', 'students.dashboard.create')->name('student.tasks.create');
     Route::post('/student-tasks', [\App\Http\Controllers\StudentTaskController::class, 'store'])->name('student.tasks.store');
 
