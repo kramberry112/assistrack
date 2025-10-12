@@ -1380,6 +1380,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+    // Listen for office verification event to update dashboard instantly
+    window.addEventListener('task-verified', function(e) {
+        // Find the task card and update its verified status
+        var taskId = e.detail.taskId;
+        var card = document.querySelector('.task-card[data-task-id="' + taskId + '"]');
+        if (card) {
+            // Mark as verified visually
+            var statusBadge = card.querySelector('.task-status');
+            if (statusBadge) {
+                statusBadge.textContent = 'Verified';
+                statusBadge.className = 'task-status verified';
+            }
+            // Enable Start button
+            var startBtn = card.querySelector('.task-action.start');
+            if (startBtn) {
+                startBtn.disabled = false;
+                startBtn.style.background = '#2563eb';
+                startBtn.style.color = '#fff';
+                startBtn.style.cursor = 'pointer';
+            }
+        }
+        updateTabCounts();
+    });
 });
 </script>
 @vite(['resources/js/app.js'])

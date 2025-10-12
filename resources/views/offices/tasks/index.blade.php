@@ -538,6 +538,8 @@
                 .then(data => {
                     // Force refresh to avoid duplicate and update UI instantly
                     fetchTasks();
+                    // Emit custom event for cross-tab/dashboard update
+                    window.dispatchEvent(new CustomEvent('task-verified', { detail: { taskId } }));
                 })
                 .catch(() => {
                     alert('Failed to verify task.');
