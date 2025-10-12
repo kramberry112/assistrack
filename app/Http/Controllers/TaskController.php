@@ -6,10 +6,41 @@ use App\Events\StudentTaskVerified;
 
 class TaskController extends Controller
 {
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'priority' => 'required|string',
+            'due_date' => 'required|date',
+            'student_id' => 'required|exists:users,id',
+        ]);
+
+        $task = new \App\Models\StudentTask();
+        $task->user_id = $request->student_id;
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->priority = $request->priority;
+        $task->due_date = $request->due_date;
+        $task->status = 'todo';
+        $task->progress = 'not_started';
+        $task->verified = true; // Automatically verified
+        $task->save();
+
+        // Optionally broadcast event if needed
+        // broadcast(new StudentTaskVerified($task->id, $task->user_id));
+
+        return redirect()->route('tasks.index')->with('success', 'Task created and assigned to student.');
+    }
+    public function create()
+    {
+        return view('offices.tasks.create');
+    }
     public function index()
     {
-    $tasks = \App\Models\StudentTask::with('user')->orderBy('created_at', 'desc')->get();
-        return view('offices.tasks.index', compact('tasks'));
+        $tasks = \App\Models\StudentTask::with('user')->orderBy('created_at', 'desc')->get();
+        $students = \App\Models\User::where('role', 'student')->orderBy('name')->get();
+        return view('offices.tasks.index', compact('tasks', 'students'));
     }
 
     /**

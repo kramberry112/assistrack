@@ -9,7 +9,7 @@ class HeadStudentListController extends Controller
     // Show the list of students for Head Office
     public function index()
     {
-        $query = \App\Models\Student::query();
+    $query = \App\Models\Student::query()->orderByDesc('id');
         if (request('keyword')) {
             $keyword = request('keyword');
             $query->where(function($q) use ($keyword) {

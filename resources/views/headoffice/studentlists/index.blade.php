@@ -560,7 +560,7 @@
                             <th>Year Level</th>
                             <th>Student ID</th>
                             <th>Designated Office</th>
-                            <th>Action</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -571,14 +571,6 @@
                                 <td>{{ $student->year_level }}</td>
                                 <td>{{ $student->id_number }}</td>
                                 <td>{{ $student->designated_office ?? 'N/A' }}</td>
-                                </td>
-                                <td class="action-cell">
-                                    <a href="{{ route('head.students.show', $student->id) }}">View</a>
-                                    <form method="POST" action="{{ route('students.delete', $student->id) }}" style="display:inline-block; margin-left:8px;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this student?')" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Delete</button>
-                                    </form>
                                 </td>
                             </tr>
                         @endforeach

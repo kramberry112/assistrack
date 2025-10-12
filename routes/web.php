@@ -312,6 +312,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'submit'])->name('evaluation.submit');
     Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/tasks', [\App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
+    Route::post('/tasks', [\App\Http\Controllers\TaskController::class, 'store'])->name('tasks.store');
+    Route::get('/tasks/create', [\App\Http\Controllers\TaskController::class, 'create'])->name('tasks.create');
     Route::post('/tasks/{id}/verify', [\App\Http\Controllers\TaskController::class, 'verify'])->name('tasks.verify');
 
     // AJAX endpoint for polling office tasks
