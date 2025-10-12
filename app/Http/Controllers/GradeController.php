@@ -51,4 +51,11 @@ class GradeController extends Controller
         $grades = Grade::all();
         return view('admin.reports.grades', compact('grades'));
     }
+
+    // Admin views details for a single grade
+    public function show($id)
+    {
+        $grade = Grade::findOrFail($id);
+        return view('admin.reports.grade-details', compact('grade'));
+    }
 }

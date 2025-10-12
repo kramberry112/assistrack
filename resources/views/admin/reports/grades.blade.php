@@ -74,7 +74,7 @@
                                 @endif
                             </td>
                             <td style="padding: 16px 20px;">
-                                <a href="#" 
+                                    <a href="{{ route('admin.grades.show', $grade->id) }}" 
                                    style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #6366f1; color: #ffffff; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s ease;"
                                    onmouseover="this.style.backgroundColor='#4f46e5'"
                                    onmouseout="this.style.backgroundColor='#6366f1'">

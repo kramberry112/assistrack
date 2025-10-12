@@ -253,6 +253,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $grades = Grade::all();
     return view('admin.reports.grades', compact('grades'));
 });
+
+    // Admin view single grade details
+    Route::get('/admin/reports/grades/{grade}', [App\Http\Controllers\GradeController::class, 'show'])->name('admin.grades.show');
     Route::post('/student-list/add/{id}', [\App\Http\Controllers\StudentListController::class, 'add'])->name('studentlist.add');
     Route::patch('/students/{student}/office', [\App\Http\Controllers\StudentListController::class, 'updateOffice'])->name('students.updateOffice');
     
