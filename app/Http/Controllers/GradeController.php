@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Grade;
+
+class GradeController extends Controller
+{
+    // Student submits grades
+    public function store(Request $request)
+    {
+        $subjects = json_decode($request->subjects, true);
+        $request->merge(['subjects' => $subjects]);
+        $request->validate([
+            'student_name' => 'required|string',
+            'year_level' => 'required|string',
+            'semester' => 'required|string',
+            'subjects' => 'required|array',
+            'subjects.*.subject' => 'required|string',
+            'subjects.*.grade' => 'required|string',
+            'subjects.*.remarks' => 'required|string',
+            'proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+        ]);
+
+        $proofUrl = null;
+        if ($request->hasFile('proof')) {
+            $proofUrl = $request->file('proof')->store('grades', 'public');
+        }
+
+        Grade::create([
+            'student_name' => $request->student_name,
+            'year_level' => $request->year_level,
+            'semester' => $request->semester,
+            'subjects' => $subjects,
+            'proof_url' => $proofUrl,
+        ]);
+
+        return redirect()->route('student.grades')->with('success', 'Grades submitted successfully!');
+    }
+
+    // Show student grades form
+    public function showForm()
+    {
+        return view('students.grades.index');
+    }
+
+    // Admin views all grades
+    public function index()
+    {
+        $grades = Grade::all();
+        return view('admin.reports.grades', compact('grades'));
+    }
+}

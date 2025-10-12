@@ -3,7 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\GradeController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Grade;
 
 // Public pages
 Route::view('/welcome', 'welcomepage.welcome');
@@ -247,6 +249,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/reports/tasks', function() {
         return view('admin.reports.tasks');
     });
+    Route::get('/admin/reports/grades', function() {
+        $grades = Grade::all();
+    return view('admin.reports.grades', compact('grades'));
+});
     Route::post('/student-list/add/{id}', [\App\Http\Controllers\StudentListController::class, 'add'])->name('studentlist.add');
     Route::patch('/students/{student}/office', [\App\Http\Controllers\StudentListController::class, 'updateOffice'])->name('students.updateOffice');
     
@@ -284,7 +290,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/student-community', [\App\Http\Controllers\CommunityGroupController::class, 'store'])->name('student.community.create');
     Route::post('/community/send-message', [App\Http\Controllers\CommunityGroupController::class, 'sendMessage'])->name('community.sendMessage');
     Route::view('/student-calendar', 'students.calendar.index')->name('student.calendar');
-    Route::view('/student-grades', 'students.grades.index')->name('student.grades');
+    Route::get('/student-grades', [GradeController::class, 'showForm'])->name('student.grades');
+    Route::post('/student-grades', [GradeController::class, 'store'])->name('student.grades.submit');
     Route::view('/student-tasks/create', 'students.dashboard.create')->name('student.tasks.create');
     Route::post('/student-tasks', [\App\Http\Controllers\StudentTaskController::class, 'store'])->name('student.tasks.store');
 

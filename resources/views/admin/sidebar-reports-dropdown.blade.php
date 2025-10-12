@@ -32,6 +32,12 @@
                 <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Tasks</p>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link report-link" data-url="/admin/reports/grades" data-name="Grades" style="display: flex; align-items: center; padding: 10px 20px 10px 52px; color: #6B7280; text-decoration: none; transition: background-color 0.2s;">
+                <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Grades</p>
+            </a>
+        </li>
     </ul>
 </li>
 </ul>

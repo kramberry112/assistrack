@@ -828,16 +828,28 @@
                 <p>• For remarks, type "Passed" or "Failed"</p>
             </div>
 
+            <!-- Success Message -->
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
             <!-- Grade Input Form -->
             <div class="form-container">
-                <form id="gradeForm">
+                <form id="gradeForm" method="POST" action="{{ route('student.grades.submit') }}" enctype="multipart/form-data">
+                    @csrf
                     <div class="form-wrapper">
                         <!-- Left Side -->
                         <div class="form-left">
+                            <!-- Student Name -->
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label for="student_name">Student Name</label>
+                                <input type="text" name="student_name" id="student_name" value="{{ auth()->user()->name }}" required readonly>
+                            </div>
                             <!-- Year Level -->
                             <div class="form-group" style="margin-bottom: 20px;">
-                                <label for="yearLevel">Year Level</label>
-                                <select id="yearLevel" required>
+                                <label for="year_level">Year Level</label>
+                                <select name="year_level" id="year_level" required>
                                     <option value="">Select Year Level</option>
                                     <option value="1st Year">1st Year</option>
                                     <option value="2nd Year">2nd Year</option>
@@ -845,24 +857,21 @@
                                     <option value="4th Year">4th Year</option>
                                 </select>
                             </div>
-
                             <!-- Semester -->
                             <div class="form-group" style="margin-bottom: 20px;">
                                 <label for="semester">Semester</label>
-                                <select id="semester" required>
+                                <select name="semester" id="semester" required>
                                     <option value="">Select Semester</option>
                                     <option value="1st Semester">1st Semester</option>
                                     <option value="2nd Semester">2nd Semester</option>
                                 </select>
                             </div>
-
                             <!-- Dynamic Subject Input -->
                             <div class="subjects-section">
                                 <h4>Subjects</h4>
                                 <div class="subjects-input-wrapper">
                                     <button type="button" id="add-subject" class="btn btn-primary">+ Add Subject</button>
                                 </div>
-                                
                                 <!-- Subjects Table -->
                                 <table class="subjects-table" id="subjects-list">
                                     <thead>
@@ -878,7 +887,6 @@
                                 </table>
                             </div>
                         </div>
-
                         <!-- Right Side - File Upload -->
                         <div class="form-right">
                             <div id="fileUploadArea" class="file-upload-area">
@@ -892,19 +900,31 @@
                                         <path d="M48 52v-4m0 0l-2 2m2-2l2 2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 </div>
-                                <input type="file" id="gradeFileInput" accept="image/*,.pdf" required style="display:none;">
+                                <input type="file" name="proof" id="gradeFileInput" accept="image/*,.pdf" required style="display:none;">
                                 <div id="filePreview" class="file-preview"></div>
                                 <div class="photo-upload-label">Photo Upload</div>
                             </div>
                         </div>
                     </div>
-
+                    <!-- Hidden subjects input -->
+                    <input type="hidden" name="subjects" id="subjectsJson">
                     <!-- Form Actions -->
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
-                        <button type="submit" class="btn btn-primary">Submit Grade</button>
+                        <button type="button" class="btn btn-primary" id="submitConfirmBtn">Submit Grade</button>
                     </div>
                 </form>
+            </div>
+
+            <!-- Modal -->
+            <div id="submitModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:9999;align-items:center;justify-content:center;">
+                <div style="background:#fff;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.15);max-width:350px;margin:auto;text-align:center;">
+                    <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:18px;">Are you sure you want to Submit?</h2>
+                    <div style="display:flex;gap:16px;justify-content:center;">
+                        <button id="modalCancel" style="padding:10px 24px;border-radius:6px;background:#e5e7eb;color:#222;font-weight:600;border:none;">Cancel</button>
+                        <button id="modalConfirm" style="padding:10px 24px;border-radius:6px;background:#3b82f6;color:#fff;font-weight:600;border:none;">Submit</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1054,10 +1074,11 @@
     const subjectsList = document.getElementById('subjects-list');
     const subjectsTbody = document.getElementById('subjects-tbody');
     const addSubjectBtn = document.getElementById('add-subject');
+    const gradeForm = document.getElementById('gradeForm');
+    const subjectsJson = document.getElementById('subjectsJson');
 
     addSubjectBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        
         // Create table row
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -1066,21 +1087,76 @@
             <td><input type="text" placeholder="Passed/Failed" class="remarks-input" required></td>
             <td><button type="button" class="remove-btn" onclick="removeSubjectRow(this)">Remove</button></td>
         `;
-        
         subjectsTbody.appendChild(row);
         subjectsList.classList.add('show');
-        
-        // Focus on first input
         row.querySelector('.subject-input').focus();
     });
 
     function removeSubjectRow(btn) {
         btn.closest('tr').remove();
-        
         if (subjectsTbody.children.length === 0) {
             subjectsList.classList.remove('show');
         }
     }
+
+    // Modal confirmation logic
+    const submitConfirmBtn = document.getElementById('submitConfirmBtn');
+    const submitModal = document.getElementById('submitModal');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalConfirm = document.getElementById('modalConfirm');
+
+    submitConfirmBtn.addEventListener('click', function(e) {
+        // Validate required fields
+        const yearLevel = document.getElementById('year_level').value;
+        const semester = document.getElementById('semester').value;
+        const fileInput = document.getElementById('gradeFileInput');
+        const rows = subjectsTbody.querySelectorAll('tr');
+        let valid = true;
+        let errorMsg = '';
+        if (!yearLevel) {
+            valid = false;
+            errorMsg = 'Year Level is required.';
+        } else if (!semester) {
+            valid = false;
+            errorMsg = 'Semester is required.';
+        } else if (rows.length === 0) {
+            valid = false;
+            errorMsg = 'At least one subject is required.';
+        } else {
+            rows.forEach(row => {
+                if (!row.querySelector('.subject-input').value || !row.querySelector('.grade-input').value || !row.querySelector('.remarks-input').value) {
+                    valid = false;
+                    errorMsg = 'All subject fields are required.';
+                }
+            });
+        }
+        if (!fileInput.files.length) {
+            valid = false;
+            errorMsg = 'Proof file is required.';
+        }
+        if (!valid) {
+            alert(errorMsg);
+            return;
+        }
+        submitModal.style.display = 'flex';
+    });
+    modalCancel.addEventListener('click', function(e) {
+        submitModal.style.display = 'none';
+    });
+    modalConfirm.addEventListener('click', function(e) {
+        submitModal.style.display = 'none';
+        // Serialize subjects to JSON before submit
+        const rows = subjectsTbody.querySelectorAll('tr');
+        const subjectsArr = [];
+        rows.forEach(row => {
+            const subject = row.querySelector('.subject-input').value;
+            const grade = row.querySelector('.grade-input').value;
+            const remarks = row.querySelector('.remarks-input').value;
+            subjectsArr.push({ subject, grade, remarks });
+        });
+        subjectsJson.value = JSON.stringify(subjectsArr);
+        gradeForm.submit();
+    });
 
     // File Upload Handling
     const fileUploadArea = document.getElementById('fileUploadArea');
