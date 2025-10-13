@@ -24,7 +24,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // $request->authenticate();
+        $request->authenticate();
 
         $request->session()->regenerate();
 
@@ -37,7 +37,7 @@ class AuthenticatedSessionController extends Controller
             case 'head':
                 return redirect()->route('Head');
             case 'student':
-                return redirect()->route('Admin.dashboard');
+                return redirect()->route('student.dashboard');
             case 'offices':
                 return redirect()->route('offices.dashboard');
             default:
