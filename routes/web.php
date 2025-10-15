@@ -240,6 +240,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/students/{student}', [\App\Http\Controllers\StudentListController::class, 'destroy'])->name('students.delete');
     Route::get('/applicants', [ApplicationController::class, 'index'])->name('applicants.list');
     Route::get('/applicants/{application}', [ApplicationController::class, 'show'])->name('applicants.show');
+    Route::get('/usermanagement', [\App\Http\Controllers\UserManagementController::class, 'index'])->name('admin.usermanagement');
+    Route::delete('/users/{user}', [\App\Http\Controllers\UserManagementController::class, 'destroy'])->name('users.destroy');
+    Route::post('/students/{student}/create-account', [\App\Http\Controllers\StudentListController::class, 'createAccount'])->name('students.createAccount');
     Route::view('/reports', 'admin.reports.index')->name('reports.list');
     // AJAX partials for admin reports dropdown
         Route::get('/admin/reports/attendance', [\App\Http\Controllers\AttendanceController::class, 'records'])->name('admin.attendance.report');

@@ -15,4 +15,10 @@ class Student extends Model
     {
         return $this->attributes['office'] ?? null;
     }
+
+    // Relationship with User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

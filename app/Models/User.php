@@ -19,6 +19,12 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\StudentTask::class, 'user_id');
     }
 
+    // Relationship with Student
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

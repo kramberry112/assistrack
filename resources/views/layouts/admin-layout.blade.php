@@ -315,6 +315,19 @@
                     </span>
                     New Applicants
                 </a>
+                <a href="{{ route('admin.usermanagement') }}" class="{{ request()->routeIs('admin.usermanagement') ? 'active' : '' }}">
+                    <span class="icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            <path d="M12 1v6"/>
+                            <path d="M12 16v6"/>
+                        </svg>
+                    </span>
+                    User Management
+                </a>
                 
                 <!-- Reports Dropdown -->
                 <div style="padding:0; margin:0; list-style:none;">
@@ -461,5 +474,19 @@ document.addEventListener('click', function(e) {
             sidebar.classList.remove('active');
         }
     }
+});
+
+// Close sidebar when navigation links are clicked on mobile
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+    const navLinks = document.querySelectorAll('.nav a');
+    
+    navLinks.forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768 && sidebar) {
+                sidebar.classList.remove('active');
+            }
+        });
+    });
 });
 </script>

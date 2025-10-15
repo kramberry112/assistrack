@@ -92,4 +92,45 @@ class StudentListController extends Controller
         $student->save();
         return response()->json(['success' => true, 'office' => $student->designated_office]);
     }
+
+    public function createAccount(Request $request, Student $student)
+    {
+        // Check if student already has an account
+        if ($student->user_id) {
+            return redirect()->back()->with('error', 'This student already has an account.');
+        }
+
+        // Generate username from student name (lowercase, no spaces)
+        $username = strtolower(str_replace(' ', '', $student->student_name));
+        
+        // Check if username already exists, add number if needed
+        $originalUsername = $username;
+        $counter = 1;
+        while (\App\Models\User::where('username', $username)->exists()) {
+            $username = $originalUsername . $counter;
+            $counter++;
+        }
+
+        // Generate student email format: fullname.stud@cdd.edu.ph
+        $emailName = strtolower(str_replace(' ', '', $student->student_name));
+        $studentEmail = $emailName . '.stud@cdd.edu.ph';
+
+        // Set default password
+        $defaultPassword = 'assistrack2025';
+
+        // Create user account
+        $user = \App\Models\User::create([
+            'name' => $student->student_name,
+            'username' => $username,
+            'email' => $studentEmail,
+            'password' => bcrypt($defaultPassword),
+            'role' => 'student',
+        ]);
+
+        // Link student to user
+        $student->user_id = $user->id;
+        $student->save();
+
+        return redirect()->back()->with('success', "Account created successfully! Username: {$username}, Password: {$defaultPassword}");
+    }
 }

@@ -186,6 +186,18 @@
 </style>
 
 
+        @if(session('success'))
+            <div style="background:#10b981;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
+                <i class="bi bi-check-circle"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div style="background:#ef4444;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
+                <i class="bi bi-exclamation-circle"></i> {{ session('error') }}
+            </div>
+        @endif
+
         <div class="content-card">
             <div class="content-header">
                 <span class="icon">
@@ -387,11 +399,21 @@
                                 </div>
                             </td>
                             <td class="action-cell">
-                                <a href="{{ route('students.show', $student->id) }}">View</a>
-                                <form method="POST" action="{{ route('students.delete', $student->id) }}" style="display:inline-block; margin-left:8px;">
+                                <a href="{{ route('students.show', $student->id) }}" style="background:#3b82f6;color:#fff;padding:6px 12px;border-radius:4px;text-decoration:none;margin-right:4px;">View</a>
+                                
+                                @if($student->user_id)
+                                    <span style="background:#10b981;color:#fff;padding:6px 12px;border-radius:4px;margin-right:4px;font-size:12px;">Account Created</span>
+                                @else
+                                    <form method="POST" action="{{ route('students.createAccount', $student->id) }}" style="display:inline-block; margin-right:4px;">
+                                        @csrf
+                                        <button type="submit" onclick="return confirm('Create account for {{ $student->student_name }}?')" style="background:#10b981;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Create Account</button>
+                                    </form>
+                                @endif
+                                
+                                <form method="POST" action="{{ route('students.delete', $student->id) }}" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this student?')" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Delete</button>
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this student?')" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Delete</button>
                                 </form>
                             </td>
                         </tr>

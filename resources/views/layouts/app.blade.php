@@ -14,7 +14,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body style="font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; min-height: 100vh; margin: 0;">
-        @if(request()->is('admin*') || request()->is('admindashboard') || request()->is('student-list') || request()->is('applicants') || request()->routeIs('Admin') || request()->routeIs('student.list') || request()->routeIs('applicants.list'))
+        @if(request()->is('admin*') || request()->is('admindashboard') || request()->is('student-list') || request()->is('applicants') || request()->is('usermanagement') || request()->routeIs('Admin') || request()->routeIs('student.list') || request()->routeIs('applicants.list') || request()->routeIs('admin.usermanagement'))
             @include('layouts.admin-layout')
         @elseif(request()->is('head*') || request()->routeIs('Head') || request()->routeIs('head.student.list') || request()->routeIs('head.reports') || request()->routeIs('head.reports.list') || request()->routeIs('head.students.show'))
             @include('layouts.head-layout')
