@@ -2,24 +2,26 @@
 
 @section('content')
 <style>
+    * {
+        box-sizing: border-box;
+    }
+
     .content-card {
-        flex: 1;
         background: #fff;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
+        overflow: hidden;
+        margin: 0;
     }
 
     .content-header {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 16px 20px;
+        gap: 12px;
+        padding: 16px 24px;
         border-bottom: 1px solid #e5e7eb;
         background: #fff;
-        font-size: 0.95rem;
+        font-size: 1rem;
         color: #374151;
         font-weight: 600;
     }
@@ -32,57 +34,146 @@
         justify-content: center;
     }
 
-    .content-body {
+    .header-actions {
+        margin-left: auto;
+    }
+
+    .search-filter-section {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e5e7eb;
+        background: #f9fafb;
+    }
+
+    .search-filter-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .search-input-wrapper {
         flex: 1;
-        padding: 24px;
+        min-width: 300px;
+    }
+
+    .filter-select-wrapper {
+        min-width: 180px;
+    }
+
+    .content-body {
+        padding: 0;
+        overflow-x: auto;
     }
 
     .table-container {
-        background: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid #e5e7eb;
+        width: 100%;
+        overflow-x: auto;
+        padding: 0 24px 24px 24px;
+        max-width: 100%;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
+        min-width: 100%;
+        table-layout: auto;
     }
 
-    th, td {
-        padding: 12px 16px;
-        text-align: left;
-        border-bottom: 1px solid #e5e7eb;
+    thead tr {
+        background: #f9fafb;
     }
 
     th {
-        background: #f9fafb;
+        padding: 12px 16px;
+        text-align: left;
         font-weight: 600;
-        font-size: 0.875rem;
         color: #374151;
+        font-size: 0.875rem;
+        border-bottom: 1px solid #e5e7eb;
+        white-space: nowrap;
     }
 
     td {
+        padding: 12px 16px;
+        text-align: left;
         font-size: 0.875rem;
-        color: #6b7280;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: middle;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 50px; /* Fixed row height */
     }
 
-    tr:hover td {
+    tbody tr:hover {
         background: #f9fafb;
     }
 
+    /* Column widths - Responsive percentages */
+    th:nth-child(1), td:nth-child(1) { width: 14%; }
+    th:nth-child(2), td:nth-child(2) { width: 11%; }
+    th:nth-child(3), td:nth-child(3) { width: 20%; }
+    th:nth-child(4), td:nth-child(4) { width: 8%; text-align: center; }
+    th:nth-child(5), td:nth-child(5) { width: 11%; }
+    th:nth-child(6), td:nth-child(6) { width: 11%; }
+    th:nth-child(7), td:nth-child(7) { width: 9%; }
+    th:nth-child(8), td:nth-child(8) { width: 16%; }
+
+    /* Email column wrapping */
+    td:nth-child(3) {
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 0; /* Forces ellipsis to work */
+    }
+
+    /* Badge styles */
+    .role-badge, .office-badge, .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .office-badge {
+        background: #f3f4f6;
+        color: #374151;
+        border-radius: 6px;
+    }
+
+    .status-active {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    /* Button styles */
     .btn {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        padding: 6px 12px;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 16px;
         border-radius: 6px;
-        font-size: 0.75rem;
+        font-size: 0.813rem;
         font-weight: 500;
-        text-decoration: none;
-        transition: all 0.2s ease;
         border: none;
         cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .btn i {
+        font-size: 0.875rem;
     }
 
     .btn-primary {
@@ -103,40 +194,343 @@
         background: #dc2626;
     }
 
-    .status-badge {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 500;
+    .btn-gray {
+        background: #6b7280;
+        color: white;
     }
 
-    .status-active {
-        background: #d1fae5;
-        color: #065f46;
+    .btn-gray:hover {
+        background: #4b5563;
     }
 
-    .status-inactive {
-        background: #fee2e2;
-        color: #991b1b;
+    .btn-success {
+        background: #10b981;
+        color: white;
     }
 
+    .btn-success:hover {
+        background: #059669;
+    }
+
+    /* Actions column */
     .actions {
         display: flex;
+        gap: 4px;
+        align-items: center;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .actions form {
+        display: inline-block;
+        margin: 0;
+        flex: 1;
+    }
+
+    .actions .btn {
+        width: 100%;
+        min-width: 0;
+        padding: 6px 8px;
+        font-size: 0.7rem;
+        justify-content: center;
+    }
+
+    .actions .btn i {
+        font-size: 0.75rem;
+        margin-right: 3px;
+    }
+
+    /* Ensure action buttons don't get squeezed */
+    td:nth-child(8) {
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 8px 12px;
+    }
+
+    /* Form styles */
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: #9ca3af;
+        padding: 0;
+        line-height: 1;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-close:hover {
+        color: #374151;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.875rem;
+    }
+
+    .form-help {
+        color: #6b7280;
+        font-size: 0.75rem;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 24px;
+    }
+
+    /* Alert styles */
+    .alert {
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
         gap: 8px;
+        transition: opacity 0.5s ease-out;
+    }
+
+    .alert-success {
+        background: #10b981;
+        color: #fff;
+    }
+
+    .alert-error {
+        background: #ef4444;
+        color: #fff;
+    }
+
+    /* Password field styling */
+    .password-field-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .password-field-group label {
+        margin: 0;
+    }
+
+    .btn-reset {
+        background: #f59e0b;
+        color: white;
+        padding: 5px 12px;
+        font-size: 0.75rem;
+    }
+
+    .btn-reset:hover {
+        background: #d97706;
+    }
+
+    /* Responsive adjustments - No horizontal scroll */
+    @media (max-width: 1400px) {
+        .table-container {
+            padding: 0 16px 16px 16px;
+        }
+        
+        .actions .btn {
+            padding: 5px 6px;
+            font-size: 0.65rem;
+        }
+        
+        .actions .btn i {
+            font-size: 0.7rem;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .table-container {
+            padding: 0 12px 12px 12px;
+        }
+        
+        /* Adjust column widths for smaller screens */
+        th:nth-child(1), td:nth-child(1) { width: 12%; }
+        th:nth-child(2), td:nth-child(2) { width: 10%; }
+        th:nth-child(3), td:nth-child(3) { width: 18%; }
+        th:nth-child(4), td:nth-child(4) { width: 7%; }
+        th:nth-child(5), td:nth-child(5) { width: 10%; }
+        th:nth-child(6), td:nth-child(6) { width: 10%; }
+        th:nth-child(7), td:nth-child(7) { width: 8%; }
+        th:nth-child(8), td:nth-child(8) { width: 25%; }
+        
+        .actions {
+            gap: 3px;
+        }
+        
+        .actions .btn {
+            padding: 4px 6px;
+            font-size: 0.6rem;
+        }
+        
+        .actions .btn i {
+            font-size: 0.65rem;
+            margin-right: 2px;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .table-container {
+            padding: 0 8px 8px 8px;
+        }
+        
+        /* Stack buttons vertically on very small screens */
+        .actions {
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .actions .btn {
+            width: 100%;
+            padding: 3px 4px;
+            font-size: 0.55rem;
+        }
+        
+        /* Hide icons on very small screens to save space */
+        .actions .btn i {
+            display: none;
+        }
+        
+        /* Adjust column widths for mobile */
+        th:nth-child(1), td:nth-child(1) { width: 15%; }
+        th:nth-child(2), td:nth-child(2) { width: 12%; }
+        th:nth-child(3), td:nth-child(3) { width: 20%; }
+        th:nth-child(4), td:nth-child(4) { width: 8%; }
+        th:nth-child(5), td:nth-child(5) { width: 12%; }
+        th:nth-child(6), td:nth-child(6) { width: 8%; }
+        th:nth-child(7), td:nth-child(7) { width: 8%; }
+        th:nth-child(8), td:nth-child(8) { width: 17%; }
+        
+        /* Maintain consistent row height and text handling */
+        th, td {
+            padding: 8px 6px;
+            font-size: 0.75rem;
+            height: 45px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Keep email column consistent - no wrapping */
+        td:nth-child(3) {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    @media (max-width: 768px) {
+        /* Ultra compact for phones */
+        th:nth-child(1), td:nth-child(1) { width: 16%; }
+        th:nth-child(2), td:nth-child(2) { width: 14%; }
+        th:nth-child(3), td:nth-child(3) { width: 22%; }
+        th:nth-child(4), td:nth-child(4) { width: 8%; }
+        th:nth-child(5), td:nth-child(5) { width: 14%; }
+        th:nth-child(6), td:nth-child(6) { width: 8%; }
+        th:nth-child(7), td:nth-child(7) { width: 8%; }
+        th:nth-child(8), td:nth-child(8) { width: 10%; }
+        
+        .actions .btn {
+            padding: 2px 3px;
+            font-size: 0.5rem;
+        }
+        
+        th, td {
+            padding: 6px 4px;
+            font-size: 0.7rem;
+            height: 40px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 </style>
 
-<!-- Main Content -->
+<!-- Alerts -->
 @if(session('success'))
-    <div id="successMessage" style="background:#10b981;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:16px;transition:opacity 0.5s ease-out;">
-        <i class="bi bi-check-circle"></i> {{ session('success') }}
+    <div id="successMessage" class="alert alert-success">
+        <i class="bi bi-check-circle"></i>
+        {{ session('success') }}
     </div>
 @endif
 
 @if(session('error'))
-    <div id="errorMessage" style="background:#ef4444;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:16px;transition:opacity 0.5s ease-out;">
-        <i class="bi bi-exclamation-circle"></i> {{ session('error') }}
+    <div id="errorMessage" class="alert alert-error">
+        <i class="bi bi-exclamation-circle"></i>
+        {{ session('error') }}
     </div>
 @endif
 
@@ -146,8 +540,8 @@
             <i class="bi bi-people-fill"></i>
         </span>
         User Management
-        <div style="margin-left: auto;">
-            <button class="btn btn-primary" onclick="openCreateUserModal()" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">
+        <div class="header-actions">
+            <button class="btn btn-primary" onclick="openCreateUserModal()">
                 <i class="bi bi-person-plus"></i>
                 Create New User
             </button>
@@ -155,22 +549,20 @@
     </div>
 
     <!-- Search and Filter Section -->
-    <div style="padding: 20px; border-bottom: 1px solid #e5e7eb; background: #f9fafb;">
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-            <!-- Search Input -->
-            <div style="flex: 1; min-width: 250px;">
+    <div class="search-filter-section">
+        <div class="search-filter-row">
+            <div class="search-input-wrapper">
                 <input type="text" 
                        id="searchInput" 
+                       class="form-control"
                        placeholder="Search by name, username, or email..." 
-                       style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;"
                        onkeyup="filterUsers()">
             </div>
             
-            <!-- Role Filter -->
-            <div style="min-width: 150px;">
+            <div class="filter-select-wrapper">
                 <select id="roleFilter" 
-                        onchange="filterUsers()" 
-                        style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem; background: white;">
+                        class="form-control"
+                        onchange="filterUsers()">
                     <option value="">All Roles</option>
                     <option value="admin">Admin</option>
                     <option value="head">Head Office</option>
@@ -179,9 +571,7 @@
                 </select>
             </div>
             
-            <!-- Clear Filters -->
-            <button onclick="clearFilters()" 
-                    style="padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 6px; font-size: 0.875rem; cursor: pointer;">
+            <button onclick="clearFilters()" class="btn btn-gray">
                 <i class="bi bi-x-circle"></i> Clear
             </button>
         </div>
@@ -208,55 +598,61 @@
                         data-name="{{ strtolower($user->name) }}" 
                         data-username="{{ strtolower($user->username) }}" 
                         data-email="{{ strtolower($user->email) }}" 
-                        data-role="{{ $user->role }}" 
-                        data-office="{{ $user->office_name ?? '' }}">
+                        data-role="{{ $user->role }}">
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>
-                            <span style="color:#6b7280;font-family:monospace;font-size:0.875rem;">••••••••</span>
+                        <td style="text-align: center;">
+                            <span style="color:#9ca3af;font-family:monospace;letter-spacing:2px;">••••••••</span>
                         </td>
                         <td>
                             @if($user->role === 'admin')
-                                <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:500;">Administrator</span>
+                                <span class="role-badge" style="background:#3b82f6;color:#fff;">Administrator</span>
                             @elseif($user->role === 'head')
-                                <span style="background:#8b5cf6;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:500;">Head Office</span>
+                                <span class="role-badge" style="background:#8b5cf6;color:#fff;">Head Office</span>
                             @elseif($user->role === 'offices')
-                                <span style="background:#f59e0b;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:500;">Offices</span>
+                                <span class="role-badge" style="background:#f59e0b;color:#fff;">Offices</span>
                             @elseif($user->role === 'student')
-                                <span style="background:#10b981;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:500;">Student</span>
+                                <span class="role-badge" style="background:#10b981;color:#fff;">Student</span>
                             @else
-                                <span style="background:#6b7280;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:500;">{{ ucfirst($user->role) }}</span>
+                                <span class="role-badge" style="background:#6b7280;color:#fff;">{{ ucfirst($user->role) }}</span>
                             @endif
                         </td>
                         <td>
                             @if($user->office_name)
-                                <span style="background:#f3f4f6;color:#374151;padding:2px 8px;border-radius:6px;font-size:0.75rem;font-weight:500;">{{ $user->office_name }}</span>
+                                <span class="office-badge">{{ $user->office_name }}</span>
                             @else
-                                <span style="color:#6b7280;">-</span>
+                                <span style="color:#9ca3af;">-</span>
                             @endif
                         </td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td class="actions">
-                            <button class="btn btn-primary" onclick="confirmEditUser({{ $user->id }}, '{{ $user->name }}', '{{ $user->username }}', '{{ $user->email }}', '', '{{ $user->role }}', '{{ $user->office_name }}')">
-                                <i class="bi bi-pencil-square"></i>
-                                Edit
-                            </button>
-                            @if($user->role !== 'admin')
-                            <form method="POST" action="{{ route('users.destroy', $user->id) }}" style="display:inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user account for {{ $user->name }}?')">
-                                    <i class="bi bi-trash"></i>
-                                    Delete
+                        <td>
+                            <span class="status-badge status-active">Active</span>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-primary" onclick='confirmEditUser({{ $user->id }}, "{{ addslashes($user->name) }}", "{{ $user->username }}", "{{ $user->email }}", "", "{{ $user->role }}", "{{ $user->office_name ?? "" }}")'>
+                                    <i class="bi bi-pencil-square"></i>
+                                    Edit
                                 </button>
-                            </form>
-                            @endif
+                                @if($user->role !== 'admin')
+                                <form method="POST" action="{{ route('users.destroy', $user->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" onclick='return confirm("Are you sure you want to delete this user account for {{ addslashes($user->name) }}?")'>
+                                        <i class="bi bi-trash"></i>
+                                        Delete
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" style="text-align: center; padding: 24px; color: #6b7280;">No users found.</td>
+                        <td colspan="8" style="text-align: center; padding: 48px; color: #9ca3af;">
+                            <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 8px;"></i>
+                            No users found
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -266,33 +662,33 @@
 </div>
 
 <!-- Create User Modal -->
-<div id="createUserModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; color: #111827;">Create New User Account</h3>
-            <button onclick="closeCreateUserModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>
+<div id="createUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Create New User Account</h3>
+            <button type="button" class="modal-close" onclick="closeCreateUserModal()">&times;</button>
         </div>
         
         <form method="POST" action="{{ route('users.store') }}">
             @csrf
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Full Name</label>
-                <input type="text" name="name" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" class="form-control" required>
             </div>
             
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Username</label>
-                <input type="text" name="username" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" required>
             </div>
             
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Email</label>
-                <input type="email" name="email" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" required>
             </div>
             
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Role</label>
-                <select name="role" id="userRole" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" onchange="toggleOfficeField()">
+            <div class="form-group">
+                <label>Role</label>
+                <select name="role" id="userRole" class="form-control" required onchange="toggleOfficeField()">
                     <option value="">Select Role</option>
                     <option value="admin">Administrator</option>
                     <option value="head">Head Office</option>
@@ -300,9 +696,9 @@
                 </select>
             </div>
             
-            <div id="officeField" style="margin-bottom: 16px; display: none;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Assigned Office</label>
-                <select name="office_name" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            <div id="officeField" class="form-group" style="display: none;">
+                <label>Assigned Office</label>
+                <select name="office_name" class="form-control">
                     <option value="">Select Office</option>
                     <option value="LIBRARY">LIBRARY</option>
                     <option value="ACADS">ACADS</option>
@@ -338,49 +734,49 @@
                 </select>
             </div>
             
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Password</label>
-                <input type="password" name="password" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
-                <small style="color: #6b7280; font-size: 12px;">Minimum 8 characters</small>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" required>
+                <small class="form-help">Minimum 8 characters</small>
             </div>
             
-            <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <button type="button" onclick="closeCreateUserModal()" style="padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
-                <button type="submit" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer;">Create Account</button>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-gray" onclick="closeCreateUserModal()">Cancel</button>
+                <button type="submit" class="btn btn-success">Create Account</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- Edit User Modal -->
-<div id="editUserModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; color: #111827;">Edit User Account</h3>
-            <button onclick="closeEditUserModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>
+<div id="editUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit User Account</h3>
+            <button type="button" class="modal-close" onclick="closeEditUserModal()">&times;</button>
         </div>
         
         <form method="POST" action="" id="editUserForm" onsubmit="return confirmSaveEdit()">
             @csrf
             @method('PUT')
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Full Name</label>
-                <input type="text" name="name" id="editName" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" id="editName" class="form-control" required>
             </div>
             
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Username</label>
-                <input type="text" name="username" id="editUsername" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" id="editUsername" class="form-control" required>
             </div>
             
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Email</label>
-                <input type="email" name="email" id="editEmail" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" id="editEmail" class="form-control" required>
             </div>
             
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Role</label>
-                <select name="role" id="editRole" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" onchange="toggleEditOfficeField()">
+            <div class="form-group">
+                <label>Role</label>
+                <select name="role" id="editRole" class="form-control" required onchange="toggleEditOfficeField()">
                     <option value="admin">Administrator</option>
                     <option value="head">Head Office</option>
                     <option value="offices">Offices</option>
@@ -388,9 +784,9 @@
                 </select>
             </div>
             
-            <div id="editOfficeField" style="margin-bottom: 16px; display: none;">
-                <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">Assigned Office</label>
-                <select name="office_name" id="editOfficeName" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            <div id="editOfficeField" class="form-group" style="display: none;">
+                <label>Assigned Office</label>
+                <select name="office_name" id="editOfficeName" class="form-control">
                     <option value="">Select Office</option>
                     <option value="LIBRARY">LIBRARY</option>
                     <option value="ACADS">ACADS</option>
@@ -426,18 +822,20 @@
                 </select>
             </div>
             
-            <div style="margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <label style="font-weight: 600; color: #374151;">Password</label>
-                    <button type="button" onclick="resetPassword()" style="background: #f59e0b; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 12px; cursor: pointer;">Reset Password</button>
+            <div class="form-group">
+                <div class="password-field-group">
+                    <label>Password</label>
+                    <button type="button" onclick="resetPassword()" class="btn btn-reset">
+                        Reset Password
+                    </button>
                 </div>
-                <input type="password" name="password" id="editPassword" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
-                <small style="color: #6b7280; font-size: 12px;">Leave blank to keep current password</small>
+                <input type="password" name="password" id="editPassword" class="form-control">
+                <small class="form-help">Leave blank to keep current password</small>
             </div>
             
-            <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <button type="button" onclick="closeEditUserModal()" style="padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
-                <button type="submit" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer;">Update Account</button>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-gray" onclick="closeEditUserModal()">Cancel</button>
+                <button type="submit" class="btn btn-success">Update Account</button>
             </div>
         </form>
     </div>
@@ -445,32 +843,30 @@
 
 <script>
 function openCreateUserModal() {
-    document.getElementById('createUserModal').style.display = 'block';
+    document.getElementById('createUserModal').classList.add('active');
 }
 
 function closeCreateUserModal() {
-    document.getElementById('createUserModal').style.display = 'none';
-    // Reset form
+    document.getElementById('createUserModal').classList.remove('active');
     document.querySelector('#createUserModal form').reset();
     document.getElementById('officeField').style.display = 'none';
 }
 
 function openEditUserModal(userId, name, username, email, password, role, officeName) {
-    document.getElementById('editUserModal').style.display = 'block';
+    document.getElementById('editUserModal').classList.add('active');
     document.getElementById('editUserForm').action = `/users/${userId}`;
     document.getElementById('editName').value = name;
     document.getElementById('editUsername').value = username;
     document.getElementById('editEmail').value = email;
-    document.getElementById('editPassword').value = ''; // Always start with empty password
+    document.getElementById('editPassword').value = '';
     document.getElementById('editRole').value = role;
     document.getElementById('editOfficeName').value = officeName || '';
     
-    // Show/hide office field based on role
     toggleEditOfficeField();
 }
 
 function closeEditUserModal() {
-    document.getElementById('editUserModal').style.display = 'none';
+    document.getElementById('editUserModal').classList.remove('active');
 }
 
 function toggleEditOfficeField() {
@@ -532,7 +928,7 @@ document.getElementById('editUserModal').addEventListener('click', function(e) {
     }
 });
 
-// Auto-hide success and error messages
+// Auto-hide messages
 document.addEventListener('DOMContentLoaded', function() {
     const successMessage = document.getElementById('successMessage');
     const errorMessage = document.getElementById('errorMessage');
@@ -541,18 +937,18 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
             successMessage.style.opacity = '0';
             setTimeout(function() {
-                successMessage.style.display = 'none';
+                successMessage.remove();
             }, 500);
-        }, 3000); // Hide after 3 seconds
+        }, 3000);
     }
     
     if (errorMessage) {
         setTimeout(function() {
             errorMessage.style.opacity = '0';
             setTimeout(function() {
-                errorMessage.style.display = 'none';
+                errorMessage.remove();
             }, 500);
-        }, 3000); // Hide after 3 seconds
+        }, 3000);
     }
 });
 
@@ -570,16 +966,13 @@ function filterUsers() {
         const email = row.dataset.email;
         const role = row.dataset.role;
         
-        // Check search criteria
         const matchesSearch = !searchInput || 
             name.includes(searchInput) || 
             username.includes(searchInput) || 
             email.includes(searchInput);
         
-        // Check role filter
         const matchesRole = !roleFilter || role === roleFilter;
         
-        // Show/hide row based on criteria
         if (matchesSearch && matchesRole) {
             row.style.display = '';
             visibleCount++;
@@ -588,7 +981,6 @@ function filterUsers() {
         }
     });
     
-    // Show "no results" message if needed
     updateNoResultsMessage(visibleCount);
 }
 
@@ -606,7 +998,7 @@ function updateNoResultsMessage(visibleCount) {
         if (!noResultsRow) {
             noResultsRow = document.createElement('tr');
             noResultsRow.id = 'noResultsRow';
-            noResultsRow.innerHTML = '<td colspan="8" style="text-align: center; padding: 24px; color: #6b7280;">No users match your search criteria.</td>';
+            noResultsRow.innerHTML = '<td colspan="8" style="text-align: center; padding: 48px; color: #9ca3af;"><i class="bi bi-search" style="font-size: 2rem; display: block; margin-bottom: 8px;"></i>No users match your search criteria</td>';
             tbody.appendChild(noResultsRow);
         }
         noResultsRow.style.display = '';
@@ -619,12 +1011,11 @@ function updateNoResultsMessage(visibleCount) {
 
 // Security confirmation functions
 function confirmEditUser(userId, name, username, email, password, role, officeName) {
-    // Check if editing admin or head office account
     if (role === 'admin' || role === 'head') {
         const isConfirmed = confirm(
-            `⚠️ SECURITY NOTICE: You are about to edit a ${role === 'admin' ? 'Administrator' : 'Head Office'} account for "${name}".\n\n` +
-            `This is a privileged account with elevated permissions. Please ensure you have authorization to make changes.\n\n` +
-            `Do you want to continue?`
+            '⚠️ SECURITY NOTICE: You are about to edit a ' + (role === 'admin' ? 'Administrator' : 'Head Office') + ' account for "' + name + '".\n\n' +
+            'This is a privileged account with elevated permissions. Please ensure you have authorization to make changes.\n\n' +
+            'Do you want to continue?'
         );
         
         if (!isConfirmed) {
@@ -632,7 +1023,6 @@ function confirmEditUser(userId, name, username, email, password, role, officeNa
         }
     }
     
-    // Open the edit modal
     openEditUserModal(userId, name, username, email, password, role, officeName);
 }
 
@@ -640,18 +1030,16 @@ function confirmSaveEdit() {
     const currentRole = document.getElementById('editRole').value;
     const userName = document.getElementById('editName').value;
     
-    // Extra confirmation for admin/head office edits
     if (currentRole === 'admin' || currentRole === 'head') {
         return confirm(
-            `🔒 Final Confirmation Required\n\n` +
-            `You are saving changes to ${currentRole === 'admin' ? 'Administrator' : 'Head Office'} account: "${userName}"\n\n` +
-            `This action will update critical system access credentials. Please confirm this is intentional.\n\n` +
-            `Save changes to this privileged account?`
+            '🔒 Final Confirmation Required\n\n' +
+            'You are saving changes to ' + (currentRole === 'admin' ? 'Administrator' : 'Head Office') + ' account: "' + userName + '"\n\n' +
+            'This action will update critical system access credentials. Please confirm this is intentional.\n\n' +
+            'Save changes to this privileged account?'
         );
     }
     
-    // Standard confirmation for other accounts
-    return confirm(`Save changes to "${userName}"?`);
+    return confirm('Save changes to "' + userName + '"?');
 }
 </script>
 @endsection

@@ -18,6 +18,8 @@
             @include('layouts.admin-layout')
         @elseif(request()->is('head*') || request()->routeIs('Head') || request()->routeIs('head.student.list') || request()->routeIs('head.reports') || request()->routeIs('head.reports.list') || request()->routeIs('head.students.show'))
             @include('layouts.head-layout')
+        @elseif(request()->is('student*') || request()->routeIs('student.dashboard') || request()->routeIs('student.community') || request()->routeIs('student.calendar') || request()->routeIs('student.grades'))
+            @include('layouts.student-layout')
         @else
             <main style="min-height: 100vh;">
                 @yield('content')
