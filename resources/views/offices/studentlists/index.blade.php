@@ -245,10 +245,7 @@
         display: block;
     }
 
-    .filter-cascade.filter-cascade-office {
-        max-height: 250px;
-        overflow-y: auto;
-    }
+
 
     .filter-option {
         padding: 8px 32px;
@@ -501,12 +498,12 @@
                         <circle cx="12" cy="7" r="4"/>
                     </svg>
                 </span>
-                Student Official List
+                {{ $officeName ?? 'Office' }} - Student List
             </div>
             <div style="display: flex; flex-direction: row; align-items: flex-start; padding: 0 24px; margin-bottom: 12px;">
                 <div style="flex: 1 1 auto;">
-                    <div class="studentlist-title" style="margin-bottom:0;">Student Official List</div>
-                    <div class="studentlist-desc" style="margin-bottom:0;">This list contains Official Student Assistants of Universidad de Dagupan</div>
+                    <div class="studentlist-title" style="margin-bottom:0;">{{ $officeName ?? 'Office' }} Student Assistants</div>
+                    <div class="studentlist-desc" style="margin-bottom:0;">Students assigned to {{ $officeName ?? 'this office' }}</div>
                 </div>
                 <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 8px; margin-top: 16px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
@@ -545,44 +542,6 @@
                                         <div class="filter-option" data-filter="year_level" data-value="Third Year">Third Year</div>
                                         <div class="filter-option" data-filter="year_level" data-value="Fourth Year">Fourth Year</div>
                                         <div class="filter-option" data-filter="year_level" data-value="Fifth Year">Fifth Year</div>
-                                    </div>
-                                    <div class="filter-label cascading-label" data-cascade="office">
-                                        <span>Office</span>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                    </div>
-                                    <div class="filter-cascade filter-cascade-office">
-                                        <div class="filter-option active" data-filter="office" data-value="">All Offices</div>
-                                        <div class="filter-option" data-filter="office" data-value="LIBRARY">LIBRARY</div>
-                                        <div class="filter-option" data-filter="office" data-value="ACADS">ACADS</div>
-                                        <div class="filter-option" data-filter="office" data-value="REGISTRAR">REGISTRAR</div>
-                                        <div class="filter-option" data-filter="office" data-value="CANTEEN">CANTEEN</div>
-                                        <div class="filter-option" data-filter="office" data-value="KUWAGO">KUWAGO</div>
-                                        <div class="filter-option" data-filter="office" data-value="QUEUING">QUEUING</div>
-                                        <div class="filter-option" data-filter="office" data-value="HRD">HRD</div>
-                                        <div class="filter-option" data-filter="office" data-value="SAO">SAO</div>
-                                        <div class="filter-option" data-filter="office" data-value="GUIDANCE">GUIDANCE</div>
-                                        <div class="filter-option" data-filter="office" data-value="CLINIC">CLINIC</div>
-                                        <div class="filter-option" data-filter="office" data-value="OPEN LAB">OPEN LAB</div>
-                                        <div class="filter-option" data-filter="office" data-value="LINKAGES">LINKAGES</div>
-                                        <div class="filter-option" data-filter="office" data-value="XACTO">XACTO</div>
-                                        <div class="filter-option" data-filter="office" data-value="SITE FACULTY">SITE FACULTY</div>
-                                        <div class="filter-option" data-filter="office" data-value="SOHS FACULTY">SOHS FACULTY</div>
-                                        <div class="filter-option" data-filter="office" data-value="SOH FACULTY">SOH FACULTY</div>
-                                        <div class="filter-option" data-filter="office" data-value="STE FACULTY">STE FACULTY</div>
-                                        <div class="filter-option" data-filter="office" data-value="SOC FACULTY">SOC FACULTY</div>
-                                        <div class="filter-option" data-filter="office" data-value="SBA FACULTY">SBA FACULTY</div>
-                                        <div class="filter-option" data-filter="office" data-value="SOE FACULTY">SOE FACULTY</div>
-                                        <div class="filter-option" data-filter="office" data-value="SIHM FACULTY">SIHM FACULTY</div>
-                                        <div class="filter-option" data-filter="office" data-value="STE DEAN'S OFFICE">STE DEAN'S OFFICE</div>
-                                        <div class="filter-option" data-filter="office" data-value="FINANCE">FINANCE</div>
-                                        <div class="filter-option" data-filter="office" data-value="LCR">LCR</div>
-                                        <div class="filter-option" data-filter="office" data-value="STEEDS">STEEDS</div>
-                                        <div class="filter-option" data-filter="office" data-value="SPORTS AND CULTURE">SPORTS AND CULTURE</div>
-                                        <div class="filter-option" data-filter="office" data-value="QUALITY ASSURANCE">QUALITY ASSURANCE</div>
-                                        <div class="filter-option" data-filter="office" data-value="ARCHIVING">ARCHIVING</div>
-                                        <div class="filter-option" data-filter="office" data-value="PRESIDENT'S OFFICE">PRESIDENT'S OFFICE</div>
-                                        <div class="filter-option" data-filter="office" data-value="MARKETING">MARKETING</div>
-                                        <div class="filter-option" data-filter="office" data-value="ALUMNI OFFICE">ALUMNI OFFICE</div>
                                     </div>
                                     <button type="button" class="filter-clear" onclick="clearFilters()">Clear Filters</button>
                                 </div>
@@ -690,8 +649,7 @@
     const cascadeLabels = document.querySelectorAll('.cascading-label');
     const cascades = {
         course: document.querySelector('.filter-cascade-course'),
-        year: document.querySelector('.filter-cascade-year'),
-        office: document.querySelector('.filter-cascade-office')
+        year: document.querySelector('.filter-cascade-year')
     };
     Object.values(cascades).forEach(c => c.style.display = 'none');
 

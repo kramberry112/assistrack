@@ -124,6 +124,7 @@ class StudentListController extends Controller
             'username' => $username,
             'email' => $studentEmail,
             'password' => bcrypt($defaultPassword),
+            'plain_password' => $defaultPassword,
             'role' => 'student',
         ]);
 

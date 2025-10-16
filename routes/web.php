@@ -241,6 +241,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/applicants', [ApplicationController::class, 'index'])->name('applicants.list');
     Route::get('/applicants/{application}', [ApplicationController::class, 'show'])->name('applicants.show');
     Route::get('/usermanagement', [\App\Http\Controllers\UserManagementController::class, 'index'])->name('admin.usermanagement');
+    Route::post('/users', [\App\Http\Controllers\UserManagementController::class, 'store'])->name('users.store');
+    Route::put('/users/{user}', [\App\Http\Controllers\UserManagementController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [\App\Http\Controllers\UserManagementController::class, 'destroy'])->name('users.destroy');
     Route::post('/students/{student}/create-account', [\App\Http\Controllers\StudentListController::class, 'createAccount'])->name('students.createAccount');
     Route::view('/reports', 'admin.reports.index')->name('reports.list');

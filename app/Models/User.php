@@ -25,6 +25,15 @@ class User extends Authenticatable
         return $this->hasOne(Student::class);
     }
 
+    // Get students assigned to this office user
+    public function assignedStudents()
+    {
+        if ($this->role === 'offices' && $this->office_name) {
+            return \App\Models\Student::where('designated_office', $this->office_name)->get();
+        }
+        return collect();
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -36,6 +45,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'office_name',
         'profile_photo',
     ];
 

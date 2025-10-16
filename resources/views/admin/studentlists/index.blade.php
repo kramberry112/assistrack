@@ -187,13 +187,13 @@
 
 
         @if(session('success'))
-            <div style="background:#10b981;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
+            <div id="successMessage" style="background:#10b981;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:16px;transition:opacity 0.5s ease-out;">
                 <i class="bi bi-check-circle"></i> {{ session('success') }}
             </div>
         @endif
 
         @if(session('error'))
-            <div style="background:#ef4444;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
+            <div id="errorMessage" style="background:#ef4444;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:16px;transition:opacity 0.5s ease-out;">
                 <i class="bi bi-exclamation-circle"></i> {{ session('error') }}
             </div>
         @endif
@@ -589,6 +589,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Auto-hide success and error messages
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    if (successMessage) {
+        setTimeout(function() {
+            successMessage.style.opacity = '0';
+            setTimeout(function() {
+                successMessage.style.display = 'none';
+            }, 500);
+        }, 3000); // Hide after 3 seconds
+    }
+    
+    if (errorMessage) {
+        setTimeout(function() {
+            errorMessage.style.opacity = '0';
+            setTimeout(function() {
+                errorMessage.style.display = 'none';
+            }, 500);
+        }, 5000); // Hide after 5 seconds (longer for errors)
+    }
 });
 </script>
 @endsection
