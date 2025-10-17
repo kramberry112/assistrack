@@ -248,9 +248,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/reports', 'admin.reports.index')->name('reports.list');
     // AJAX partials for admin reports dropdown
         Route::get('/admin/reports/attendance', [\App\Http\Controllers\AttendanceController::class, 'records'])->name('admin.attendance.report');
-    Route::get('/admin/reports/evaluation', function() {
-        return view('admin.reports.evaluation');
-    });
+    Route::get('/admin/reports/evaluation', [\App\Http\Controllers\AdminEvaluationController::class, 'index'])->name('admin.evaluations.index');
+    Route::get('/admin/evaluations/{evaluation}/view', [\App\Http\Controllers\AdminEvaluationController::class, 'view'])->name('admin.evaluations.view');
     Route::get('/admin/reports/tasks', function() {
         return view('admin.reports.tasks');
     });

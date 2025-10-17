@@ -21,4 +21,10 @@ class Student extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // Relationship with Evaluations
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class);
+    }
 }

@@ -598,12 +598,35 @@
 
         document.getElementById('evaluationForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('Evaluation submitted:', {
+            
+            const formData = {
                 ...ratings,
                 department: document.getElementById('department').value,
-                comments: document.getElementById('overall_comments').value
+                overall_comments: document.getElementById('overall_comments').value,
+                _token: '{{ csrf_token() }}'
+            };
+
+            fetch('{{ route("evaluation.submit", $student->id) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Evaluation submitted successfully!');
+                    window.location.href = '{{ route("offices.studentlists.index") }}';
+                } else {
+                    alert('Error submitting evaluation. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting evaluation. Please try again.');
             });
-            alert('Evaluation submitted successfully!');
         });
     </script>
 @endsection
