@@ -10,6 +10,11 @@ class Student extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected $fillable = [
+        'student_name', 'course', 'year_level', 'id_number', 'age', 
+        'address', 'email', 'telephone', 'picture'
+    ];
+
     // Add office field accessor for compatibility
     public function getOfficeAttribute()
     {
@@ -26,5 +31,11 @@ class Student extends Model
     public function evaluations()
     {
         return $this->hasMany(Evaluation::class);
+    }
+
+    // Check if student has been evaluated
+    public function isEvaluated()
+    {
+        return $this->evaluations()->exists();
     }
 }

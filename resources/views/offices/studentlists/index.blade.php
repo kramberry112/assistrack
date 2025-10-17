@@ -2,133 +2,6 @@
 
 @section('content')
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: #f3f4f6;
-    }
-
-    .dashboard-container {
-        display: flex;
-        min-height: 100vh;
-    }
-
-    /* Sidebar */
-    .sidebar {
-        width: 260px;
-        background: #ffffff;
-        border-right: 1px solid #e5e7eb;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        position: fixed;
-        height: 100vh;
-        left: 0;
-        top: 0;
-    }
-
-    .sidebar .logo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 20px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .sidebar .logo img {
-        width: 36px;
-        height: 36px;
-    }
-
-    .sidebar .logo span {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #111827;
-    }
-
-    .sidebar .nav {
-        display: flex;
-        flex-direction: column;
-        margin-top: 8px;
-        flex: 1;
-    }
-
-    .sidebar .nav a {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 20px;
-        font-size: 0.95rem;
-        color: #374151;
-        text-decoration: none;
-        transition: all 0.2s;
-        border-left: 3px solid transparent;
-        font-weight: 500;
-    }
-
-    .sidebar .nav a:hover {
-        background: #f9fafb;
-        color: #111827;
-    }
-
-    .sidebar .nav a.active {
-        background: #f9fafb;
-        color: #111827;
-        border-left: 3px solid #3b82f6;
-    }
-
-    .sidebar .nav a .icon {
-        width: 20px;
-        height: 20px;
-    }
-
-    /* Profile */
-    .sidebar .profile {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 16px 20px;
-        border-top: 1px solid #e5e7eb;
-        cursor: pointer;
-    }
-
-    .sidebar .profile .avatar {
-        width: 36px;
-        height: 36px;
-        background: #e5e7eb;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .sidebar .profile-details {
-        display: flex;
-        flex-direction: column;
-        font-size: 0.85rem;
-        flex: 1;
-    }
-    
-    .sidebar .profile-details .name {
-        font-weight: 600;
-        color: #111827;
-        font-size: 0.9rem;
-    }
-    
-    .sidebar .profile-details .username {
-        font-size: 0.75rem;
-        color: #6b7280;
-    }
-
-    /* Main Content */
-    .main-content {
-        flex: 1;
-        margin-left: 260px;
-        background: #f9fafb;
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-    }
-
     .content-card {
         flex: 1;
         background: #fff;
@@ -421,76 +294,23 @@
     .action-cell .delete-btn:hover {
         background: #dc2626;
     }
+
+    /* Button Success Style */
+    .btn-success {
+        background: #22c55e;
+        color: white;
+        border: 1px solid #22c55e;
+    }
+
+    .btn.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
 </style>
 
-<div class="dashboard-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div>
-            <div class="logo">
-                <img src="/images/assistracklogo.png" alt="Logo">
-                <span>Assistrack Portal</span>
-            </div>
-            <nav class="nav">
-                <a href="{{ route('offices.dashboard') }}" class="{{ request()->routeIs('offices.dashboard') ? 'active' : '' }}">
-                    <span class="icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="7" height="7" rx="1"/>
-                            <rect x="14" y="3" width="7" height="7" rx="1"/>
-                            <rect x="14" y="14" width="7" height="7" rx="1"/>
-                            <rect x="3" y="14" width="7" height="7" rx="1"/>
-                        </svg>
-                    </span>
-                    Dashboard
-                </a>
-                <a href="{{ route('offices.studentlists.index') }}" class="{{ request()->routeIs('offices.studentlists.index') ? 'active' : '' }}">
-                    <span class="icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="7" r="4" />
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        </svg>
-                    </span>
-                    Student List
-                </a>
-                <a href="{{ route('attendance.index') }}">
-                    <span class="icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 11l3 3L22 4"/>
-                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-                        </svg>
-                    </span>
-                    Attendance
-                </a>
-                <a href="{{ route('tasks.index') }}">
-                    <span class="icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
-                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-                            <path d="M9 14l2 2 4-4"/>
-                        </svg>
-                    </span>
-                    Tasks
-                </a>
-            </nav>
-        </div>
 
-        <!-- Profile -->
-        <div class="profile" id="profileDropdown">
-            @if(auth()->user()->profile_photo)
-                <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="{{ auth()->user()->name }}" class="avatar">
-            @else
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=667eea&color=fff&size=36" alt="{{ auth()->user()->name }}" class="avatar">
-            @endif
-            <div class="profile-details">
-                <span class="name">{{ auth()->user()->name }}</span>
-                <span class="username">{{ auth()->user()->username }}</span>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <section class="main-content">
-        <div class="content-card">
+<div class="content-card">
             <div class="content-header">
                 <span class="icon">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -600,7 +420,11 @@
                             <td>{{ $student->id_number }}</td>
                             <td>{{ $student->designated_office }}</td>
                             <td class="action-cell" style="text-align: center; vertical-align: middle;">
-                                <a href="{{ route('evaluation.show', $student->id) }}" class="btn btn-primary">Evaluation</a>
+                                @if($student->isEvaluated())
+                                    <button class="btn btn-success disabled">Evaluated</button>
+                                @else
+                                    <a href="{{ route('evaluation.show', $student->id) }}" class="btn btn-primary">Evaluation</a>
+                                @endif
                             </td>
                         </tr>
                         @empty
@@ -614,8 +438,7 @@
                 </table>
             </div>
         </div>
-    </section>
-</div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

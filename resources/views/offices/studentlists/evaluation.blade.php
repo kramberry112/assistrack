@@ -253,7 +253,78 @@
             transform: translateY(0);
         }
 
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 0;
+            min-width: 350px;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .success-notification {
+            border-left: 4px solid #22c55e;
+        }
+
+        .success-notification .notification-icon {
+            color: #22c55e;
+        }
+
+        .success-notification .notification-content {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .error-notification {
+            border-left: 4px solid #ef4444;
+        }
+
+        .error-notification .notification-icon {
+            color: #ef4444;
+        }
+
+        .error-notification .notification-content {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
+            .notification {
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+                transform: translateY(-100px);
+            }
+
+            .notification.show {
+                transform: translateY(0);
+            }
+
             .header {
                 padding: 32px 24px;
             }
@@ -596,6 +667,58 @@
             ratings[field] = value;
         }
 
+        function showSuccessMessage(message) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+
+            // Create success notification
+            const notification = document.createElement('div');
+            notification.className = 'notification success-notification';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <svg class="notification-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => notification.classList.add('show'), 100);
+        }
+
+        function showErrorMessage(message) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+
+            // Create error notification
+            const notification = document.createElement('div');
+            notification.className = 'notification error-notification';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <svg class="notification-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
         document.getElementById('evaluationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -617,15 +740,20 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Evaluation submitted successfully!');
-                    window.location.href = '{{ route("offices.studentlists.index") }}';
+                    // Show success message
+                    showSuccessMessage('Evaluation submitted successfully!');
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '{{ route("offices.studentlists.index") }}';
+                    }, 2000);
                 } else {
-                    alert('Error submitting evaluation. Please try again.');
+                    showErrorMessage('Error submitting evaluation. Please try again.');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error submitting evaluation. Please try again.');
+                showErrorMessage('Error submitting evaluation. Please try again.');
             });
         });
     </script>
