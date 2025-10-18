@@ -251,7 +251,43 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/reports/evaluation', [\App\Http\Controllers\AdminEvaluationController::class, 'index'])->name('admin.evaluations.index');
     Route::get('/admin/evaluations/{evaluation}/view', [\App\Http\Controllers\AdminEvaluationController::class, 'view'])->name('admin.evaluations.view');
     Route::get('/admin/reports/tasks', function() {
-        return view('admin.reports.tasks');
+        $currentUser = auth()->user();
+        
+        // If user is admin, show all tasks. If office user, show only their office's students' tasks
+        if ($currentUser->role === 'admin') {
+            $students = \App\Models\User::where('role', 'student')
+                ->whereHas('studentTasks', function($q) { 
+                    $q->where('status', 'Completed'); 
+                })
+                ->withCount(['studentTasks as student_tasks_count' => function($q) { 
+                    $q->where('status', 'Completed'); 
+                }])
+                ->with('student')
+                ->orderBy('name')
+                ->get();
+        } else if ($currentUser->role === 'offices' && $currentUser->office_name) {
+            // Get students assigned to this office
+            $assignedStudentIds = \App\Models\Student::where('designated_office', $currentUser->office_name)
+                ->whereNotNull('user_id')
+                ->pluck('user_id')
+                ->toArray();
+            
+            $students = \App\Models\User::where('role', 'student')
+                ->whereIn('id', $assignedStudentIds)
+                ->whereHas('studentTasks', function($q) { 
+                    $q->where('status', 'Completed'); 
+                })
+                ->withCount(['studentTasks as student_tasks_count' => function($q) { 
+                    $q->where('status', 'Completed'); 
+                }])
+                ->with('student')
+                ->orderBy('name')
+                ->get();
+        } else {
+            $students = collect(); // Empty collection if no office assigned
+        }
+        
+        return view('admin.reports.tasks', compact('students', 'currentUser'));
     });
     Route::get('/admin/reports/grades', function() {
         $grades = Grade::all();
@@ -313,7 +349,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Offices pages (protected)
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('/offices-dashboard', 'offices.dashboard.index')->name('offices.dashboard');
+    Route::get('/offices-dashboard', function() {
+        $user = auth()->user();
+        return view('offices.dashboard.index', compact('user'));
+    })->name('offices.dashboard');
     Route::get('/offices-student-list', [\App\Http\Controllers\OfficeStudentListController::class, 'index'])->name('offices.studentlists.index');
     Route::get('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'show'])->name('evaluation.show');
     Route::post('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'submit'])->name('evaluation.submit');

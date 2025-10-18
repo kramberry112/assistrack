@@ -49,7 +49,14 @@
             Dashboard
         </div>
         <div class="welcome-section">
-            <h1 class="welcome-message">Welcome, Office User!</h1>
+            <h1 class="welcome-message">
+                Welcome, {{ $user->name ?? 'Office User' }}!
+                @if(isset($user) && $user->office_name)
+                    <span style="display: block; font-size: 1rem; color: #6b7280; margin-top: 8px;">
+                        📍 {{ $user->office_name }} Office
+                    </span>
+                @endif
+            </h1>
         </div>
     </div>
 </div>

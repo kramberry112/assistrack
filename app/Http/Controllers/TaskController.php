@@ -38,8 +38,31 @@ class TaskController extends Controller
     }
     public function index()
     {
-        $tasks = \App\Models\StudentTask::with('user')->orderBy('created_at', 'desc')->get();
-        $students = \App\Models\User::where('role', 'student')->orderBy('name')->get();
+        $user = auth()->user();
+        
+        // Filter tasks based on office user's designated office
+        if ($user && $user->role === 'offices' && $user->office_name) {
+            // Get student IDs assigned to this office
+            $assignedStudentIds = \App\Models\Student::where('designated_office', $user->office_name)
+                ->whereNotNull('user_id')
+                ->pluck('user_id')
+                ->toArray();
+                
+            $tasks = \App\Models\StudentTask::with('user')
+                ->whereIn('user_id', $assignedStudentIds)
+                ->orderBy('created_at', 'desc')
+                ->get();
+                
+            $students = \App\Models\User::where('role', 'student')
+                ->whereIn('id', $assignedStudentIds)
+                ->orderBy('name')
+                ->get();
+        } else {
+            // Admin or other roles see all tasks
+            $tasks = \App\Models\StudentTask::with('user')->orderBy('created_at', 'desc')->get();
+            $students = \App\Models\User::where('role', 'student')->orderBy('name')->get();
+        }
+        
         return view('offices.tasks.index', compact('tasks', 'students'));
     }
 
@@ -48,7 +71,25 @@ class TaskController extends Controller
      */
     public function ajaxTasks(Request $request)
     {
-        $tasks = \App\Models\StudentTask::with('user')->orderBy('created_at', 'desc')->get();
+        $user = auth()->user();
+        
+        // Filter tasks based on office user's designated office
+        if ($user && $user->role === 'offices' && $user->office_name) {
+            // Get student IDs assigned to this office
+            $assignedStudentIds = \App\Models\Student::where('designated_office', $user->office_name)
+                ->whereNotNull('user_id')
+                ->pluck('user_id')
+                ->toArray();
+                
+            $tasks = \App\Models\StudentTask::with('user')
+                ->whereIn('user_id', $assignedStudentIds)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            // Admin or other roles see all tasks
+            $tasks = \App\Models\StudentTask::with('user')->orderBy('created_at', 'desc')->get();
+        }
+        
         // Format tasks for frontend
         $formatted = $tasks->map(function($task) {
             return [

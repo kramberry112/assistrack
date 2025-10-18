@@ -1,7 +1,30 @@
 @extends('layouts.app')
 
+@section('page-title')
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>Student List</span>
+    </div>
+@endsection
+
 @section('content')
 <style>
+    .content-wrapper {
+        background: #fff !important;
+    }
+    .admin-content-wrapper {
+        background: #fff !important;
+    }
+    .main-content {
+        background: #fff !important;
+    }
+    body {
+        background: #fff !important;
+    }
+    
     .content-card {
         flex: 1;
         background: #fff;
@@ -198,18 +221,8 @@
             </div>
         @endif
 
-        <div class="content-card">
-            <div class="content-header">
-                <span class="icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
-                </span>
-                Student Official List
-            </div>
-            
-            <div style="display: flex; flex-direction: row; align-items: flex-start; padding: 0 24px; margin-bottom: 12px;">
+<div style="background: #fff; min-height: calc(100vh - 76px); padding: 0;">
+            <div style="display: flex; flex-direction: row; align-items: flex-start; padding: 16px 16px 0 16px; margin-bottom: 8px;">
                 <div style="flex: 1 1 auto;">
                     <div class="studentlist-title" style="margin-bottom:0;">Student Official List</div>
                     <div class="studentlist-desc" style="margin-bottom:0;">This list contains Official Student Assistants of Universidad de Dagupan</div>
@@ -420,8 +433,6 @@
                         @endforeach
                     </tbody>
                 </div>
-            </div>
-        </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -613,4 +624,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+</div>
 @endsection

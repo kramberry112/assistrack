@@ -1,6 +1,27 @@
 @extends('layouts.app')
 
+@section('page-title')
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 11H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-2"/>
+            <rect x="9" y="7" width="6" height="4" rx="2"/>
+            <path d="M13 17h2"/>
+            <path d="M9 17h.01"/>
+        </svg>
+        <span>Evaluation Report</span>
+    </div>
+@endsection
+
 @section('content')
+<style>
+    .content-wrapper {
+        background: #fff !important;
+    }
+    .admin-content-wrapper {
+        background: #fff !important;
+    }
+</style>
+<div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
 
 <style>
     .page-header {
@@ -30,16 +51,18 @@
     }
     
     .reports-table thead tr {
-        background-color: #f8d7da;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     
     .reports-table th {
         padding: 18px 16px;
         text-align: left;
         font-weight: 600;
-        color: #333;
+        color: #ffffff;
         font-size: 14px;
         border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .reports-table th:first-child {
@@ -134,11 +157,6 @@
     }
 </style>
 
-<div class="page-header">
-    <h1 class="page-title">Evaluation Report</h1>
-</div>
-
-<div class="main-content-card">
     <table class="reports-table">
         <thead>
             <tr>

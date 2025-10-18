@@ -1,180 +1,119 @@
 @extends('layouts.app')
 
+@section('page-title')
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 12l2 2 4-4"/>
+            <path d="M21 12c.552 0 1-.448 1-1V8c0-.552-.448-1-1-1h-1V6c0-2.761-2.239-5-5-5H8C5.239 1 3 3.239 3 6v1H2c-.552 0-1 .448-1 1v3c0 .552.448 1 1 1"/>
+            <path d="M3 12v6c0 2.761 2.239 5 5 5h8c2.761 0 5-2.239 5-5v-6"/>
+        </svg>
+        <span>Attendance Report</span>
+    </div>
+@endsection
+
 @section('content')
-<div class="container mx-auto px-2 py-6 max-w-full overflow-x-hidden">
-    <div class="main-content-card w-full">
-    <!-- Page Header -->
-    <div class="mb-6">
-    <h1 class="text-xl font-bold text-gray-800">Attendance Records</h1>
-    <p class="text-sm text-gray-600 mt-1">Monitor and track student attendance records</p>
-    </div>
+<style>
+    .content-wrapper {
+        background: #fff !important;
+    }
+    .admin-content-wrapper {
+        background: #fff !important;
+    }
+</style>
+<div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
+        <!-- Date Filter Form -->
+        <form method="GET" action="{{ route('admin.attendance.report') }}" class="mb-6 flex items-center gap-3">
+            <label for="date" class="text-sm font-medium text-gray-700">Select Date:</label>
+            <input type="date" id="date" name="date" value="{{ request('date', now()->format('Y-m-d')) }}" 
+                   class="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition">
+                View Report
+            </button>
+        </form>
 
-    <!-- Date Filter Form for History Viewing -->
-    <form method="GET" action="{{ route('admin.attendance.report') }}" class="mb-8 flex flex-wrap items-center gap-4">
-        <label for="date" class="text-sm font-medium text-gray-700">Select Date:</label>
-        <input type="date" id="date" name="date" value="{{ request('date', now()->format('Y-m-d')) }}" class="border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:border-indigo-300">
-        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">View</button>
-    </form>
-
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-lg p-4 text-white transform hover:scale-105 transition-transform duration-200">
-            <div class="flex items-center justify-between">
-                <div>
-                    <div class="text-2xl font-bold">{{ $stats['total'] ?? 0 }}</div>
-                    <div class="text-xs text-indigo-100 mt-1">Total Records</div>
-                </div>
-                <div class="bg-white bg-opacity-20 rounded-full p-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-4 text-white transform hover:scale-105 transition-transform duration-200">
-            <div class="flex items-center justify-between">
-                <div>
-                    <div class="text-2xl font-bold">{{ $stats['clock_ins'] ?? 0 }}</div>
-                    <div class="text-xs text-green-100 mt-1">Time Ins</div>
-                </div>
-                <div class="bg-white bg-opacity-20 rounded-full p-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-4 text-white transform hover:scale-105 transition-transform duration-200">
-            <div class="flex items-center justify-between">
-                <div>
-                    <div class="text-2xl font-bold">{{ $stats['clock_outs'] ?? 0 }}</div>
-                    <div class="text-xs text-purple-100 mt-1">Time Outs</div>
-                </div>
-                <div class="bg-white bg-opacity-20 rounded-full p-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-4 text-white transform hover:scale-105 transition-transform duration-200">
-            <div class="flex items-center justify-between">
-                <div>
-                    <div class="text-2xl font-bold">{{ $stats['unique_users'] ?? 0 }}</div>
-                    <div class="text-xs text-blue-100 mt-1">Unique Students</div>
-                </div>
-                <div class="bg-white bg-opacity-20 rounded-full p-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Attendance Table -->
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden w-full">
-        <div class="overflow-x-auto w-full">
-            <table class="min-w-full divide-y divide-gray-200 text-xs w-full">
-                <thead class="bg-gradient-to-r from-indigo-600 to-indigo-700">
+        <!-- Attendance Table -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                     <tr>
-                        <th class="px-4 py-2 text-left font-semibold text-white uppercase tracking-wider">#</th>
-                        <th class="px-4 py-2 text-left font-semibold text-white uppercase tracking-wider">ID Number</th>
-                        <th class="px-4 py-2 text-left font-semibold text-white uppercase tracking-wider">Name</th>
-                        <th class="px-4 py-2 text-left font-semibold text-white uppercase tracking-wider">Designated Office</th>
-                        <th class="px-4 py-2 text-left font-semibold text-white uppercase tracking-wider">Date</th>
-                        <th class="px-4 py-2 text-left font-semibold text-white uppercase tracking-wider">Time In</th>
-                        <th class="px-4 py-2 text-left font-semibold text-white uppercase tracking-wider">Time Out</th>
-                        <th class="px-4 py-2 text-left font-semibold text-white uppercase tracking-wider">Total Hours</th>
-                        <th class="px-4 py-2 text-left font-semibold text-white uppercase tracking-wider">Status</th>
+                        <th style="padding: 16px 20px; text-align: left; font-weight: 600; font-size: 14px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">#</th>
+                        <th style="padding: 16px 20px; text-align: left; font-weight: 600; font-size: 14px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">ID Number</th>
+                        <th style="padding: 16px 20px; text-align: left; font-weight: 600; font-size: 14px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">Name</th>
+                        <th style="padding: 16px 20px; text-align: left; font-weight: 600; font-size: 14px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">Designated Office</th>
+                        <th style="padding: 16px 20px; text-align: left; font-weight: 600; font-size: 14px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">Date</th>
+                        <th style="padding: 16px 20px; text-align: left; font-weight: 600; font-size: 14px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">Time In</th>
+                        <th style="padding: 16px 20px; text-align: left; font-weight: 600; font-size: 14px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">Time Out</th>
+                        <th style="padding: 16px 20px; text-align: left; font-weight: 600; font-size: 14px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">Total Hours</th>
+                        <th style="padding: 16px 20px; text-align: left; font-weight: 600; font-size: 14px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">Status</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200 text-xs">
+                <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($records as $i => $record)
-                        <tr class="hover:bg-indigo-50 transition-colors duration-150">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
                                 {{ $i + 1 }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-mono font-semibold text-indigo-600">{{ $record['id_number'] }}</span>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                                {{ $record['id_number'] }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $record['name'] ?? '-' }}</div>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                                {{ $record['name'] ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm text-gray-600">{{ $record['office'] ?? '-' }}</span>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-600">
+                                {{ $record['office'] ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm text-gray-900">
-                                    {{ $record['date'] ?? (isset($record['time_in']) ? \Carbon\Carbon::parse($record['time_in'])->format('M d, Y') : '-') }}
-                                </span>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                                {{ $record['date'] ?? (isset($record['time_in']) ? \Carbon\Carbon::parse($record['time_in'])->format('M d, Y') : '-') }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
                                 @if($record['time_in'])
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-200">
-                                        <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                                        </svg>
-                                        {{ \Carbon\Carbon::parse($record['time_in'])->format('h:i A') }}
-                                    </span>
+                                    {{ \Carbon\Carbon::parse($record['time_in'])->format('h:i A') }}
                                 @else
-                                    <span class="text-gray-400 text-sm">-</span>
+                                    <span class="text-gray-400 font-bold">-</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
                                 @if($record['time_out'])
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
-                                        <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                                        </svg>
-                                        {{ \Carbon\Carbon::parse($record['time_out'])->format('h:i A') }}
-                                    </span>
+                                    {{ \Carbon\Carbon::parse($record['time_out'])->format('h:i A') }}
                                 @else
-                                    <span class="text-gray-400 text-sm">-</span>
+                                    <span class="text-gray-400 font-bold">-</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
                                 @if($record['total_hours'])
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
-                                        {{ number_format($record['total_hours'], 2) }} hrs
-                                    </span>
+                                    {{ number_format($record['total_hours'], 2) }} hrs
                                 @else
-                                    <span class="text-gray-400 text-sm">-</span>
+                                    <span class="text-gray-400 font-bold">-</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 @php $status = $record['status'] ?? '-' @endphp
                                 @if($status !== '-')
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold 
-                                        @if(strtolower($status) == 'present') bg-green-100 text-green-800 border border-green-200
-                                        @elseif(strtolower($status) == 'late') bg-yellow-100 text-yellow-800 border border-yellow-200
-                                        @else bg-gray-100 text-gray-800 border border-gray-200
+                                    <span class="inline-flex px-2 py-1 text-xs font-bold rounded
+                                        @if(strtolower($status) == 'present') bg-green-100 text-green-800
+                                        @elseif(strtolower($status) == 'late') bg-yellow-100 text-yellow-800
+                                        @else bg-gray-100 text-gray-800
                                         @endif">
                                         {{ $status }}
                                     </span>
                                 @else
-                                    <span class="text-gray-400 text-sm">-</span>
+                                    <span class="text-gray-400 font-bold">-</span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="px-6 py-12 text-center">
+                            <td colspan="9" class="px-4 py-8 text-center">
                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
-                                <p class="mt-4 text-gray-500 font-medium">No attendance records found</p>
-                                <p class="mt-1 text-sm text-gray-400">Records will appear here once students clock in</p>
+                                <p class="mt-2 text-sm text-gray-500">No attendance records found</p>
+                                <p class="text-xs text-gray-400">Records will appear here once students clock in</p>
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-    </div>
-    </div>
 </div>
 @endsection

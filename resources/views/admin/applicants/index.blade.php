@@ -1,7 +1,31 @@
 @extends('layouts.app')
 
+@section('page-title')
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="m22 21-3-3 3-3"/>
+        </svg>
+        <span>New Applicants</span>
+    </div>
+@endsection
+
 @section('content')
 <style>
+    .content-wrapper {
+        background: #fff !important;
+    }
+    .admin-content-wrapper {
+        background: #fff !important;
+    }
+    .main-content {
+        background: #fff !important;
+    }
+    body {
+        background: #fff !important;
+    }
+    
     /* Action cell layout: View left, Add to Student List right */
     .applicants-table td.action-cell {
         display: flex;
@@ -207,18 +231,8 @@
     }
 </style>
 
-        <div class="content-card">
-            <div class="content-header">
-                <span class="icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="m22 21-3-3 3-3"/>
-                    </svg>
-                </span>
-                <span style="font-weight:600; font-size:1.1rem;">New Applicants</span>
-            </div>
-            <div style="display: flex; flex-direction: row; align-items: center; padding: 0 24px; margin-bottom: 12px;">
+<div style="background: #fff; min-height: calc(100vh - 76px); padding: 0;">
+            <div style="display: flex; flex-direction: row; align-items: center; padding: 16px 16px 0 16px; margin-bottom: 8px;">
                 <div style="flex: 1 1 auto;">
                     <div class="applicants-title" style="margin-bottom:0;">New Applicants</div>
                     <div class="applicants-desc" style="margin-bottom:0;">This page contains new applicants for student assistantship.</div>
@@ -320,8 +334,6 @@
                         @endforeach
                     </tbody>
                 </div>
-            </div>
-        </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -404,4 +416,5 @@ function clearFilters() {
     window.location.href = window.location.pathname;
 }
 </script>
+</div>
 @endsection

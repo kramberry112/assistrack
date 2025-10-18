@@ -28,6 +28,8 @@
         gap: 12px;
         padding: 20px;
         border-bottom: 1px solid #e5e7eb;
+        height: 76px;
+        box-sizing: border-box;
     }
 
     .sidebar .logo img {
@@ -207,13 +209,56 @@
         box-shadow: 0 4px 16px rgba(239,68,68,0.15);
     }
 
+    /* Header */
+    .main-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        height: 76px;
+        box-sizing: border-box;
+    }
+
+    .header-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #3b82f6;
+        margin: 0;
+    }
+
+    .header-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    .header-breadcrumb .separator {
+        color: #d1d5db;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
     /* Main Content */
     .main-content {
         flex: 1;
-        background: #f9fafb;
+        background: transparent;
         display: flex;
         flex-direction: column;
-        padding: 20px;
+    }
+
+    .content-wrapper {
+        flex: 1;
+        padding: 0;
+        background: #f9fafb;
     }
 
     .content-card {
@@ -230,6 +275,7 @@
         flex: 1;
         display: flex;
         flex-direction: column;
+        background: transparent;
     }
 
     /* Responsive */
@@ -251,6 +297,22 @@
             width: 100%;
         }
 
+        .main-header {
+            padding: 12px 16px;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+        }
+
+        .header-breadcrumb {
+            font-size: 0.75rem;
+        }
+
+        .content-wrapper {
+            padding: 16px;
+        }
+
         .mobile-menu-btn {
             display: block;
             position: fixed;
@@ -262,6 +324,11 @@
             border: none;
             padding: 10px;
             border-radius: 5px;
+        }
+
+        .dashboard-stats {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
         }
     }
 
@@ -405,8 +472,22 @@
 
     <!-- Main Content -->
     <section class="main-content w-full">
-        <div class="admin-content-wrapper">
-            @yield('content')
+        <!-- Header -->
+        <header class="main-header">
+            <div>
+                <h1 class="header-title">@yield('page-title', 'Dashboard')</h1>
+            </div>
+            <div class="header-actions">
+                @yield('header-actions')
+                <!-- Add any common header actions here -->
+            </div>
+        </header>
+        
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <div class="admin-content-wrapper">
+                @yield('content')
+            </div>
         </div>
     </section>
 </div>

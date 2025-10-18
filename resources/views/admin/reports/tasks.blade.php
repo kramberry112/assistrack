@@ -1,6 +1,27 @@
 @extends('layouts.app')
 
+@section('page-title')
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="9" y1="13" x2="15" y2="13"/>
+            <line x1="9" y1="17" x2="13" y2="17"/>
+        </svg>
+        <span>Tasks Report</span>
+    </div>
+@endsection
+
 @section('content')
+<style>
+    .content-wrapper {
+        background: #fff !important;
+    }
+    .admin-content-wrapper {
+        background: #fff !important;
+    }
+</style>
+<div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
 
 <style>
     .page-header {
@@ -30,16 +51,18 @@
     }
     
     .reports-table thead tr {
-        background-color: #f8d7da;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     
     .reports-table th {
         padding: 18px 16px;
         text-align: left;
         font-weight: 600;
-        color: #333;
+        color: #ffffff;
         font-size: 14px;
         border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .reports-table th:first-child {
@@ -97,46 +120,45 @@
     }
 </style>
 
-<div class="page-header">
-    <h1 class="page-title">Tasks Report</h1>
-</div>
+    @if(isset($currentUser) && $currentUser->role === 'offices')
+        <div style="background: #e0f2fe; border-left: 4px solid #0277bd; padding: 12px 16px; margin-bottom: 20px; border-radius: 4px;">
+            <p style="margin: 0; color: #01579b; font-weight: 600;">
+                📍 Showing tasks for: {{ $currentUser->office_name ?? 'Your Office' }}
+            </p>
+        </div>
+    @endif
 
-<div class="main-content-card">
     <table class="reports-table">
         <thead>
             <tr>
                 <th>Student ID</th>
                 <th>Name</th>
+                <th>Designated Office</th>
                 <th>Tasks Completed</th>
             </tr>
         </thead>
         <tbody>
-            @php
-                $students = \App\Models\User::where('role', 'student')
-                    ->whereHas('studentTasks', function($q) { 
-                        $q->where('status', 'Completed'); 
-                    })
-                    ->withCount(['studentTasks as student_tasks_count' => function($q) { 
-                        $q->where('status', 'Completed'); 
-                    }])
-                    ->orderBy('name')
-                    ->get();
-            @endphp
-
             @forelse($students as $user)
                 <tr>
-                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->student->id_number ?? 'N/A' }}</td>
                     <td>{{ $user->name }}</td>
+                    <td>{{ $user->student->designated_office ?? 'Not Assigned' }}</td>
                     <td>
                         <span class="task-count-badge">{{ $user->student_tasks_count }}</span>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="3">
+                    <td colspan="4">
                         <div class="empty-state">
                             <div class="empty-state-icon">📋</div>
-                            <div class="empty-state-text">No completed tasks found</div>
+                            <div class="empty-state-text">
+                                @if(isset($currentUser) && $currentUser->role === 'offices')
+                                    No completed tasks found for {{ $currentUser->office_name ?? 'your office' }}
+                                @else
+                                    No completed tasks found
+                                @endif
+                            </div>
                         </div>
                     </td>
                 </tr>

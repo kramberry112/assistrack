@@ -42,11 +42,32 @@ class AttendanceController extends Controller {
 
     public function index(Request $request)
     {
-        $records = Attendance::getTodayGroupedRecords();
-        $stats = Attendance::getTodayStats();
+        $user = auth()->user();
+        
+        // Get all today's records
+        $allRecords = Attendance::getTodayGroupedRecords();
+        
+        // Filter by office if user is office role
+        if ($user && $user->role === 'offices' && $user->office_name) {
+            $records = collect($allRecords)->filter(function ($record) use ($user) {
+                return $record['office'] === $user->office_name;
+            })->values()->toArray();
+        } else {
+            $records = $allRecords;
+        }
+        
+        // Calculate filtered stats
+        $stats = [
+            'total' => count($records),
+            'clock_ins' => collect($records)->whereNotNull('time_in')->count(),
+            'clock_outs' => collect($records)->whereNotNull('time_out')->count(),
+            'unique_users' => collect($records)->pluck('id_number')->unique()->count()
+        ];
+        
         return view('offices.attendance.index', [
             'todayRecords' => $records,
-            'stats' => $stats
+            'stats' => $stats,
+            'officeName' => $user && $user->office_name ? $user->office_name : null
         ]);
     }
 

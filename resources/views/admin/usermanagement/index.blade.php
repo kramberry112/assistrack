@@ -1,6 +1,35 @@
 @extends('layouts.app')
 
+@section('page-title')
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            <path d="M12 1v6"/>
+            <path d="M12 16v6"/>
+        </svg>
+        <span>User Management</span>
+    </div>
+@endsection
+
+@section('header-actions')
+    <button class="btn btn-primary" onclick="openCreateUserModal()" style="padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <i class="bi bi-person-plus"></i>
+        Create New User
+    </button>
+@endsection
+
 @section('content')
+<style>
+    .content-wrapper {
+        background: #fff !important;
+    }
+    .admin-content-wrapper {
+        background: #fff !important;
+    }
+</style>
 <style>
     * {
         box-sizing: border-box;
@@ -534,22 +563,9 @@
     </div>
 @endif
 
-<div class="content-card">
-    <div class="content-header">
-        <span class="icon">
-            <i class="bi bi-people-fill"></i>
-        </span>
-        User Management
-        <div class="header-actions">
-            <button class="btn btn-primary" onclick="openCreateUserModal()">
-                <i class="bi bi-person-plus"></i>
-                Create New User
-            </button>
-        </div>
-    </div>
-
+<div style="background: #fff; min-height: calc(100vh - 76px); padding: 0;">
     <!-- Search and Filter Section -->
-    <div class="search-filter-section">
+    <div class="search-filter-section" style="padding: 16px 16px 0 16px;">
         <div class="search-filter-row">
             <div class="search-input-wrapper">
                 <input type="text" 
@@ -1042,4 +1058,5 @@ function confirmSaveEdit() {
     return confirm('Save changes to "' + userName + '"?');
 }
 </script>
+</div>
 @endsection
