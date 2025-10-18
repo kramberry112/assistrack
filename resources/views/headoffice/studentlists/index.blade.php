@@ -1,20 +1,16 @@
 @extends('layouts.app')
 
+@section('page-title')
+    <i class="bi bi-people" style="margin-right: 8px;"></i>
+    Student List
+@endsection
+
 @section('content')
 <style>
-
-
-
-
     .content-card {
         flex: 1;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 0;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     .content-header {
         display: flex;
@@ -182,15 +178,6 @@
 
 <!-- Main Content -->
 <div class="content-card">
-            <div class="content-header">
-                <span class="icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                </span>
-                Student Official List
-            </div>
             <div style="display: flex; flex-direction: row; align-items: flex-start; padding: 0 24px; margin-bottom: 12px;">
                 <div style="flex: 1 1 auto;">
                     <div class="studentlist-title" style="margin-bottom:0;">Student Official List</div>

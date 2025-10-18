@@ -519,7 +519,10 @@ document.addEventListener('DOMContentLoaded', function() {
         parentToggle.addEventListener('click', function(e) {
             e.preventDefault();
             if (treeview) {
-                const isVisible = treeview.style.display !== 'none';
+                // Check if dropdown is currently visible
+                const currentDisplay = window.getComputedStyle(treeview).display;
+                const isVisible = currentDisplay !== 'none';
+                
                 if (isVisible) {
                     treeview.style.display = 'none';
                     if (arrow) arrow.style.transform = 'rotate(0deg)';
@@ -529,6 +532,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
+
+    // Auto-open dropdown if we're on a reports page
+    if (window.location.pathname.includes('/admin/reports/')) {
+        if (treeview) {
+            treeview.style.display = 'block';
+            if (arrow) arrow.style.transform = 'rotate(90deg)';
+        }
     }
 
     // Report links functionality (for AJAX loading if needed)

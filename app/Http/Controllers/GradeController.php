@@ -56,6 +56,12 @@ class GradeController extends Controller
     public function show($id)
     {
         $grade = Grade::findOrFail($id);
-        return view('admin.reports.grade-details', compact('grade'));
+        
+        // Check if request is from head office
+        if (request()->routeIs('head.*')) {
+            return view('headoffice.reports.grade-details-fullpage', compact('grade'));
+        }
+        
+        return view('admin.reports.grade-details-fullpage', compact('grade'));
     }
 }

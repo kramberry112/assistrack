@@ -3,7 +3,7 @@
         margin: 0;
         padding: 0;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: #f3f4f6;
+        background: #ffffff;
     }
 
     .dashboard-container {
@@ -76,6 +76,91 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    /* Dropdown Styles */
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        color: #374151;
+        text-decoration: none;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .dropdown-toggle:hover {
+        background: #f9fafb;
+        color: #111827;
+    }
+
+    .dropdown-toggle.active {
+        background: #f9fafb;
+        color: #111827;
+        border-left: 3px solid #3b82f6;
+    }
+
+    .dropdown-icon {
+        transition: transform 0.2s ease;
+        margin-left: auto;
+    }
+
+    .dropdown-toggle.open .dropdown-icon {
+        transform: rotate(180deg);
+    }
+
+    .dropdown-menu {
+        display: none;
+        background: #f8fafc;
+        border-left: 3px solid transparent;
+        margin-left: 20px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .dropdown-menu.open {
+        display: block;
+    }
+
+    .dropdown-menu a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        color: #64748b;
+        text-decoration: none;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+        font-weight: 500;
+    }
+
+    .dropdown-menu a:hover {
+        background: #e2e8f0;
+        color: #475569;
+    }
+
+    .dropdown-menu a.active {
+        background: #e2e8f0;
+        color: #475569;
+        border-left: 3px solid #3b82f6;
+    }
+
+    .dropdown-menu a .icon {
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
     }
 
     /* Profile */
@@ -175,10 +260,48 @@
     /* Main Content */
     .main-content {
         flex: 1;
-        background: #f9fafb;
+        background: transparent;
         display: flex;
         flex-direction: column;
-        padding: 20px;
+        padding: 0;
+    }
+
+    /* Header */
+    .main-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        height: 76px;
+        box-sizing: border-box;
+    }
+
+    .header-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #3b82f6;
+        margin: 0;
+    }
+
+    .header-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    .header-breadcrumb .separator {
+        color: #d1d5db;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
 
     .content-card {
@@ -190,10 +313,6 @@
         display: flex;
         flex-direction: column;
     }
-
-    .head-content-wrapper {
-        flex: 1;
-        display: flex;
         flex-direction: column;
     }
 
@@ -214,6 +333,20 @@
 
         .main-content {
             width: 100%;
+        }
+
+        .main-header {
+            padding: 15px 20px;
+            height: auto;
+            min-height: 60px;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+        }
+
+        .header-actions {
+            gap: 8px;
         }
 
         .mobile-menu-btn {
@@ -271,16 +404,42 @@
                     </span>
                     Student List
                 </a>
-                <a href="{{ route('head.reports') }}" class="{{ request()->routeIs('head.reports') || request()->routeIs('head.reports.list') ? 'active' : '' }}">
-                    <span class="icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                            <line x1="9" y1="9" x2="15" y2="9"/>
-                            <line x1="9" y1="15" x2="15" y2="15"/>
-                        </svg>
-                    </span>
-                    Reports
-                </a>
+                <!-- Reports Dropdown -->
+                <div style="padding:0; margin:0; list-style:none;">
+                    <div class="nav-item">
+                        <a href="#" class="nav-link parent-toggle" style="display: flex; align-items: center; padding: 12px 20px; color: #374151; text-decoration: none; transition: background-color 0.2s;" id="headReportsDropdown">
+                            <i class="nav-icon bi bi-file-earmark-text" style="margin-right: 12px; font-size: 1.25rem;"></i>
+                            <p class="parent-label" style="margin: 0; font-size: 0.95rem; font-weight: bold; flex: 1;">Reports</p>
+                            <i class="nav-arrow bi bi-chevron-right" style="font-size: 0.75rem; transition: transform 0.3s;"></i>
+                        </a>
+                        <ul class="nav nav-treeview" style="display:none;" id="headReportsMenu">
+                            <li class="nav-item">
+                                <a href="{{ route('head.reports.attendance') }}" class="nav-link report-link {{ request()->routeIs('head.reports.attendance') ? 'active' : '' }}" data-url="{{ route('head.reports.attendance') }}" data-name="Attendance">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Attendance</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('head.reports.evaluation') }}" class="nav-link report-link {{ request()->routeIs('head.reports.evaluation') ? 'active' : '' }}" data-url="{{ route('head.reports.evaluation') }}" data-name="Evaluation">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Evaluation</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('head.reports.tasks') }}" class="nav-link report-link {{ request()->routeIs('head.reports.tasks') ? 'active' : '' }}" data-url="{{ route('head.reports.tasks') }}" data-name="Tasks">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Tasks</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('head.reports.grades') }}" class="nav-link report-link {{ request()->routeIs('head.reports.grades') ? 'active' : '' }}" data-url="{{ route('head.reports.grades') }}" data-name="Grades">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Grades</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
         </div>
 
@@ -320,9 +479,19 @@
 
     <!-- Main Content -->
     <section class="main-content w-full">
-        <div class="head-content-wrapper">
-            @yield('content')
-        </div>
+        <!-- Header -->
+        <header class="main-header">
+            <div>
+                <h1 class="header-title">@yield('page-title', 'Dashboard')</h1>
+            </div>
+            <div class="header-actions">
+                @yield('header-actions')
+                <!-- Add any common header actions here -->
+            </div>
+        </header>
+        
+        <!-- Content -->
+        @yield('content')
     </section>
 </div>
 
@@ -342,6 +511,43 @@ document.addEventListener('DOMContentLoaded', function() {
             if (menu.style.display === 'block') menu.style.display = 'none';
         });
     }
+
+    // Reports dropdown functionality - matches admin layout
+    const parentToggle = document.querySelector('.parent-toggle');
+    const treeview = document.querySelector('.nav-treeview');
+    const arrow = document.querySelector('.nav-arrow');
+
+    if (parentToggle) {
+        parentToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (treeview) {
+                const isVisible = treeview.style.display !== 'none';
+                if (isVisible) {
+                    treeview.style.display = 'none';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    treeview.style.display = 'block';
+                    if (arrow) arrow.style.transform = 'rotate(90deg)';
+                }
+            }
+        });
+    }
+
+    // Keep dropdown open if we're on a reports page
+    if (window.location.pathname.includes('/head/reports/')) {
+        if (treeview) {
+            treeview.style.display = 'block';
+            if (arrow) arrow.style.transform = 'rotate(90deg)';
+        }
+    }
+
+    // Report links functionality (for AJAX loading if needed)
+    document.querySelectorAll('.report-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            // Remove default AJAX behavior - let normal navigation work
+            // You can add AJAX functionality here if needed later
+        });
+    });
 });
 
 // Mobile sidebar toggle

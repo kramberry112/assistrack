@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('page-title')
+    <i class="bi bi-grid-3x3-gap" style="margin-right: 8px;"></i>
+    Dashboard Overview
+@endsection
+
 @section('content')
 <style>
     .content-card {
@@ -37,17 +42,6 @@
 
 
         <div class="content-card">
-            <div class="content-header">
-                <span class="icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="14" width="7" height="7" rx="1"/>
-                        <rect x="3" y="14" width="7" height="7" rx="1"/>
-                    </svg>
-                </span>
-                Dashboard
-            </div>
             <div class="welcome-section">
                 <h1 class="welcome-message">Welcome, Head!</h1>
             </div>

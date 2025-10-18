@@ -10,13 +10,10 @@
     .content-wrapper {
         background: #fff !important;
     }
-    .admin-content-wrapper {
-        background: #fff !important;
-    }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
         <!-- Date Filter Form -->
-        <form method="GET" action="{{ route('admin.attendance.report') }}" class="mb-6 flex items-center gap-3">
+        <form method="GET" action="{{ route('head.reports.attendance') }}" class="mb-6 flex items-center gap-3">
             <label for="date" class="text-sm font-medium text-gray-700">Select Date:</label>
             <input type="date" id="date" name="date" value="{{ request('date', now()->format('Y-m-d')) }}" 
                    class="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">

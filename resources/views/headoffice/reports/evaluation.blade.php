@@ -10,9 +10,6 @@
     .content-wrapper {
         background: #fff !important;
     }
-    .admin-content-wrapper {
-        background: #fff !important;
-    }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
 
@@ -176,7 +173,7 @@
                         </div>
                     </td>
                     <td>
-                        <a href="{{ route('admin.evaluations.view', $evaluation->id) }}" class="btn btn-primary btn-sm">
+                        <a href="{{ route('head.evaluations.view', $evaluation->id) }}" class="btn btn-primary btn-sm">
                             <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>

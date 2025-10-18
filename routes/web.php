@@ -5,6 +5,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\GradeController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Models\Grade;
 
 // Public pages
@@ -318,6 +319,46 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/head-student-list', [\App\Http\Controllers\HeadStudentListController::class, 'index'])->name('head.student.list');
     Route::view('/head-reports', 'headoffice.reports.index')->name('head.reports.list');
     Route::view('/head-reports-alt', 'headoffice.reports.index')->name('head.reports');
+    
+    // Head Office Reports (same functionality as admin)
+    Route::get('/head/reports/attendance', function(Request $request) {
+        $date = $request->input('date') ?? now()->toDateString();
+        $records = \App\Models\Attendance::getGroupedRecordsByDate($date);
+        $stats = [
+            'total' => count($records),
+            'clock_ins' => collect($records)->whereNotNull('time_in')->count(),
+            'clock_outs' => collect($records)->whereNotNull('time_out')->count(),
+            'unique_users' => collect($records)->pluck('id_number')->unique()->count(),
+        ];
+        return view('headoffice.reports.attendance', compact('records', 'stats'));
+    })->name('head.reports.attendance');
+    
+    Route::get('/head/reports/tasks', function() {
+        $currentUser = auth()->user();
+        $students = \App\Models\User::whereHas('student')
+            ->whereHas('studentTasks', function($q) { 
+                $q->where('status', 'Completed'); 
+            })
+            ->withCount(['studentTasks as student_tasks_count' => function($q) { 
+                $q->where('status', 'Completed'); 
+            }])
+            ->with('student')
+            ->orderBy('name')
+            ->get();
+        return view('headoffice.reports.tasks', compact('students', 'currentUser'));
+    })->name('head.reports.tasks');
+    
+    Route::get('/head/reports/evaluation', [\App\Http\Controllers\AdminEvaluationController::class, 'headOfficeIndex'])->name('head.reports.evaluation');
+    
+    Route::get('/head/reports/grades', function() {
+        $grades = \App\Models\Grade::all();
+        return view('headoffice.reports.grades', compact('grades'));
+    })->name('head.reports.grades');
+    
+    // Head office detail view routes
+    Route::get('/head/evaluations/{evaluation}/view', [\App\Http\Controllers\AdminEvaluationController::class, 'view'])->name('head.evaluations.view');
+    Route::get('/head/reports/grades/{grade}', [App\Http\Controllers\GradeController::class, 'show'])->name('head.grades.show');
+    
     Route::get('/head-students/{student}', [\App\Http\Controllers\HeadStudentListController::class, 'show'])->name('head.students.show');
 });
 

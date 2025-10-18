@@ -10,9 +10,6 @@
     .content-wrapper {
         background: #fff !important;
     }
-    .admin-content-wrapper {
-        background: #fff !important;
-    }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
     @if(session('success'))
@@ -64,7 +61,7 @@
                                 </span>
                             </td>
                             <td style="padding: 16px 20px;">
-                                <a href="{{ route('admin.grades.show', $grade->id) }}" 
+                                <a href="{{ route('head.grades.show', $grade->id) }}" 
                                        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #6366f1; color: #ffffff; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s ease;"
                                        onmouseover="this.style.backgroundColor='#4f46e5'"
                                        onmouseout="this.style.backgroundColor='#6366f1'">
