@@ -1,4 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.office-layout')
+
+@section('page-title')
+    STUDENT LIST
+@endsection
+
+@section('page-icon')
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2">
+        <circle cx="12" cy="7" r="4"/>
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    </svg>
+@endsection
 
 @section('content')
 <style>
@@ -311,21 +322,12 @@
 
 
 <div class="content-card">
-            <div class="content-header">
-                <span class="icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                </span>
-                {{ $officeName ?? 'Office' }} - Student List
-            </div>
-            <div style="display: flex; flex-direction: row; align-items: flex-start; padding: 0 24px; margin-bottom: 12px;">
+            <div style="display: flex; flex-direction: row; align-items: center; padding: 0 24px; margin-bottom: 12px;">
                 <div style="flex: 1 1 auto;">
                     <div class="studentlist-title" style="margin-bottom:0;">{{ $officeName ?? 'Office' }} Student Assistants</div>
                     <div class="studentlist-desc" style="margin-bottom:0;">Students assigned to {{ $officeName ?? 'this office' }}</div>
                 </div>
-                <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 8px; margin-top: 16px;">
+                <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 8px; margin-top: 8px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <div class="filter-container">
                             <form id="filterForm" method="GET" action="{{ route('offices.studentlists.index') }}">
@@ -341,15 +343,15 @@
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                     </div>
                                     <div class="filter-cascade filter-cascade-course">
-                                        <div class="filter-option active" data-filter="course" data-value="">All Courses</div>
-                                        <div class="filter-option" data-filter="course" data-value="BSIT">BSIT</div>
-                                        <div class="filter-option" data-filter="course" data-value="BSCS">BSCS</div>
-                                        <div class="filter-option" data-filter="course" data-value="BSBA">BSBA</div>
-                                        <div class="filter-option" data-filter="course" data-value="BSN">BSN</div>
-                                        <div class="filter-option" data-filter="course" data-value="BSED">BSED</div>
-                                        <div class="filter-option" data-filter="course" data-value="BEED">BEED</div>
-                                        <div class="filter-option" data-filter="course" data-value="BSHM">BSHM</div>
-                                        <div class="filter-option" data-filter="course" data-value="BSTM">BSTM</div>
+                                        <div class="filter-option" data-filter="course" data-value="">All Courses</div>
+                                        <div class="filter-option" data-filter="course" data-value="SOH">SOH</div>
+                                        <div class="filter-option" data-filter="course" data-value="STE">STE</div>
+                                        <div class="filter-option" data-filter="course" data-value="SBA">SBA</div>
+                                        <div class="filter-option" data-filter="course" data-value="SOHS">SOHS</div>
+                                        <div class="filter-option" data-filter="course" data-value="SOE">SOE</div>
+                                        <div class="filter-option" data-filter="course" data-value="SITE">SITE</div>
+                                        <div class="filter-option" data-filter="course" data-value="SIHM">SIHM</div>
+                                        <div class="filter-option" data-filter="course" data-value="SOC">SOC</div>
                                     </div>
                                     <div class="filter-label cascading-label" data-cascade="year">
                                         <span>Year Level</span>
@@ -526,13 +528,15 @@
     };
 
     // Search bar functionality
-    const searchBar = document.getElementById('headStudentSearchBar');
-    const originalUrl = "{{ route('head.student.list') }}";
-    searchBar.addEventListener('input', function() {
-        if (searchBar.value.trim() === '') {
-            window.location.href = originalUrl;
-        }
-    });
+    const searchBar = document.getElementById('officeStudentSearchBar');
+    const originalUrl = "{{ route('offices.studentlists.index') }}";
+    if (searchBar) {
+        searchBar.addEventListener('input', function() {
+            if (searchBar.value.trim() === '') {
+                window.location.href = originalUrl;
+            }
+        });
+    }
 </script>
 
 @endsection

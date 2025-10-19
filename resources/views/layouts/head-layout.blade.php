@@ -282,8 +282,9 @@
     .header-title {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #3b82f6;
+        color: #2563eb;
         margin: 0;
+        text-transform: uppercase;
     }
 
     .header-breadcrumb {

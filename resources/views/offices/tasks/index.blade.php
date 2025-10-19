@@ -1,21 +1,21 @@
-@extends('layouts.app')
+@extends('layouts.office-layout')
+
+@section('page-title')
+    TASKS REQUEST
+@endsection
+
+@section('page-icon')
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2">
+        <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+        <path d="M9 14l2 2 4-4"/>
+    </svg>
+@endsection
 
 @section('content')
 <style>
     
      /* Tasks Request Styles */
-    .tasks-header {
-        background: #ffffff;
-        padding: 20px 30px;
-        border-bottom: 2px solid #6366f1;
-        margin: -20px -20px 20px -20px;
-    }
-    .tasks-header h1 {
-        color: #6366f1;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0;
-    }
     .tasks-controls {
         display: flex;
         gap: 15px;
@@ -174,9 +174,7 @@
     }
 </style>
 
-<div class="tasks-header">
-            <h1>TASKS REQUEST</h1>
-        </div>
+
 
         <div class="tasks-controls">
             <div class="search-box">
@@ -187,9 +185,10 @@
                 <input type="text" placeholder="Search Student" id="searchInput">
             </div>
             <select class="filter-dropdown" id="filterDropdown">
-                <option value="">Filter by Type or Status</option>
+                <option value="">Filter by Status</option>
                 <option value="pending">Pending</option>
-                <option value="completed">Completed</option>
+                <option value="verified">Verified</option>
+                <option value="rejected">Rejected</option>
             </select>
             <button id="openCreateTaskModal" class="btn-create-task" style="margin-left:16px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -436,7 +435,7 @@
             if (filterValue === '') {
                 row.style.display = '';
             } else {
-                const status = row.cells[4].textContent.toLowerCase();
+                const status = row.cells[5].textContent.toLowerCase(); // Status column is index 5
                 if (status.includes(filterValue)) {
                     row.style.display = '';
                 } else {

@@ -12,13 +12,13 @@ class Student extends Model
 
     protected $fillable = [
         'student_name', 'course', 'year_level', 'id_number', 'age', 
-        'address', 'email', 'telephone', 'picture'
+        'address', 'email', 'telephone', 'picture', 'designated_office'
     ];
 
     // Add office field accessor for compatibility
     public function getOfficeAttribute()
     {
-        return $this->attributes['office'] ?? null;
+        return $this->designated_office;
     }
 
     // Relationship with User

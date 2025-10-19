@@ -120,18 +120,24 @@
     }
 
     #logoutMenu {
-        display: none;
-        position: absolute;
-        bottom: 60px;
+        position: fixed;
+        bottom: 80px;
         left: 20px;
         background: #fff;
-        border: none;
-        border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-        padding: 24px 20px 16px 20px;
-        min-width: 220px;
-        z-index: 100;
-        text-align: center;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        padding: 8px;
+        width: 180px;
+        z-index: 99999;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.2s;
+    }
+    
+    #logoutMenu.show {
+        visibility: visible;
+        opacity: 1;
     }
 
     #logoutMenu a,
@@ -176,7 +182,46 @@
         background: #f9fafb;
         display: flex;
         flex-direction: column;
-        padding: 20px;
+        width: calc(100% - 260px);
+        margin: 0;
+        padding: 0;
+    }
+
+
+
+    /* Page Header */
+    .page-header {
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 20px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .header-title h1 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2563eb;
+        letter-spacing: 0.3px;
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    .page-content {
+        flex: 1;
+        padding: 20px 30px;
     }
 
     /* Mobile Responsive */
@@ -284,6 +329,19 @@
 
     <!-- Main Content -->
     <main class="main-content">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-title" style="display:flex;align-items:center;gap:16px;">
+                @yield('page-icon')
+                <h1 style="font-size:1.5rem;font-weight:600;color:#2563eb;letter-spacing:0.5px;margin:0;text-transform:uppercase;">@yield('page-title', 'Office Portal')</h1>
+            </div>
+            
+            <div style="display:flex;align-items:center;gap:16px;">
+                @yield('header-actions')
+            </div>
+        </div>
+        
         @yield('content')
     </main>
 </div>
@@ -293,30 +351,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Profile dropdown functionality
     var profile = document.getElementById('profileDropdown');
     var menu = document.getElementById('logoutMenu');
-    var logoutUp = document.getElementById('logoutUp');
-    var logoutDown = document.getElementById('logoutDown');
     
-    if (profile && menu && logoutUp && logoutDown) {
+    if (profile && menu) {
         profile.addEventListener('click', function(e) {
             e.stopPropagation();
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            menu.classList.toggle('show');
         });
-
-        logoutUp.addEventListener('click', function(e) {
-            e.stopPropagation();
-            menu.style.display = 'block';
-        });
-
-        logoutDown.addEventListener('click', function(e) {
-            e.stopPropagation();
-            menu.style.display = 'none';
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!profile.contains(e.target)) {
-                menu.style.display = 'none';
-            }
+        
+        document.addEventListener('click', function() {
+            menu.classList.remove('show');
         });
     }
 });

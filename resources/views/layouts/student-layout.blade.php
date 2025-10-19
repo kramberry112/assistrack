@@ -180,11 +180,7 @@
         flex-direction: column;
     }
 
-    .student-content-wrapper {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
+
 
     /* Page Header */
     .page-header {
@@ -207,10 +203,11 @@
 
     .header-title h1 {
         font-size: 1.5rem;
-        font-weight: 700;
+        font-weight: 600;
         color: #2563eb;
         letter-spacing: 0.5px;
         margin: 0;
+        text-transform: uppercase;
     }
 
     /* Notifications */
@@ -408,7 +405,7 @@
         <div class="page-header">
             <div class="header-title" style="display:flex;align-items:center;gap:16px;">
                 @yield('page-icon')
-                <h1 style="font-size:1.5rem;font-weight:700;color:#2563eb;letter-spacing:0.5px;margin:0;">@yield('page-title', 'Student Portal')</h1>
+                <h1 style="font-size:1.5rem;font-weight:600;color:#2563eb;letter-spacing:0.5px;margin:0;text-transform:uppercase;">@yield('page-title', 'Student Portal')</h1>
             </div>
             
             <div style="display:flex;align-items:center;gap:16px;">
@@ -427,9 +424,7 @@
             </div>
         </div>
         
-        <div class="student-content-wrapper">
-            @yield('content')
-        </div>
+        @yield('content')
     </section>
 </div>
 

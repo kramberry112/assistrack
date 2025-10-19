@@ -1,36 +1,43 @@
-@extends('layouts.app')
+@extends('layouts.office-layout')
+
+@section('page-title')
+    ATTENDANCE (DTR)
+@endsection
+
+@section('page-icon')
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+    </svg>
+@endsection
+
+@section('header-actions')
+    <div class="text-right">
+        <span id="currentDate" class="block text-sm text-gray-700 font-semibold"></span>
+        <span id="currentTime" class="block text-md text-indigo-600 font-bold"></span>
+    </div>
+@endsection
 
 @section('content')
-        <script src="https://cdn.tailwindcss.com"></script>
-        <style>
-            .fade-in {
-                animation: fadeIn 0.3s ease-in;
-            }
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(-10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .pulse-animation {
-                animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            }
-            @keyframes pulse {
-                0%, 100% { opacity: 1; }
-                50% { opacity: .5; }
-            }
-        </style>
-        <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
-            <div class="container mx-auto p-4 max-w-7xl fade-in">
-                <!-- Header Section -->
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h1 class="text-2xl font-bold text-indigo-700">Daily Time Record (DTR)</h1>
-                        <p class="text-sm text-gray-500">Track student attendance by ID number</p>
-                    </div>
-                    <div class="text-right">
-                        <span id="currentDate" class="block text-md text-gray-700 font-semibold"></span>
-                        <span id="currentTime" class="block text-lg text-indigo-600 font-bold"></span>
-                    </div>
-                </div>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    .fade-in {
+        animation: fadeIn 0.3s ease-in;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .pulse-animation {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: .5; }
+    }
+</style>
+<div style="padding: 32px; background: #f9fafb; min-height: calc(100vh - 80px);">
+    <div style="max-width: 1200px; margin: 0 auto;">
 
                 <!-- Attendance Form -->
                 @if($errors->has('id_number'))
@@ -138,7 +145,8 @@
                         </table>
                     </div>
                 </div>
-            </div>
+    </div>
+</div>
 
 <script>
     // Update real-time clock

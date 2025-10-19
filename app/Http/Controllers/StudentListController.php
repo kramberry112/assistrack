@@ -131,7 +131,7 @@ class StudentListController extends Controller
         // Link student to user
         $student->user_id = $user->id;
         $student->save();
-
+        
         return redirect()->back()->with('success', "Account created successfully! Username: {$username}, Password: {$defaultPassword}");
     }
 }

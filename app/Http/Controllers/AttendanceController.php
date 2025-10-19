@@ -86,6 +86,14 @@ class AttendanceController extends Controller {
             return redirect()->back()->withInput()->withErrors(['id_number' => 'Student ID not found. Please check and try again.']);
         }
 
+        // Check if the current user is an office user and verify student assignment
+        $user = auth()->user();
+        if ($user && $user->role === 'offices' && $user->office_name) {
+            if ($student->designated_office !== $user->office_name) {
+                return redirect()->back()->withInput()->withErrors(['id_number' => 'This student is not assigned to your office. Please contact admin if this is incorrect.']);
+            }
+        }
+
         // Prevent time out if there is no time in record for today
         if ($validated['action'] === 'out') {
             $hasTimeIn = Attendance::where('id_number', $validated['id_number'])

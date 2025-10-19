@@ -1,4 +1,17 @@
-@extends('layouts.app')
+@extends('layouts.office-layout')
+
+@section('page-title')
+    DASHBOARD
+@endsection
+
+@section('page-icon')
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+    </svg>
+@endsection
 
 @section('content')
 <style>
@@ -37,26 +50,17 @@
 
 <div class="content-card w-full">
     <div id="mainContent" class="w-full">
-        <div class="content-header">
-            <span class="icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                </svg>
-            </span>
-            Dashboard
-        </div>
-        <div class="welcome-section">
-            <h1 class="welcome-message">
-                Welcome, {{ $user->name ?? 'Office User' }}!
-                @if(isset($user) && $user->office_name)
-                    <span style="display: block; font-size: 1rem; color: #6b7280; margin-top: 8px;">
-                        📍 {{ $user->office_name }} Office
-                    </span>
-                @endif
-            </h1>
+        <div style="padding: 0 24px; margin-bottom: 12px;">
+            <div style="margin-top: 20px;">
+                <h1 class="welcome-message">
+                    Welcome, {{ $user->name ?? 'Office User' }}!
+                    @if(isset($user) && $user->office_name)
+                        <span style="display: block; font-size: 1rem; color: #6b7280; margin-top: 8px;">
+                            📍 {{ $user->office_name }} Office
+                        </span>
+                    @endif
+                </h1>
+            </div>
         </div>
     </div>
 </div>
