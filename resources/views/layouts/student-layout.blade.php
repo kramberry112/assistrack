@@ -186,18 +186,38 @@
         flex-direction: column;
     }
 
-    /* Notifications */
-    .notification-header {
-        position: fixed;
+    /* Page Header */
+    .page-header {
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 20px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
         top: 0;
-        right: 0;
-        z-index: 1000;
-        padding: 16px 24px;
+        z-index: 50;
     }
 
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .header-title h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2563eb;
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+
+    /* Notifications */
     .notification-bell-container {
         position: relative;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         cursor: pointer;
     }
 
@@ -230,9 +250,9 @@
 
     .notification-dropdown {
         display: none;
-        position: fixed;
-        top: 60px;
-        right: 24px;
+        position: absolute;
+        top: 100%;
+        right: 0;
         background: #fff;
         border-radius: 12px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.12);
@@ -240,6 +260,7 @@
         z-index: 100;
         padding: 16px;
         border: 1px solid #e5e7eb;
+        margin-top: 8px;
     }
 
     /* Responsive */
@@ -272,6 +293,11 @@
             border: none;
             padding: 10px;
             border-radius: 5px;
+        }
+
+        .notification-dropdown {
+            right: -100px;
+            min-width: 280px;
         }
     }
 
@@ -377,17 +403,27 @@
 
     <!-- Main Content -->
     <section class="main-content w-full">
-        <!-- Notifications -->
-        <div class="notification-header">
-            <div class="notification-bell-container" id="notificationBellContainer">
-                <svg class="notification-bell" id="notificationBell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                </svg>
-                <span class="notification-count" id="notificationCount">0</span>
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-title" style="display:flex;align-items:center;gap:16px;">
+                @yield('page-icon')
+                <h1 style="font-size:1.5rem;font-weight:700;color:#2563eb;letter-spacing:0.5px;margin:0;">@yield('page-title', 'Student Portal')</h1>
             </div>
-            <div class="notification-dropdown" id="notificationDropdown">
-                <div id="notificationContent">Loading...</div>
+            
+            <div style="display:flex;align-items:center;gap:16px;">
+                @yield('header-actions')
+                <!-- Notifications -->
+                <div class="notification-bell-container" id="notificationBellContainer">
+                    <svg class="notification-bell" id="notificationBell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="notification-count" id="notificationCount">0</span>
+                </div>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div id="notificationContent">Loading...</div>
+                </div>
             </div>
         </div>
         

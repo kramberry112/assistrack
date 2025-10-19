@@ -1,21 +1,21 @@
-@extends('layouts.app')
+@extends('layouts.student-layout')
+
+@section('page-title')
+    CALENDAR
+@endsection
+
+@section('page-icon')
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+@endsection
 
 @section('content')
 <style>
 
-
-        /* Page Header */
-        .page-header {
-            background: #fff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 20px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
 
         .header-title {
             display: flex;
@@ -234,20 +234,7 @@
         }
     </style>
 
-<!-- Header -->
-    <div class="page-header">
-        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-            <div class="header-title" style="display:flex;align-items:center;gap:16px;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                </svg>
-                <h1 style="font-size:1.5rem;font-weight:700;color:#2563eb;letter-spacing:0.5px;">CALENDAR</h1>
-            </div>
-        </div>
-    </div>            <!-- Calendar Container -->
+            <!-- Calendar Container -->
             <div class="calendar-container">
                 <div class="calendar-header">
                     <div class="calendar-nav">

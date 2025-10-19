@@ -1,4 +1,16 @@
-@extends('layouts.app')
+@extends('layouts.student-layout')
+
+@section('page-title')
+    TASKS OVERVIEW
+@endsection
+
+@section('page-icon')
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <line x1="9" y1="9" x2="15" y2="9"/>
+        <line x1="9" y1="15" x2="15" y2="15"/>
+    </svg>
+@endsection
 
 @section('content')
 <script>
@@ -12,24 +24,7 @@ window.currentUserId = {{ auth()->id() }};
         border-radius: 4px;
     }
 
-    /* Fixed Header */
-    .page-header {
-        background: #fff;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 20px 32px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: sticky;
-        top: 0;
-        z-index: 50;
-    }
 
-    .header-title {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
 
     .header-title h1 {
         font-size: 2rem;
@@ -444,22 +439,6 @@ window.currentUserId = {{ auth()->id() }};
         background: #16a34a;
     }
 </style>
-
-<!-- Main Content -->
-        <!-- Fixed Header -->
-        <div class="page-header">
-            <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-                <div class="header-title" style="display:flex;align-items:center;gap:16px;">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <line x1="9" y1="9" x2="15" y2="9"/>
-                        <line x1="9" y1="15" x2="15" y2="15"/>
-                    </svg>
-                    <h1 style="font-size:1.5rem;font-weight:700;color:#2563eb;letter-spacing:0.5px;">TASKS OVERVIEW</h1>
-                </div>
-
-            </div>
-        </div>
 
         <!-- Content Area -->
         <div class="content-area">

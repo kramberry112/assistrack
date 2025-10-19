@@ -1,4 +1,18 @@
-@extends('layouts.app')
+@extends('layouts.student-layout')
+
+@section('page-title')
+    GRADES
+@endsection
+
+@section('page-icon')
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14,2 14,8 20,8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10,9 9,9 8,9"/>
+    </svg>
+@endsection
 
 @section('content')
 <style>
@@ -550,21 +564,7 @@
     }
 </style>
 
-        <!-- Grades Header -->
-        <div class="page-header">
-            <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-                <div class="header-title" style="display:flex;align-items:center;gap:16px;">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14,2 14,8 20,8"/>
-                        <line x1="16" y1="13" x2="8" y2="13"/>
-                        <line x1="16" y1="17" x2="8" y2="17"/>
-                        <polyline points="10,9 9,9 8,9"/>
-                    </svg>
-                    <h1 style="font-size:1.5rem;font-weight:700;color:#2563eb;letter-spacing:0.5px;">GRADES</h1>
-                </div>
-            </div>
-        </div>        <div class="container mx-auto py-8" style="max-width: 1200px;">
+        <div class="container mx-auto py-8" style="max-width: 1200px;">
 
             <!-- Instructions Box -->
             <div class="instructions-box">

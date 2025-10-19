@@ -1,22 +1,22 @@
-@extends('layouts.app')
+@extends('layouts.student-layout')
+
+@section('page-title')
+    COMMUNITY
+@endsection
+
+@section('page-icon')
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+@endsection
 
 @section('content')
 
 <style>
     /* Community Specific Styles */
-
-    /* Header */
-    .community-header {
-        background: #fff;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 20px 32px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: sticky;
-        top: 0;
-        z-index: 50;
-    }
 
     .header-title {
         display: flex;
@@ -35,13 +35,6 @@
         display: flex;
         align-items: center;
         gap: 16px;
-    }
-
-    .notification-bell {
-        width: 24px;
-        height: 24px;
-        color: #6b7280;
-        cursor: pointer;
     }
 
     .user-avatar {
@@ -208,20 +201,7 @@
     }
 </style>
 
-<!-- Header -->
-    <div class="community-header">
-        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-            <div class="header-title" style="display:flex;align-items:center;gap:16px;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d2e83" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-                <h1 class="community-title" style="font-size:1.5rem;font-weight:700;color:#2563eb;letter-spacing:0.5px;">COMMUNITY</h1>
-            </div>
-        </div>
-    </div><!-- Content -->
+<!-- Content -->
 <div class="content-section">
     <!-- Community List -->
     <div class="community-list">
