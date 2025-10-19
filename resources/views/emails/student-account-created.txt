@@ -1,0 +1,37 @@
+Congratulations! You are now a Student Assistant
+
+Dear {{ $student->student_name }},
+
+We are delighted to inform you that your application has been approved, and you have been officially selected as a Student Assistant at Universidad de Dagupan!
+
+@if($student->designated_office)
+Your Designated Office: {{ $student->designated_office }}
+@endif
+
+Your student account has been created with the following credentials:
+
+Email Address: {{ $studentEmail }}
+Username: {{ $username }}
+Password: {{ $password }}
+
+SECURITY NOTICE: For your security, please change your password after your first login. Keep your login credentials confidential and do not share them with anyone.
+
+You can now access the AssisTrack system to:
+- View and manage your assigned tasks
+- Track your attendance
+- Submit progress reports
+- Communicate with your office supervisors
+- Access important announcements and updates
+
+If you have any questions or need assistance getting started, please don't hesitate to contact your designated office or the system administrator.
+
+Welcome to the Student Assistant program! We look forward to working with you.
+
+Best regards,
+The AssisTrack Team
+Universidad de Dagupan
+
+---
+This is an automated message from AssisTrack System.
+Please do not reply to this email.
+© {{ date('Y') }} Universidad de Dagupan. All rights reserved.

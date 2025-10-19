@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Application;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\StudentAccountCreated;
 
 class StudentListController extends Controller
 {
@@ -118,20 +121,42 @@ class StudentListController extends Controller
         // Set default password
         $defaultPassword = 'assistrack2025';
 
-        // Create user account
-        $user = \App\Models\User::create([
-            'name' => $student->student_name,
-            'username' => $username,
-            'email' => $studentEmail,
-            'password' => bcrypt($defaultPassword),
-            'plain_password' => $defaultPassword,
-            'role' => 'student',
-        ]);
+        try {
+            // Create user account
+            $user = \App\Models\User::create([
+                'name' => $student->student_name,
+                'username' => $username,
+                'email' => $studentEmail,
+                'password' => bcrypt($defaultPassword),
+                'plain_password' => $defaultPassword,
+                'role' => 'student',
+            ]);
 
-        // Link student to user
-        $student->user_id = $user->id;
-        $student->save();
-        
-        return redirect()->back()->with('success', "Account created successfully! Username: {$username}, Password: {$defaultPassword}");
+            // Link student to user
+            $student->user_id = $user->id;
+            $student->save();
+
+            // Send congratulatory email to the student's registered email
+            try {
+                Mail::to($student->email)->send(new StudentAccountCreated(
+                    $student,
+                    $username,
+                    $defaultPassword,
+                    $studentEmail
+                ));
+                
+                $emailStatus = 'Congratulatory email sent successfully!';
+            } catch (\Exception $emailException) {
+                // Log the email error but don't fail the account creation
+                Log::error('Failed to send student account creation email: ' . $emailException->getMessage());
+                $emailStatus = 'Account created but email notification failed to send.';
+            }
+            
+            return redirect()->back()->with('success', "Account created successfully! Username: {$username}, Password: {$defaultPassword}. {$emailStatus}");
+            
+        } catch (\Exception $e) {
+            // If account creation fails, return error
+            return redirect()->back()->with('error', 'Failed to create account: ' . $e->getMessage());
+        }
     }
 }
