@@ -136,7 +136,7 @@
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         min-width: 200px;
-        z-index: 50;
+        z-index: 99999;
         padding: 8px 0;
     }
 
@@ -272,37 +272,38 @@
                             </div>
                             <div class="filter-cascade filter-cascade-office" style="max-height: 250px; overflow-y: auto;">
                                 <div class="filter-option" data-filter="office" data-value="">All Offices</div>
-                                <div class="filter-option" data-filter="office" data-value="LIBRARY">LIBRARY</div>
                                 <div class="filter-option" data-filter="office" data-value="ACADS">ACADS</div>
-                                <div class="filter-option" data-filter="office" data-value="REGISTRAR">REGISTRAR</div>
-                                <div class="filter-option" data-filter="office" data-value="CANTEEN">CANTEEN</div>
-                                <div class="filter-option" data-filter="office" data-value="KUWAGO">KUWAGO</div>
-                                <div class="filter-option" data-filter="office" data-value="QUEUING">QUEUING</div>
-                                <div class="filter-option" data-filter="office" data-value="HRD">HRD</div>
-                                <div class="filter-option" data-filter="office" data-value="SAO">SAO</div>
-                                <div class="filter-option" data-filter="office" data-value="GUIDANCE">GUIDANCE</div>
-                                <div class="filter-option" data-filter="office" data-value="CLINIC">CLINIC</div>
-                                <div class="filter-option" data-filter="office" data-value="OPEN LAB">OPEN LAB</div>
-                                <div class="filter-option" data-filter="office" data-value="LINKAGES">LINKAGES</div>
-                                <div class="filter-option" data-filter="office" data-value="XACTO">XACTO</div>
-                                <div class="filter-option" data-filter="office" data-value="SITE FACULTY">SITE FACULTY</div>
-                                <div class="filter-option" data-filter="office" data-value="SOHS FACULTY">SOHS FACULTY</div>
-                                <div class="filter-option" data-filter="office" data-value="SOH FACULTY">SOH FACULTY</div>
-                                <div class="filter-option" data-filter="office" data-value="STE FACULTY">STE FACULTY</div>
-                                <div class="filter-option" data-filter="office" data-value="SOC FACULTY">SOC FACULTY</div>
-                                <div class="filter-option" data-filter="office" data-value="SBA FACULTY">SBA FACULTY</div>
-                                <div class="filter-option" data-filter="office" data-value="SOE FACULTY">SOE FACULTY</div>
-                                <div class="filter-option" data-filter="office" data-value="SIHM FACULTY">SIHM FACULTY</div>
-                                <div class="filter-option" data-filter="office" data-value="STE DEAN'S OFFICE">STE DEAN'S OFFICE</div>
-                                <div class="filter-option" data-filter="office" data-value="FINANCE">FINANCE</div>
-                                <div class="filter-option" data-filter="office" data-value="LCR">LCR</div>
-                                <div class="filter-option" data-filter="office" data-value="STEEDS">STEEDS</div>
-                                <div class="filter-option" data-filter="office" data-value="SPORTS AND CULTURE">SPORTS AND CULTURE</div>
-                                <div class="filter-option" data-filter="office" data-value="QUALITY ASSURANCE">QUALITY ASSURANCE</div>
-                                <div class="filter-option" data-filter="office" data-value="ARCHIVING">ARCHIVING</div>
-                                <div class="filter-option" data-filter="office" data-value="PRESIDENT'S OFFICE">PRESIDENT'S OFFICE</div>
-                                <div class="filter-option" data-filter="office" data-value="MARKETING">MARKETING</div>
                                 <div class="filter-option" data-filter="office" data-value="ALUMNI OFFICE">ALUMNI OFFICE</div>
+                                <div class="filter-option" data-filter="office" data-value="ARCHIVING">ARCHIVING</div>
+                                <div class="filter-option" data-filter="office" data-value="ARZATECH">ARZATECH</div>
+                                <div class="filter-option" data-filter="office" data-value="CANTEEN">CANTEEN</div>
+                                <div class="filter-option" data-filter="office" data-value="CLINIC">CLINIC</div>
+                                <div class="filter-option" data-filter="office" data-value="FINANCE">FINANCE</div>
+                                <div class="filter-option" data-filter="office" data-value="GUIDANCE">GUIDANCE</div>
+                                <div class="filter-option" data-filter="office" data-value="HRD">HRD</div>
+                                <div class="filter-option" data-filter="office" data-value="KUWAGO">KUWAGO</div>
+                                <div class="filter-option" data-filter="office" data-value="LCR">LCR</div>
+                                <div class="filter-option" data-filter="office" data-value="LIBRARY">LIBRARY</div>
+                                <div class="filter-option" data-filter="office" data-value="LINKAGES">LINKAGES</div>
+                                <div class="filter-option" data-filter="office" data-value="MARKETING">MARKETING</div>
+                                <div class="filter-option" data-filter="office" data-value="OPEN LAB">OPEN LAB</div>
+                                <div class="filter-option" data-filter="office" data-value="PRESIDENT'S OFFICE">PRESIDENT'S OFFICE</div>
+                                <div class="filter-option" data-filter="office" data-value="QUEUING">QUEUING</div>
+                                <div class="filter-option" data-filter="office" data-value="QUALITY ASSURANCE">QUALITY ASSURANCE</div>
+                                <div class="filter-option" data-filter="office" data-value="REGISTRAR">REGISTRAR</div>
+                                <div class="filter-option" data-filter="office" data-value="SAO">SAO</div>
+                                <div class="filter-option" data-filter="office" data-value="SBA FACULTY">SBA FACULTY</div>
+                                <div class="filter-option" data-filter="office" data-value="SIHM FACULTY">SIHM FACULTY</div>
+                                <div class="filter-option" data-filter="office" data-value="SITE FACULTY">SITE FACULTY</div>
+                                <div class="filter-option" data-filter="office" data-value="SOE FACULTY">SOE FACULTY</div>
+                                <div class="filter-option" data-filter="office" data-value="SOH FACULTY">SOH FACULTY</div>
+                                <div class="filter-option" data-filter="office" data-value="SOHS FACULTY">SOHS FACULTY</div>
+                                <div class="filter-option" data-filter="office" data-value="SOC FACULTY">SOC FACULTY</div>
+                                <div class="filter-option" data-filter="office" data-value="SPORTS AND CULTURE">SPORTS AND CULTURE</div>
+                                <div class="filter-option" data-filter="office" data-value="STE DEAN'S OFFICE">STE DEAN'S OFFICE</div>
+                                <div class="filter-option" data-filter="office" data-value="STE FACULTY">STE FACULTY</div>
+                                <div class="filter-option" data-filter="office" data-value="STEEDS">STEEDS</div>
+                                <div class="filter-option" data-filter="office" data-value="XACTO">XACTO</div>
                             </div>
                             <button class="filter-clear" onclick="clearFilters()">Clear Filters</button>
                         </div>
@@ -377,37 +378,38 @@
                                         </span>
                                     </div>
                                     <div class="office-combo-list" style="display:none;position:absolute;top:40px;left:0;width:100%;background:#fff;border:1px solid #bbb;border-radius:5px;box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:9999;max-height:220px;overflow-y:auto;">
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LIBRARY</div>
                                         <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ACADS</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">REGISTRAR</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">CANTEEN</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">KUWAGO</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">QUEUING</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">HRD</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SAO</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">GUIDANCE</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">CLINIC</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">OPEN LAB</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LINKAGES</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">XACTO</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SITE FACULTY</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOHS FACULTY</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOH FACULTY</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">STE FACULTY</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOC FACULTY</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SBA FACULTY</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOE FACULTY</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SIHM FACULTY</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">STE DEAN'S OFFICE</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">FINANCE</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LCR</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">STEEDS</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SPORTS AND CULTURE</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">QUALITY ASSURANCE</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ARCHIVING</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">PRESIDENT'S OFFICE</div>
-                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">MARKETING</div>
                                         <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ALUMNI OFFICE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ARCHIVING</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ARZATECH</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">CANTEEN</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">CLINIC</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">FINANCE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">GUIDANCE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">HRD</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">KUWAGO</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LCR</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LIBRARY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LINKAGES</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">MARKETING</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">OPEN LAB</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">PRESIDENT'S OFFICE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">QUEUING</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">QUALITY ASSURANCE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">REGISTRAR</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SAO</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SBA FACULTY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SIHM FACULTY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SITE FACULTY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOE FACULTY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOH FACULTY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOHS FACULTY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SOC FACULTY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SPORTS AND CULTURE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">STE DEAN'S OFFICE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">STE FACULTY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">STEEDS</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">XACTO</div>
                                     </div>
                                 </div>
                             </td>

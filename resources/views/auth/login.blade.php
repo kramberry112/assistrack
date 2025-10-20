@@ -51,7 +51,7 @@
     /* LEFT PANEL */
     .banner {
         background: rgba(179, 205, 250, 0.65);
-        width: 480px;
+        width: 480px; /* keep same banner width */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -62,12 +62,12 @@
     }
 
     .banner img {
-        width: 180px; /* increased logo size */
-        margin-bottom: 10px;
+        width: 300px; /* bigger logo only */
+        margin-bottom: 20px;
     }
 
     .banner-title {
-        font-size: 2.2rem;
+        font-size: 2.4rem; /* keep proportionate */
         font-weight: 800;
         color: #111;
         letter-spacing: 1px;

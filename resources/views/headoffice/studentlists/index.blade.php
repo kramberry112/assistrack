@@ -226,37 +226,38 @@
                                 </div>
                                 <div class="filter-cascade filter-cascade-office" style="max-height: 250px; overflow-y: auto;">
                                     <div class="filter-option" data-filter="office" data-value="">All Offices</div>
-                                    <div class="filter-option" data-filter="office" data-value="LIBRARY">LIBRARY</div>
                                     <div class="filter-option" data-filter="office" data-value="ACADS">ACADS</div>
-                                    <div class="filter-option" data-filter="office" data-value="REGISTRAR">REGISTRAR</div>
-                                    <div class="filter-option" data-filter="office" data-value="CANTEEN">CANTEEN</div>
-                                    <div class="filter-option" data-filter="office" data-value="KUWAGO">KUWAGO</div>
-                                    <div class="filter-option" data-filter="office" data-value="QUEUING">QUEUING</div>
-                                    <div class="filter-option" data-filter="office" data-value="HRD">HRD</div>
-                                    <div class="filter-option" data-filter="office" data-value="SAO">SAO</div>
-                                    <div class="filter-option" data-filter="office" data-value="GUIDANCE">GUIDANCE</div>
-                                    <div class="filter-option" data-filter="office" data-value="CLINIC">CLINIC</div>
-                                    <div class="filter-option" data-filter="office" data-value="OPEN LAB">OPEN LAB</div>
-                                    <div class="filter-option" data-filter="office" data-value="LINKAGES">LINKAGES</div>
-                                    <div class="filter-option" data-filter="office" data-value="XACTO">XACTO</div>
-                                    <div class="filter-option" data-filter="office" data-value="SITE FACULTY">SITE FACULTY</div>
-                                    <div class="filter-option" data-filter="office" data-value="SOHS FACULTY">SOHS FACULTY</div>
-                                    <div class="filter-option" data-filter="office" data-value="SOH FACULTY">SOH FACULTY</div>
-                                    <div class="filter-option" data-filter="office" data-value="STE FACULTY">STE FACULTY</div>
-                                    <div class="filter-option" data-filter="office" data-value="SOC FACULTY">SOC FACULTY</div>
-                                    <div class="filter-option" data-filter="office" data-value="SBA FACULTY">SBA FACULTY</div>
-                                    <div class="filter-option" data-filter="office" data-value="SOE FACULTY">SOE FACULTY</div>
-                                    <div class="filter-option" data-filter="office" data-value="SIHM FACULTY">SIHM FACULTY</div>
-                                    <div class="filter-option" data-filter="office" data-value="STE DEAN'S OFFICE">STE DEAN'S OFFICE</div>
-                                    <div class="filter-option" data-filter="office" data-value="FINANCE">FINANCE</div>
-                                    <div class="filter-option" data-filter="office" data-value="LCR">LCR</div>
-                                    <div class="filter-option" data-filter="office" data-value="STEEDS">STEEDS</div>
-                                    <div class="filter-option" data-filter="office" data-value="SPORTS AND CULTURE">SPORTS AND CULTURE</div>
-                                    <div class="filter-option" data-filter="office" data-value="QUALITY ASSURANCE">QUALITY ASSURANCE</div>
-                                    <div class="filter-option" data-filter="office" data-value="ARCHIVING">ARCHIVING</div>
-                                    <div class="filter-option" data-filter="office" data-value="PRESIDENT'S OFFICE">PRESIDENT'S OFFICE</div>
-                                    <div class="filter-option" data-filter="office" data-value="MARKETING">MARKETING</div>
                                     <div class="filter-option" data-filter="office" data-value="ALUMNI OFFICE">ALUMNI OFFICE</div>
+                                    <div class="filter-option" data-filter="office" data-value="ARCHIVING">ARCHIVING</div>
+                                    <div class="filter-option" data-filter="office" data-value="ARZATECH">ARZATECH</div>
+                                    <div class="filter-option" data-filter="office" data-value="CANTEEN">CANTEEN</div>
+                                    <div class="filter-option" data-filter="office" data-value="CLINIC">CLINIC</div>
+                                    <div class="filter-option" data-filter="office" data-value="FINANCE">FINANCE</div>
+                                    <div class="filter-option" data-filter="office" data-value="GUIDANCE">GUIDANCE</div>
+                                    <div class="filter-option" data-filter="office" data-value="HRD">HRD</div>
+                                    <div class="filter-option" data-filter="office" data-value="KUWAGO">KUWAGO</div>
+                                    <div class="filter-option" data-filter="office" data-value="LCR">LCR</div>
+                                    <div class="filter-option" data-filter="office" data-value="LIBRARY">LIBRARY</div>
+                                    <div class="filter-option" data-filter="office" data-value="LINKAGES">LINKAGES</div>
+                                    <div class="filter-option" data-filter="office" data-value="MARKETING">MARKETING</div>
+                                    <div class="filter-option" data-filter="office" data-value="OPEN LAB">OPEN LAB</div>
+                                    <div class="filter-option" data-filter="office" data-value="PRESIDENT'S OFFICE">PRESIDENT'S OFFICE</div>
+                                    <div class="filter-option" data-filter="office" data-value="QUEUING">QUEUING</div>
+                                    <div class="filter-option" data-filter="office" data-value="QUALITY ASSURANCE">QUALITY ASSURANCE</div>
+                                    <div class="filter-option" data-filter="office" data-value="REGISTRAR">REGISTRAR</div>
+                                    <div class="filter-option" data-filter="office" data-value="SAO">SAO</div>
+                                    <div class="filter-option" data-filter="office" data-value="SBA FACULTY">SBA FACULTY</div>
+                                    <div class="filter-option" data-filter="office" data-value="SIHM FACULTY">SIHM FACULTY</div>
+                                    <div class="filter-option" data-filter="office" data-value="SITE FACULTY">SITE FACULTY</div>
+                                    <div class="filter-option" data-filter="office" data-value="SOE FACULTY">SOE FACULTY</div>
+                                    <div class="filter-option" data-filter="office" data-value="SOH FACULTY">SOH FACULTY</div>
+                                    <div class="filter-option" data-filter="office" data-value="SOHS FACULTY">SOHS FACULTY</div>
+                                    <div class="filter-option" data-filter="office" data-value="SOC FACULTY">SOC FACULTY</div>
+                                    <div class="filter-option" data-filter="office" data-value="SPORTS AND CULTURE">SPORTS AND CULTURE</div>
+                                    <div class="filter-option" data-filter="office" data-value="STE DEAN'S OFFICE">STE DEAN'S OFFICE</div>
+                                    <div class="filter-option" data-filter="office" data-value="STE FACULTY">STE FACULTY</div>
+                                    <div class="filter-option" data-filter="office" data-value="STEEDS">STEEDS</div>
+                                    <div class="filter-option" data-filter="office" data-value="XACTO">XACTO</div>
                                 </div>
                                 <button class="filter-clear" onclick="clearFilters()">Clear Filters</button>
                             </div>

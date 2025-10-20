@@ -28,11 +28,10 @@
     
     /* Action cell layout: View left, Add to Student List right */
     .applicants-table td.action-cell {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0;
-        padding-right: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 16px;
     }
     .applicants-table td.action-cell a {
         background: #f3f4f6;
@@ -324,7 +323,14 @@
                                 <td>{{ $applicant->id_number }}</td>
                                 <td>Pending</td>
                                 <td class="action-cell">
-                                    <a href="{{ route('applications.show', $applicant->id) }}">View</a>
+                                    <span style="display:flex;gap:10px;align-items:center;">
+                                        <a href="{{ route('applications.show', $applicant->id) }}">View</a>
+                                        <form method="POST" action="{{ route('applications.destroy', $applicant->id) }}" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" onclick="return confirm('Are you sure you want to delete this applicant?')" style="background:#ef4444;color:#fff;">Delete</button>
+                                        </form>
+                                    </span>
                                     <form method="POST" action="{{ route('studentlist.add', $applicant->id) }}" style="display:inline;">
                                         @csrf
                                         <button type="submit">Add to Student List</button>
