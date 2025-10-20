@@ -211,7 +211,7 @@
                         @csrf
                         <div style="margin-bottom:16px;">
                             <label for="modal_title" style="font-weight:600;">Title</label>
-                            <textarea name="title" id="modal_title" required style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d5db;margin-top:4px;"></textarea>
+                            <input type="text" name="title" id="modal_title" required style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d5db;margin-top:4px;" />
                         </div>
                         <div style="margin-bottom:16px;">
                             <label for="modal_description" style="font-weight:600;">Description</label>

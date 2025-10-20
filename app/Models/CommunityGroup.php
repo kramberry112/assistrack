@@ -26,4 +26,12 @@ class CommunityGroup extends Model
     {
         return $this->members()->count();
     }
+
+    // Pending member requests relationship
+    public function pendingRequests()
+    {
+        return $this->hasMany(CommunityGroupJoinRequest::class, 'community_group_id')
+            ->where('status', 'pending')
+            ->with('user');
+    }
 }

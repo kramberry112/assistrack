@@ -553,7 +553,7 @@ window.currentUserId = {{ auth()->id() }};
                     @csrf
                     <div class="form-group">
                         <label for="taskTitle" class="form-label">Title</label>
-                        <textarea id="taskTitle" name="title" required class="form-textarea" style="min-height:40px;"></textarea>
+                        <input id="taskTitle" name="title" type="text" required class="form-input" style="min-height:40px;" />
                     </div>
                     <div class="form-group">
                         <label for="taskDesc" class="form-label">Description</label>

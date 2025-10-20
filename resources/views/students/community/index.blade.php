@@ -209,10 +209,31 @@
     <!-- Community List -->
     <div class="community-list">
         @foreach($groups as $group)
-            <div class="community-item">
+            <div class="community-item" style="position:relative;">
+                {{-- DEBUG: Show why member requests may not be showing --}}
+                @if(auth()->user() && $group->owner_id == auth()->user()->id)
+                @endif
+                @if(auth()->user() && $group->owner_id == auth()->user()->id && isset($group->pendingRequests) && count($group->pendingRequests))
+                    <div class="pending-requests" style="position:absolute; top:18px; right:18px; min-width:180px; background:#f3f4f6; border-radius:8px; padding:12px 16px; box-shadow:0 2px 8px rgba(59,130,246,0.10); z-index:2;">
+                        <button class="minimize-requests-btn" data-group-id="{{ $group->id }}" style="position:absolute; top:8px; right:8px; background:none;border:none;color:#374151;cursor:pointer;outline:none;display:none;padding:0;z-index:3;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="toggle-requests-btn" data-group-id="{{ $group->id }}" style="background:none;border:none;color:#2563eb;font-weight:600;font-size:1rem;cursor:pointer;outline:none;display:block;text-align:left;padding:0;margin-bottom:8px;">
+                            {{ count($group->pendingRequests) }} Member Request{{ count($group->pendingRequests) > 1 ? 's' : '' }}
+                        </button>
+                        <ul class="requests-list" id="requests-list-{{ $group->id }}" style="margin:0; padding:0; list-style:none; display:none;">
+                            @foreach($group->pendingRequests as $request)
+                                <li style="margin-bottom:6px; display:flex; align-items:center; gap:10px;">
+                                    <span style="font-weight:500; color:#374151;">{{ $request->user->name ?? 'Unknown' }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="community-name" style="font-size:1.2rem;font-weight:700;color:#2563eb;margin-bottom:4px;">{{ $group->name }}</div>
                 <div class="community-owner" style="font-size:0.95rem;color:#374151;margin-bottom:4px;">Created by: {{ $group->owner ? $group->owner->name : 'Unknown' }}</div>
                 <div class="community-description" style="font-size:0.95rem;color:#6b7280;margin-bottom:12px;">{{ $group->description }}</div>
+
                 <div class="community-meta">
                     <span class="member-count">{{ $group->members_count }} Member{{ $group->members_count == 1 ? '' : 's' }}</span>
                     @if(auth()->user() && $group->owner_id == auth()->user()->id)
@@ -318,6 +339,29 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Toggle member requests list with a dedicated Minimize button
+    document.querySelectorAll('.toggle-requests-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var groupId = btn.getAttribute('data-group-id');
+            var list = document.getElementById('requests-list-' + groupId);
+            var minimizeBtn = document.querySelector('.minimize-requests-btn[data-group-id="' + groupId + '"]');
+            if (list.style.display === 'none' || list.style.display === '') {
+                list.style.display = 'block';
+                minimizeBtn.style.display = 'inline-flex';
+                btn.style.display = 'none';
+            }
+        });
+    });
+    document.querySelectorAll('.minimize-requests-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var groupId = btn.getAttribute('data-group-id');
+            var list = document.getElementById('requests-list-' + groupId);
+            var toggleBtn = document.querySelector('.toggle-requests-btn[data-group-id="' + groupId + '"]');
+            list.style.display = 'none';
+            btn.style.display = 'none';
+            toggleBtn.style.display = 'block';
+        });
+    });
 
 
 

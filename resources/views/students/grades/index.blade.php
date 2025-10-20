@@ -572,7 +572,7 @@
                 <p>• Please fill in your grade information accurately</p>
                 <p>• Input your grades info and upload your grade slip as proof</p>
                 <p>• Input all subjects and grades to the table below</p>
-                <p>• For remarks, type "Passed" or "Failed"</p>
+                <p>• For remarks, select "Passed" or "Failed" from the dropdown</p>
             </div>
 
             <!-- Success Message -->
@@ -687,7 +687,13 @@
         row.innerHTML = `
             <td><input type="text" placeholder="Subject name" class="subject-input" required></td>
             <td><input type="text" placeholder="Grade" class="grade-input" required></td>
-            <td><input type="text" placeholder="Passed/Failed" class="remarks-input" required></td>
+            <td>
+                <select class="remarks-input" required>
+                    <option value="">Select Remarks</option>
+                    <option value="Passed">Passed</option>
+                    <option value="Failed">Failed</option>
+                </select>
+            </td>
             <td><button type="button" class="remove-btn" onclick="removeSubjectRow(this)">Remove</button></td>
         `;
         subjectsTbody.appendChild(row);

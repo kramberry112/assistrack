@@ -9,7 +9,9 @@ class CommunityGroupController extends Controller {
 
     public function index()
     {
-        $groups = CommunityGroup::withCount('members')->get();
+        $groups = CommunityGroup::withCount('members')
+            ->with(['owner', 'pendingRequests.user'])
+            ->get();
         $groupMessages = [];
         foreach ($groups as $group) {
             $groupMessages[$group->id] = \App\Models\GroupMessage::where('community_group_id', $group->id)
