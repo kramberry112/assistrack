@@ -1,4 +1,4 @@
-@extends('layouts.student-layout')
+@extends('layouts.app')
 
 @section('page-title')
     COMMUNITY
@@ -14,6 +14,9 @@
 @endsection
 
 @section('content')
+
+<!-- CSRF Token for AJAX requests -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
     /* Community Specific Styles */
@@ -346,19 +349,60 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     if (sendJoinRequestBtn) {
-        sendJoinRequestBtn.addEventListener('click', function() {
-            if (!selectedGroupId) return;
+        sendJoinRequestBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!selectedGroupId) {
+                console.error('No group selected');
+                return;
+            }
+            
+            console.log('Sending join request for group:', selectedGroupId);
+            
+            // Get CSRF token - try different methods
+            let csrfToken = null;
+            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+            const csrfInput = document.querySelector('input[name="_token"]');
+            
+            if (csrfMeta) {
+                csrfToken = csrfMeta.getAttribute('content');
+            } else if (csrfInput) {
+                csrfToken = csrfInput.value;
+            } else {
+                // Try to get from Laravel's global
+                csrfToken = window.Laravel && window.Laravel.csrfToken ? window.Laravel.csrfToken : null;
+            }
+            
+            if (!csrfToken) {
+                console.error('CSRF token not found');
+                if (joinModalText) joinModalText.textContent = 'Error: Security token not found. Please refresh the page.';
+                return;
+            }
+            
+            // Disable button to prevent double-clicking
+            sendJoinRequestBtn.disabled = true;
+            const originalText = sendJoinRequestBtn.textContent;
+            sendJoinRequestBtn.textContent = 'Sending...';
+            
             fetch('/community/join-request', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-CSRF-TOKEN': csrfToken,
                     'X-Requested-With': 'XMLHttpRequest'
                 },
-                body: JSON.stringify({ group_id: selectedGroupId })
+                body: JSON.stringify({ group_id: parseInt(selectedGroupId) })
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
                 if (data.success) {
                     if (joinModalText) joinModalText.textContent = 'Your request has been sent. Please wait for approval.';
                     if (sendJoinRequestBtn) sendJoinRequestBtn.style.display = 'none';
@@ -366,7 +410,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (joinRequestModal && joinRequestModal._triggerBtn) joinRequestModal._triggerBtn.style.display = 'none';
                 } else {
                     if (joinModalText) joinModalText.textContent = data.message || 'Failed to send request.';
+                    // Re-enable button on error
+                    sendJoinRequestBtn.disabled = false;
+                    sendJoinRequestBtn.textContent = originalText;
                 }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                if (joinModalText) joinModalText.textContent = 'Network error. Please try again.';
+                // Re-enable button on error
+                sendJoinRequestBtn.disabled = false;
+                sendJoinRequestBtn.textContent = originalText;
             });
         });
     }

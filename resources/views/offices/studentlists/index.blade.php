@@ -1,4 +1,4 @@
-@extends('layouts.office-layout')
+@extends('layouts.app')
 
 @section('page-title')
     STUDENT LIST

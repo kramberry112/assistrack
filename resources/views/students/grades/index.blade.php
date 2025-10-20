@@ -1,4 +1,4 @@
-@extends('layouts.student-layout')
+@extends('layouts.app')
 
 @section('page-title')
     GRADES
