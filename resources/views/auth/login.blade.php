@@ -51,7 +51,7 @@
     /* LEFT PANEL */
     .banner {
         background: rgba(179, 205, 250, 0.65);
-        width: 480px; /* keep same banner width */
+        width: 480px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -62,12 +62,12 @@
     }
 
     .banner img {
-        width: 300px; /* bigger logo only */
+        width: 300px;
         margin-bottom: 20px;
     }
 
     .banner-title {
-        font-size: 2.4rem; /* keep proportionate */
+        font-size: 2.4rem;
         font-weight: 800;
         color: #111;
         letter-spacing: 1px;
@@ -108,7 +108,19 @@
         display: block;
     }
 
-    input[type="email"], input[type="password"] {
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .input-wrapper {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+
+    input[type="email"], 
+    input[type="password"],
+    input[type="text"] {
         width: 100%;
         border: 1.5px solid #23408e;
         border-radius: 8px;
@@ -117,6 +129,12 @@
         background: rgba(247, 250, 255, 0.9);
         outline: none;
         transition: border 0.2s;
+        box-sizing: border-box;
+    }
+
+    .input-wrapper input[type="password"],
+    .input-wrapper input[type="text"] {
+        padding-right: 50px;
     }
 
     input[type="email"]:focus, input[type="password"]:focus {
@@ -125,17 +143,33 @@
 
     .toggle-password {
         position: absolute;
-        right: 12px;
+        right: 14px;
         top: 50%;
         transform: translateY(-50%);
         cursor: pointer;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         color: #23408e;
+        background: transparent;
+        border: none;
+        padding: 4px 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        z-index: 10;
+        line-height: 1;
     }
 
-    .form-group {
-        margin-bottom: 1.25rem;
-        position: relative;
+    .toggle-password:hover {
+        opacity: 0.6;
+    }
+
+    .toggle-password:focus {
+        outline: none;
+    }
+
+    .toggle-password:active {
+        opacity: 0.4;
     }
 
     .login-btn {
@@ -161,12 +195,17 @@
         justify-content: space-between;
         align-items: center;
         margin-top: 0.5rem;
+        margin-bottom: 1.25rem;
     }
 
     .links a {
         color: #23408e;
         font-size: 0.95rem;
         text-decoration: underline;
+    }
+
+    .links a:hover {
+        color: #1a2e6d;
     }
 
     .return-home {
@@ -178,6 +217,10 @@
         color: #23408e;
         font-size: 1rem;
         font-weight: 500;
+    }
+
+    .return-home:hover {
+        color: #1a2e6d;
     }
 
     .return-home svg {
@@ -194,7 +237,6 @@
             <!-- Left Blue Banner -->
             <div class="banner">
                 <img src="/images/assistracklogo.png" alt="AssisTrack Logo">
-                <div class="banner-title">ASSISTRACK</div>
                 <div class="banner-subtitle">AssisTrack SAS Login</div>
             </div>
 
@@ -210,8 +252,12 @@
 
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input id="password" type="password" name="password" required autocomplete="current-password">
-                        <span class="toggle-password" data-target="password">&#128065;</span>
+                        <div class="input-wrapper">
+                            <input id="password" type="password" name="password" required autocomplete="current-password">
+                            <button type="button" class="toggle-password" data-target="password" aria-label="Toggle password visibility">
+                                <span class="eye-icon">&#128065;</span>
+                            </button>
+                        </div>
                     </div>
 
                     <div style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">
@@ -243,9 +289,20 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.toggle-password').forEach(function(toggle) {
-        toggle.addEventListener('click', function() {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
             const input = document.getElementById(this.dataset.target);
-            input.type = input.type === 'password' ? 'text' : 'password';
+            const eyeIcon = this.querySelector('.eye-icon');
+            
+            if (input) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    eyeIcon.innerHTML = '&#128064;';
+                } else {
+                    input.type = 'password';
+                    eyeIcon.innerHTML = '&#128065;';
+                }
+            }
         });
     });
 });

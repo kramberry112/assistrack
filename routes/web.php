@@ -392,7 +392,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/offices-dashboard', function() {
         $user = auth()->user();
-        return view('offices.dashboard.index', compact('user'));
+        $officeName = $user && $user->office_name ? $user->office_name : null;
+
+        // Get student IDs assigned to this office
+        $assignedStudentIds = $officeName
+            ? \App\Models\Student::where('designated_office', $officeName)->whereNotNull('user_id')->pluck('user_id')->toArray()
+            : [];
+
+        // Total tasks for students in this office
+        $totalTasks = $assignedStudentIds
+            ? \App\Models\StudentTask::whereIn('user_id', $assignedStudentIds)->count()
+            : 0;
+
+        // Total students in this office
+        $totalStudents = $officeName
+            ? \App\Models\Student::where('designated_office', $officeName)->count()
+            : 0;
+
+        // Attendance count for students in this office (today)
+        $attendanceCount = 0;
+        if ($officeName) {
+            $today = now()->format('Y-m-d');
+            $studentIdNumbers = \App\Models\Student::where('designated_office', $officeName)->pluck('id_number')->toArray();
+            $attendanceCount = \App\Models\Attendance::whereIn('id_number', $studentIdNumbers)
+                ->whereDate('clock_time', $today)
+                ->count();
+        }
+
+        return view('offices.dashboard.index', compact('user', 'totalTasks', 'totalStudents', 'attendanceCount'));
     })->name('offices.dashboard');
     Route::get('/offices-student-list', [\App\Http\Controllers\OfficeStudentListController::class, 'index'])->name('offices.studentlists.index');
     Route::get('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'show'])->name('evaluation.show');

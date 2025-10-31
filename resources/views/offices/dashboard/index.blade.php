@@ -15,53 +15,100 @@
 
 @section('content')
 <style>
-    .content-card {
-        flex: 1;
+    body {
+        background: #f8fafc;
+    }
+    .dashboard-stats {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        margin-top: 36px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .stat-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 0;
+        border-radius: 16px;
+        padding: 28px 20px 24px 20px;
+        text-align: left;
+        text-decoration: none;
+        color: inherit;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        align-items: center;
+        gap: 18px;
+        box-shadow: 0 4px 24px rgba(45,46,131,0.08);
+        transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        min-width: 200px;
+        flex: 1 1 0;
+        max-width: 320px;
     }
-
-    .content-header {
+    .stat-card:hover {
+        background: #f3f4f6;
+        box-shadow: 0 8px 32px rgba(45,46,131,0.13);
+        transform: translateY(-4px) scale(1.025);
+        text-decoration: none;
+        color: inherit;
+    }
+    .stat-icon {
+        font-size: 2rem;
+        color: #2563eb;
+        background: #f1f5f9;
+        border-radius: 50%;
+        padding: 12px;
+        box-shadow: 0 2px 8px rgba(45,46,131,0.08);
+        margin-bottom: 0;
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 16px 20px;
-        border-bottom: 1px solid #e5e7eb;
-        background: #fff;
-        font-size: 0.95rem;
-        color: #6b7280;
+        justify-content: center;
     }
-
-    .welcome-section {
-        flex: 1;
-        padding: 24px;
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 0.2rem;
     }
-
-    .welcome-message {
-        font-size: 1.25rem;
+    .stat-label {
+        font-size: 1rem;
+        color: #374151;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
         font-weight: 600;
-        color: #111827;
+        margin-top: 0.1rem;
     }
 </style>
 
-<div class="content-card w-full">
-    <div id="mainContent" class="w-full">
-        <div style="padding: 0 24px; margin-bottom: 12px;">
-            <div style="margin-top: 20px;">
-                <h1 class="welcome-message">
-                    Welcome, {{ $user->name ?? 'Office User' }}!
-                    @if(isset($user) && $user->office_name)
-                        <span style="display: block; font-size: 1rem; color: #6b7280; margin-top: 8px;">
-                            📍 {{ $user->office_name }} Office
-                        </span>
-                    @endif
-                </h1>
-            </div>
+<div class="welcome-section">
+    <h1 style="font-size:2rem;font-weight:800;margin-bottom:0.5rem;letter-spacing:0.01em;">Welcome, {{ $user->name ?? 'Office User' }}!</h1>
+    @if(isset($user) && $user->office_name)
+        <span style="font-size:1.1rem;color:#6b7280;margin-top:8px;font-weight:500;display:block;">📍 {{ $user->office_name }} Office</span>
+    @endif
+        <div class="dashboard-stats">
+            <a href="{{ route('tasks.index') }}" class="stat-card">
+                <span class="stat-icon"><i class="bi bi-person-check"></i></span>
+                <div>
+                    <div class="stat-number">{{ $totalTasks }}</div>
+                    <div class="stat-label">Tasks</div>
+                </div>
+            </a>
+            <a href="{{ route('offices.studentlists.index') }}" class="stat-card">
+                <span class="stat-icon"><i class="bi bi-people"></i></span>
+                <div>
+                    <div class="stat-number">{{ $totalStudents }}</div>
+                    <div class="stat-label">Students</div>
+                </div>
+            </a>
+            <a href="{{ route('attendance.index') }}" class="stat-card">
+                <span class="stat-icon"><i class="bi bi-calendar2-check"></i></span>
+                <div>
+                    <div class="stat-number">{{ $attendanceCount ?? 0 }}</div>
+                    <div class="stat-label">Attendance</div>
+                </div>
+            </a>
         </div>
-    </div>
 </div>
 @endsection
