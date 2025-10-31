@@ -242,6 +242,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/applicants', [ApplicationController::class, 'index'])->name('applicants.list');
     Route::get('/applicants/{application}', [ApplicationController::class, 'show'])->name('applicants.show');
     Route::get('/usermanagement', [\App\Http\Controllers\UserManagementController::class, 'index'])->name('admin.usermanagement');
+    Route::get('/admin/users/create', [\App\Http\Controllers\UserManagementController::class, 'create'])->name('admin.users.create');
     Route::post('/users', [\App\Http\Controllers\UserManagementController::class, 'store'])->name('users.store');
     Route::put('/users/{user}', [\App\Http\Controllers\UserManagementController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [\App\Http\Controllers\UserManagementController::class, 'destroy'])->name('users.destroy');
@@ -299,6 +300,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/reports/grades/{grade}', [App\Http\Controllers\GradeController::class, 'show'])->name('admin.grades.show');
     Route::post('/student-list/add/{id}', [\App\Http\Controllers\StudentListController::class, 'add'])->name('studentlist.add');
     Route::patch('/students/{student}/office', [\App\Http\Controllers\StudentListController::class, 'updateOffice'])->name('students.updateOffice');
+    Route::patch('/students/{student}/matriculation', [\App\Http\Controllers\StudentListController::class, 'updateMatriculation'])->name('students.updateMatriculation');
     
     // Profile management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

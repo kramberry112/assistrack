@@ -11,8 +11,15 @@ class Student extends Model
     protected $guarded = [];
 
     protected $fillable = [
-        'student_name', 'course', 'year_level', 'id_number', 'age', 
-        'address', 'email', 'telephone', 'picture', 'designated_office'
+        'student_name', 'course', 'year_level', 'id_number', 'age',
+        'address', 'email', 'telephone', 'picture', 'designated_office',
+        'matriculation', // <-- add this line
+        // Family Background
+        'father_name', 'father_age', 'father_occupation',
+        'mother_name', 'mother_age', 'mother_occupation', 'monthly_income',
+        // Computer Literacy
+        'is_literate', 'tools', 'can_commit', 'willing_overtime',
+        'comfortable_clerical', 'strong_communication', 'willing_training', 'other_skills'
     ];
 
     // Add office field accessor for compatibility

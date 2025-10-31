@@ -14,12 +14,14 @@
     </div>
 @endsection
 
+
 @section('header-actions')
     <button class="btn btn-primary" onclick="openCreateUserModal()" style="padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
         <i class="bi bi-person-plus"></i>
         Create New User
     </button>
 @endsection
+
 
 @section('content')
 <style>

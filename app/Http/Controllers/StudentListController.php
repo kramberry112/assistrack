@@ -11,6 +11,15 @@ use App\Mail\StudentAccountCreated;
 
 class StudentListController extends Controller
 {
+    public function updateMatriculation(Request $request, Student $student)
+    {
+        $request->validate([
+            'matriculation' => 'required|string|max:255',
+        ]);
+        $student->matriculation = $request->input('matriculation');
+        $student->save();
+        return response()->json(['success' => true, 'matriculation' => $student->matriculation]);
+    }
     public function add($id)
     {
         $application = Application::findOrFail($id);

@@ -475,13 +475,87 @@
     <section class="main-content w-full">
         <!-- Header -->
         <header class="main-header">
-            <div>
+            <div style="display: flex; align-items: center; width: 100%;">
                 <h1 class="header-title">@yield('page-title', 'Dashboard')</h1>
+                <div class="header-actions" style="margin-left:auto;display:flex;align-items:center;gap:16px;position:relative;">
+                    @yield('header-actions')
+                    <!-- Notification Bell -->
+                    <div class="notification-bell-container" id="adminNotificationBellContainer" style="position:relative;cursor:pointer;">
+                        <svg class="notification-bell" id="adminNotificationBell" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-count" id="adminNotificationCount" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:600;">0</span>
+                    </div>
+                    <div class="notification-dropdown" id="adminNotificationDropdown" style="display:none;position:absolute;top:36px;right:0;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.08);min-width:260px;z-index:99999;">
+                        <div id="adminNotificationContent" style="padding:16px;">Loading...</div>
+                    </div>
+                </div>
             </div>
-            <div class="header-actions">
-                @yield('header-actions')
-                <!-- Add any common header actions here -->
-            </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Admin notification functionality
+    function updateAdminNotificationCount() {
+        fetch('/admin/notifications')
+            .then(response => response.json())
+            .then(data => {
+                const countSpan = document.getElementById('adminNotificationCount');
+                if (data.length > 0) {
+                    countSpan.textContent = data.length;
+                    countSpan.style.display = 'inline-block';
+                } else {
+                    countSpan.textContent = '0';
+                    countSpan.style.display = 'inline-block';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching notifications:', error);
+            });
+    }
+
+    // Update notification count on page load and every 30 seconds
+    updateAdminNotificationCount();
+    setInterval(updateAdminNotificationCount, 30000);
+
+    // Notification dropdown functionality
+    const bellContainer = document.getElementById('adminNotificationBellContainer');
+    const dropdown = document.getElementById('adminNotificationDropdown');
+    const content = document.getElementById('adminNotificationContent');
+
+    if (bellContainer && dropdown && content) {
+        bellContainer.addEventListener('click', function(e) {
+            e.stopPropagation();
+            updateAdminNotificationCount();
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            } else {
+                dropdown.style.display = 'block';
+                content.innerHTML = 'Loading...';
+                fetch('/admin/notifications')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length === 0) {
+                            content.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
+                        } else {
+                            content.innerHTML = data.map(n => `
+                                <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">
+                                    <div style="font-weight:600;color:#2563eb;">${n.title}</div>
+                                    <div style="color:#374151;">${n.message}</div>
+                                </div>
+                            `).join('');
+                        }
+                    });
+            }
+        });
+        document.addEventListener('click', function(e) {
+            if (!bellContainer.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    }
+});
+</script>
+            <!-- Only one header-actions section should be present -->
         </header>
         
         <!-- Content Wrapper -->

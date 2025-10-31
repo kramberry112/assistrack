@@ -19,7 +19,8 @@ class ApplicationController extends Controller
         if ($request->has('year') && $request->year != '') {
             $query->where('year_level', $request->year);
         }
-        $applications = $query->paginate(10);
+        // Show newest applicants first
+        $applications = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.applicants.index', compact('applications'));
     }
 

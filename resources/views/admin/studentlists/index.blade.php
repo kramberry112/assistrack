@@ -356,6 +356,7 @@
                             <th>Course</th>
                             <th>Year Level</th>
                             <th>Student ID</th>
+                            <th>Full Matriculation</th>
                             <th>Designated Office</th>
                             <th>Action</th>
                         </tr>
@@ -368,7 +369,24 @@
                             <td>{{ $student->year_level }}</td>
                             <td>{{ $student->id_number }}</td>
                             <td style="overflow: visible; position: relative;">
-                                <div class="searchable-dropdown" style="position:relative; width:180px; overflow: visible;">
+                                <div class="matriculation-dropdown" style="position:relative; width:100px; overflow: visible;">
+                                    <div style="position:relative;">
+                                        <input type="text" class="matriculation-combo-input" value="{{ $student->matriculation ?? '' }}" placeholder="Select or search..." style="width:100%;padding:6px 32px 6px 10px;border-radius:5px;border:1px solid #bbb;font-size:14px;" autocomplete="off" readonly data-student-id="{{ $student->id }}">
+                                        <span class="matriculation-combo-arrow" style="position:absolute;top:8px;right:10px;width:18px;height:18px;pointer-events:auto;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100;background:#fff;">
+                                            <svg width="18" height="18" viewBox="0 0 24 24">
+                                                <path d="M7 10l5 5 5-5" stroke="#555" stroke-width="2" fill="none" />
+                                            </svg>
+                                        </span>
+                                        <div class="matriculation-combo-list" style="display:none;position:absolute;top:40px;left:0;width:100%;background:#fff;border:1px solid #bbb;border-radius:5px;box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:9999;max-height:120px;overflow-y:auto;">
+                                            <div class="matriculation-combo-item" style="padding:8px 12px;cursor:pointer;">50%</div>
+                                            <div class="matriculation-combo-item" style="padding:8px 12px;cursor:pointer;">75%</div>
+                                            <div class="matriculation-combo-item" style="padding:8px 12px;cursor:pointer;">Full</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="overflow: visible; position: relative;">
+                                <div class="office-dropdown" style="position:relative; width:180px; overflow: visible;">
                                     <div style="position:relative;">
                                         <input type="text" class="office-combo-input" value="{{ $student->designated_office }}" placeholder="Select or search office..." style="width:100%;padding:6px 32px 6px 10px;border-radius:5px;border:1px solid #bbb;font-size:14px;" autocomplete="off" readonly data-student-id="{{ $student->id }}">
                                         <span class="office-combo-arrow" style="position:absolute;top:8px;right:10px;width:18px;height:18px;pointer-events:auto;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100;background:#fff;">
@@ -523,7 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Custom searchable dropdown for Designated Office
-    document.querySelectorAll('.searchable-dropdown').forEach(function(dropdownDiv) {
+    document.querySelectorAll('.office-dropdown').forEach(function(dropdownDiv) {
         const input = dropdownDiv.querySelector('.office-combo-input');
         const list = dropdownDiv.querySelector('.office-combo-list');
         const arrow = dropdownDiv.querySelector('.office-combo-arrow');
@@ -603,6 +621,86 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Custom searchable dropdown for Full Matriculation
+    document.querySelectorAll('.matriculation-combo-input').forEach(function(input) {
+    const dropdownDiv = input.closest('.matriculation-dropdown');
+        const list = dropdownDiv.querySelector('.matriculation-combo-list');
+        const arrow = dropdownDiv.querySelector('.matriculation-combo-arrow');
+        let portalList = null;
+
+        function showList() {
+            if (!portalList) {
+                portalList = list.cloneNode(true);
+                portalList.classList.add('matriculation-combo-list-portal');
+                document.body.appendChild(portalList);
+                portalList.style.position = 'fixed';
+                portalList.style.zIndex = '99999';
+                portalList.style.background = '#fff';
+                portalList.style.border = '1px solid #bbb';
+                portalList.style.borderRadius = '5px';
+                portalList.style.boxShadow = '0 8px 32px rgba(0,0,0,0.18)';
+                portalList.style.maxHeight = '120px';
+                portalList.style.overflowY = 'auto';
+                portalList.style.width = dropdownDiv.offsetWidth + 'px';
+
+                const rect = input.getBoundingClientRect();
+                portalList.style.left = rect.left + 'px';
+                portalList.style.top = (rect.bottom + 2) + 'px';
+
+                input.addEventListener('input', function() {
+                    Array.from(portalList.children).forEach(function(item) {
+                        item.style.display = item.textContent.toLowerCase().includes(input.value.toLowerCase()) ? '' : 'none';
+                    });
+                });
+
+                Array.from(portalList.children).forEach(function(item) {
+                    item.addEventListener('mousedown', function(e) {
+                        e.preventDefault();
+                        input.value = item.textContent;
+                        hideList();
+                        input.setAttribute('readonly', true);
+
+                        // AJAX PATCH request to save matriculation
+                        const studentId = input.getAttribute('data-student-id');
+                        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                        fetch(`/students/${studentId}/matriculation`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token
+                            },
+                            body: JSON.stringify({ matriculation: item.textContent })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                input.value = data.matriculation;
+                            }
+                        });
+                    });
+                });
+            }
+            portalList.style.display = 'block';
+            input.removeAttribute('readonly');
+            input.focus();
+        }
+
+        function hideList() {
+            if (portalList) portalList.style.display = 'none';
+            input.setAttribute('readonly', true);
+        }
+
+        input.addEventListener('focus', showList);
+        input.addEventListener('blur', function() { setTimeout(hideList, 150); });
+        arrow.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            if (portalList && portalList.style.display === 'block') {
+                hideList();
+            } else {
+                showList();
+            }
+        });
+    });
     // Auto-hide success and error messages
     const successMessage = document.getElementById('successMessage');
     const errorMessage = document.getElementById('errorMessage');
