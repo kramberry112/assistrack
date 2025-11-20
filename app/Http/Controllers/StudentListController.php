@@ -37,10 +37,13 @@ class StudentListController extends Controller
             'father_name' => $application->father_name,
             'father_age' => $application->father_age,
             'father_occupation' => $application->father_occupation,
+            'father_deceased' => $application->father_deceased,
             'mother_name' => $application->mother_name,
             'mother_age' => $application->mother_age,
             'mother_occupation' => $application->mother_occupation,
+            'mother_deceased' => $application->mother_deceased,
             'monthly_income' => $application->monthly_income,
+            'parent_consent' => $application->parent_consent,
             // Computer literacy
             'is_literate' => $application->is_literate,
             'tools' => $application->tools,

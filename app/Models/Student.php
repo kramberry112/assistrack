@@ -15,8 +15,9 @@ class Student extends Model
         'address', 'email', 'telephone', 'picture', 'designated_office',
         'matriculation', // <-- add this line
         // Family Background
-        'father_name', 'father_age', 'father_occupation',
-        'mother_name', 'mother_age', 'mother_occupation', 'monthly_income',
+        'father_name', 'father_age', 'father_occupation', 'father_deceased',
+        'mother_name', 'mother_age', 'mother_occupation', 'mother_deceased', 
+        'monthly_income', 'parent_consent',
         // Computer Literacy
         'is_literate', 'tools', 'can_commit', 'willing_overtime',
         'comfortable_clerical', 'strong_communication', 'willing_training', 'other_skills'

@@ -5,25 +5,114 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AssisTrack SAS Login</title>
 <style>
+    @media (max-width: 900px) {
+        main {
+            height: auto;
+            min-height: 100vh;
+            align-items: flex-start;
+        }
+        .container {
+            flex-direction: column;
+            width: 95vw;
+            min-width: 0;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+        }
+        .banner {
+            width: 100%;
+            padding: 32px 16px;
+            border-radius: 16px 16px 0 0;
+        }
+        .banner img {
+            width: 180px;
+        }
+        .banner-title {
+            font-size: 2rem;
+        }
+        .login-card {
+            width: 100%;
+            padding: 32px 16px;
+            border-left: none;
+            border-radius: 0 0 16px 16px;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 600px) {
+        main {
+            padding-top: 24px;
+            padding-bottom: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .login-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .container {
+            width: 100vw;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        .banner {
+            padding: 20px 8px;
+        }
+        .banner img {
+            width: 120px;
+        }
+        .banner-title {
+            font-size: 1.2rem;
+        }
+        .banner-subtitle {
+            font-size: 0.95rem;
+        }
+        .login-card {
+            padding: 20px 8px;
+        }
+        h2 {
+            font-size: 1.1rem;
+        }
+        label, .return-home, .links a {
+            font-size: 0.95rem;
+        }
+        .login-btn {
+            font-size: 1rem;
+            padding: 10px 0;
+        }
+    }
     html, body {
-        height: 100vh;
+        min-height: 100vh;
         margin: 0;
         padding: 0;
-        overflow: hidden;
         font-family: 'Segoe UI', Arial, sans-serif;
+        background: #f3f4f6;
     }
 
     .background {
-        position: absolute;
-        inset: 0;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        width: 100vw;
+        height: 100vh;
         background: url('/images/application.png') no-repeat center center/cover;
         filter: brightness(0.95);
         z-index: 0;
     }
 
     .overlay {
-        position: absolute;
-        inset: 0;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        width: 100vw;
+        height: 100vh;
         background: rgba(0,0,0,0.15);
         z-index: 1;
     }
@@ -34,7 +123,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
+        width: 100vw;
+        box-sizing: border-box;
+        padding: 0;
     }
 
     .container {
@@ -46,12 +138,16 @@
         overflow: hidden;
         background: transparent;
         backdrop-filter: blur(4px);
+        max-width: 960px;
+        width: 100%;
+        margin: 0 auto;
     }
 
     /* LEFT PANEL */
     .banner {
         background: rgba(179, 205, 250, 0.65);
         width: 480px;
+        min-width: 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -59,6 +155,7 @@
         text-align: center;
         padding: 40px;
         backdrop-filter: blur(8px);
+        box-sizing: border-box;
     }
 
     .banner img {
@@ -83,6 +180,7 @@
     /* RIGHT LOGIN PANEL */
     .login-card {
         width: 480px;
+        min-width: 0;
         background: rgba(255, 255, 255, 0.8);
         display: flex;
         flex-direction: column;
@@ -90,6 +188,82 @@
         padding: 50px 40px;
         backdrop-filter: blur(8px);
         border-left: 1px solid rgba(255,255,255,0.3);
+        box-sizing: border-box;
+    }
+    @media (max-width: 900px) {
+        main {
+            min-height: 100vh;
+            align-items: flex-start;
+            padding: 0;
+        }
+        .container {
+            flex-direction: column;
+            width: 100vw;
+            min-width: 0;
+            border-radius: 0;
+            box-shadow: none;
+            margin: 0;
+        }
+        .banner {
+            width: 100vw;
+            min-width: 0;
+            padding: 32px 16px;
+            border-radius: 0;
+        }
+        .banner img {
+            width: 180px;
+        }
+        .banner-title {
+            font-size: 2rem;
+        }
+        .login-card {
+            width: 100vw;
+            min-width: 0;
+            padding: 32px 16px;
+            border-left: none;
+            border-radius: 0;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 600px) {
+        main {
+            padding: 0;
+        }
+        .container {
+            width: 100vw;
+            min-width: 0;
+            border-radius: 0;
+            box-shadow: none;
+            margin: 0;
+        }
+        .banner {
+            padding: 20px 18px;
+        }
+        .banner img {
+            width: 120px;
+        }
+        .banner-title {
+            font-size: 1.2rem;
+        }
+        .banner-subtitle {
+            font-size: 0.95rem;
+        }
+        .login-card {
+            padding: 20px 18px;
+        }
+        h2 {
+            font-size: 1.1rem;
+        }
+        label, .return-home, .links a {
+            font-size: 0.95rem;
+        }
+        .login-btn {
+            font-size: 1rem;
+            padding: 10px 0;
+        }
     }
 
     h2 {

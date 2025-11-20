@@ -431,18 +431,40 @@
                 </table>
             </div>
             
-            @if ($grade->proof_url)
+            <!-- Documents Section -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <!-- Grade Proof Document -->
                 <div class="proof-section">
                     <div class="section-title" style="margin-bottom: 0.5rem; border: none; padding: 0;">
                         <i class="bi bi-file-earmark-text"></i>
-                        Proof Document
+                        Grade Proof Document
                     </div>
-                    <a href="{{ asset('storage/' . $grade->proof_url) }}" target="_blank" class="proof-link">
-                        <i class="bi bi-eye"></i>
-                        View Proof File
-                    </a>
+                    @if ($grade->proof_url)
+                        <a href="{{ asset('storage/' . $grade->proof_url) }}" target="_blank" class="proof-link">
+                            <i class="bi bi-eye"></i>
+                            View Proof File
+                        </a>
+                    @else
+                        <p style="color: #64748b; font-style: italic; margin: 0;">No proof document uploaded</p>
+                    @endif
                 </div>
-            @endif
+                
+                <!-- Class Schedule -->
+                <div class="proof-section">
+                    <div class="section-title" style="margin-bottom: 0.5rem; border: none; padding: 0;">
+                        <i class="bi bi-calendar-week"></i>
+                        Class Schedule
+                    </div>
+                    @if ($grade->schedule_url)
+                        <a href="{{ asset('storage/' . $grade->schedule_url) }}" target="_blank" class="proof-link">
+                            <i class="bi bi-eye"></i>
+                            View Schedule File
+                        </a>
+                    @else
+                        <p style="color: #64748b; font-style: italic; margin: 0;">No schedule uploaded</p>
+                    @endif
+                </div>
+            </div>
             
             <div class="actions">
                 <button onclick="window.print()" class="btn btn-primary">

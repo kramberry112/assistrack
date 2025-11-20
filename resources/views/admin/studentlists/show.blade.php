@@ -80,7 +80,12 @@
                 </div>
                 <div>
                     <p class="text-gray-500 text-sm">Occupation</p>
-                    <p class="font-medium">{{ $student->father_occupation ?? 'N/A' }}</p>
+                    <p class="font-medium">
+                        {{ $student->father_occupation ?? 'N/A' }}
+                        @if($student->father_deceased)
+                            <span class="text-red-600 text-xs ml-2">(Deceased)</span>
+                        @endif
+                    </p>
                 </div>
                 <div>
                     <p class="text-gray-500 text-sm">Mother's Name</p>
@@ -92,12 +97,35 @@
                 </div>
                 <div>
                     <p class="text-gray-500 text-sm">Occupation</p>
-                    <p class="font-medium">{{ $student->mother_occupation ?? 'N/A' }}</p>
+                    <p class="font-medium">
+                        {{ $student->mother_occupation ?? 'N/A' }}
+                        @if($student->mother_deceased)
+                            <span class="text-red-600 text-xs ml-2">(Deceased)</span>
+                        @endif
+                    </p>
                 </div>
                 <div class="md:col-span-3">
                     <p class="text-gray-500 text-sm">Monthly Household Income</p>
                     <p class="font-medium">{{ $student->monthly_income ?? 'N/A' }}</p>
                 </div>
+            </div>
+
+            <hr class="my-8">
+
+            <!-- Parent Consent -->
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Parent Consent</h2>
+            <div class="space-y-4">
+                <p><span class="text-gray-500">Parent Consent Form:</span> 
+                    <span class="font-medium">
+                        @if($student->parent_consent)
+                            <a href="{{ asset('storage/' . $student->parent_consent) }}" target="_blank" class="text-blue-600 hover:underline">
+                                📄 View Uploaded Consent Form
+                            </a>
+                        @else
+                            <span class="text-red-600">Not uploaded</span>
+                        @endif
+                    </span>
+                </p>
             </div>
 
             <hr class="my-8">

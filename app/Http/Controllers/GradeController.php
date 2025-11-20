@@ -21,6 +21,7 @@ class GradeController extends Controller
             'subjects.*.grade' => 'required|string',
             'subjects.*.remarks' => 'required|string',
             'proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+            'scheduleFileInput' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
         ]);
 
         $proofUrl = null;
@@ -28,12 +29,19 @@ class GradeController extends Controller
             $proofUrl = $request->file('proof')->store('grades', 'public');
         }
 
+        $scheduleUrl = null;
+        if ($request->hasFile('scheduleFileInput')) {
+            $scheduleUrl = $request->file('scheduleFileInput')->store('schedules', 'public');
+        }
+
+
         Grade::create([
             'student_name' => $request->student_name,
             'year_level' => $request->year_level,
             'semester' => $request->semester,
             'subjects' => $subjects,
             'proof_url' => $proofUrl,
+            'schedule_url' => $scheduleUrl,
         ]);
 
         return redirect()->route('student.grades')->with('success', 'Grades submitted successfully!');

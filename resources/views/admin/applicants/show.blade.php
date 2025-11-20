@@ -87,7 +87,12 @@
                 </div>
                 <div>
                     <p class="text-gray-500 text-sm">Occupation</p>
-                    <p class="font-medium">{{ $application->father_occupation }}</p>
+                    <p class="font-medium">
+                        {{ $application->father_occupation }}
+                        @if($application->father_deceased)
+                            <span class="text-red-600 text-xs ml-2">(Deceased)</span>
+                        @endif
+                    </p>
                 </div>
                 <div>
                     <p class="text-gray-500 text-sm">Mother's Name</p>
@@ -99,12 +104,35 @@
                 </div>
                 <div>
                     <p class="text-gray-500 text-sm">Occupation</p>
-                    <p class="font-medium">{{ $application->mother_occupation }}</p>
+                    <p class="font-medium">
+                        {{ $application->mother_occupation }}
+                        @if($application->mother_deceased)
+                            <span class="text-red-600 text-xs ml-2">(Deceased)</span>
+                        @endif
+                    </p>
                 </div>
                 <div class="md:col-span-3">
                     <p class="text-gray-500 text-sm">Monthly Household Income</p>
                     <p class="font-medium">{{ $application->monthly_income }}</p>
                 </div>
+            </div>
+
+            <hr class="my-8">
+
+            <!-- Parent Consent -->
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Parent Consent</h2>
+            <div class="space-y-4">
+                <p><span class="text-gray-500">Parent Consent Form:</span> 
+                    <span class="font-medium">
+                        @if($application->parent_consent)
+                            <a href="{{ asset('storage/' . $application->parent_consent) }}" target="_blank" class="text-blue-600 hover:underline">
+                                📄 View Uploaded Consent Form
+                            </a>
+                        @else
+                            <span class="text-red-600">Not uploaded</span>
+                        @endif
+                    </span>
+                </p>
             </div>
 
             <hr class="my-8">

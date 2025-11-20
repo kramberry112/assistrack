@@ -231,6 +231,19 @@
 </style>
 
 <div style="background: #fff; min-height: calc(100vh - 76px); padding: 0;">
+            <!-- Success/Error Messages -->
+            @if(session('success'))
+                <div style="margin: 16px; padding: 12px 16px; background: #d1fae5; border: 1px solid #10b981; border-radius: 8px; color: #065f46; font-size: 0.95rem;">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
+            @if(session('error'))
+                <div style="margin: 16px; padding: 12px 16px; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; color: #991b1b; font-size: 0.95rem;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div style="display: flex; flex-direction: row; align-items: center; padding: 16px 16px 0 16px; margin-bottom: 8px;">
                 <div style="flex: 1 1 auto;">
                     <div class="applicants-title" style="margin-bottom:0;">New Applicants</div>

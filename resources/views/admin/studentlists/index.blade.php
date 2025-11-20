@@ -119,6 +119,71 @@
         font-size: 1rem;
         font-weight: 500;
         cursor: pointer;
+        .action-cell {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: flex-start;
+            white-space: nowrap !important;
+        }
+
+        .action-cell form,
+        .action-cell a {
+            display: inline-block;
+            margin: 0 !important;
+        }
+
+        .action-cell button,
+        .action-cell a,
+        .action-cell span {
+            font-size: 11px !important;
+            padding: 4px 12px !important;
+            margin: 0 !important;
+            min-width: 100px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 600px) {
+            .action-cell {
+                gap: 4px;
+            }
+            .action-cell button,
+            .action-cell a,
+            .action-cell span {
+                font-size: 10px !important;
+                padding: 3px 8px !important;
+                min-width: 70px;
+            }
+        }
+            display: inline-block;
+            margin: 0 !important;
+        }
+
+        .action-cell button,
+        .action-cell a,
+        .action-cell span {
+            font-size: 11px !important;
+            padding: 4px 8px !important;
+            margin: 0 !important;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .action-cell {
+                gap: 4px;
+            }
+            .action-cell button,
+            .action-cell a,
+            .action-cell span {
+                font-size: 10px !important;
+                padding: 3px 5px !important;
+                min-width: 70px;
+            }
+        }
         transition: background 0.2s;
     }
 

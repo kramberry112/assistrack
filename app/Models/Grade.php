@@ -12,6 +12,7 @@ class Grade extends Model
         'semester',
         'subjects',
         'proof_url',
+        'schedule_url',
     ];
 
     protected $casts = [

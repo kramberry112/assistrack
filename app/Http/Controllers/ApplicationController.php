@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ApplicationController extends Controller
 {
@@ -53,7 +54,10 @@ class ApplicationController extends Controller
             'mother_name' => 'nullable|string|max:255',
             'mother_age' => 'nullable|string|max:10',
             'mother_occupation' => 'nullable|string|max:255',
+            'father_deceased' => 'nullable|boolean',
+            'mother_deceased' => 'nullable|boolean',
             'monthly_income' => 'nullable|string|max:255',
+            'parent_consent' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'is_literate' => 'nullable|boolean',
             'tools' => 'nullable|array',
             'can_commit' => 'nullable|boolean',
@@ -68,13 +72,18 @@ class ApplicationController extends Controller
             $data['picture'] = $request->file('picture')->store('pictures', 'public');
         }
 
+        if ($request->hasFile('parent_consent')) {
+            $data['parent_consent'] = $request->file('parent_consent')->store('parent_consents', 'public');
+        }
+
         if (isset($data['tools'])) {
             $data['tools'] = json_encode($data['tools']);
         }
 
         foreach ([
             'is_literate', 'can_commit', 'willing_overtime',
-            'comfortable_clerical', 'strong_communication', 'willing_training'
+            'comfortable_clerical', 'strong_communication', 'willing_training',
+            'father_deceased', 'mother_deceased'
         ] as $field) {
             $data[$field] = isset($data[$field]) ? (bool)$data[$field] : false;
         }
@@ -117,6 +126,18 @@ class ApplicationController extends Controller
      */
     public function destroy(Application $application)
     {
-        // your delete logic here...
+        // Delete associated files if they exist
+        if ($application->picture) {
+            \Storage::disk('public')->delete($application->picture);
+        }
+        
+        if ($application->parent_consent) {
+            \Storage::disk('public')->delete($application->parent_consent);
+        }
+        
+        // Delete the application record
+        $application->delete();
+        
+        return redirect()->route('applicants.list')->with('success', 'Deleted successfully');
     }
 }

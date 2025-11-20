@@ -99,7 +99,7 @@
                            </div>
                            <div style="flex: 1;">
                                <label style="font-size: 16px; font-weight: bold; text-align: left;">ID Number:</label>
-                               <input type="text" name="id_number" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
+                               <input type="text" name="id_number" required pattern="[0-9]{2}-[0-9]{4}-[0-9]{3}" title="Format: 22-0313-407" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
                            </div>
                        </div>
                        <div style="display: flex; gap: 18px; margin-bottom: 8px;">
@@ -130,8 +130,9 @@
                                 <rect x="8" y="3" width="8" height="4" rx="2" fill="#eaeaea" stroke="#23408e"/>
                             </svg>
                         </button>
-                        <input type="file" name="picture" id="pictureInput" accept="image/*" required style="display:none;">
+                        <input type="file" name="picture" id="pictureInput" accept="image/*" style="display:none;">
                         <input type="hidden" name="cropped_picture" id="cropped-picture">
+                        <div id="photoError" style="display:none; color:#ef4444; font-size:15px; font-weight:bold; position:absolute; bottom:60px; left:0; right:0; text-align:center; background:rgba(255,255,255,0.95); padding:6px 0; border-radius:6px; z-index:10;">Please fill up this field.</div>
                     </div>
                     <!-- Modal for cropping -->
                     <div id="cropperModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
@@ -169,6 +170,10 @@
                     <div>
                         <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Occupation:</label>
                         <input type="text" name="father_occupation" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <div style="margin-top: 6px;">
+                            <input type="checkbox" name="father_deceased" value="1" id="father_deceased" style="margin-right: 8px;">
+                            <label for="father_deceased" style="font-size: 14px; font-weight: normal;">Deceased</label>
+                        </div>
                     </div>
                 </div>
                 <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 8px;">
@@ -183,11 +188,36 @@
                     <div>
                         <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Occupation:</label>
                         <input type="text" name="mother_occupation" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <div style="margin-top: 6px;">
+                            <input type="checkbox" name="mother_deceased" value="1" id="mother_deceased" style="margin-right: 8px;">
+                            <label for="mother_deceased" style="font-size: 14px; font-weight: normal;">Deceased</label>
+                        </div>
                     </div>
                 </div>
                 <div style="margin-bottom: 8px;">
                     <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Monthly Household Income:</label>
                     <input type="text" name="monthly_income" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                </div>
+                <hr style="border: 1.5px solid #222; margin: 16px 0;">
+
+                <!-- Parent Consent -->
+                <h3 style="font-size: 24px; font-weight: bold; margin-bottom: 8px; margin-top: 18px; font-family: Times New Roman, Times, serif;">Parent Consent</h3>
+                <hr style="border: 1.5px solid #222; margin-bottom: 18px; margin-top: 0;">
+                <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 16px; margin-bottom: 16px;">
+                    <p style="font-size: 14px; font-family: Times New Roman, Times, serif; margin-bottom: 12px; color: #495057;">
+                        <strong>Step 1:</strong> Download the Parent Consent Form below and have your parent/guardian sign it.
+                    </p>
+                    <a href="#" download style="display: inline-block; background: #007bff; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-size: 14px; margin-bottom: 12px;">
+                        📄 Download Parent Consent Form
+                    </a>
+                    <p style="font-size: 14px; font-family: Times New Roman, Times, serif; margin-bottom: 12px; color: #495057;">
+                        <strong>Step 2:</strong> Upload the signed consent form here:
+                    </p>
+                    <div style="margin-bottom: 8px;">
+                        <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Upload Signed Consent Form:</label>
+                        <input type="file" name="parent_consent" accept=".pdf,.jpg,.jpeg,.png" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <small style="font-size: 12px; color: #6c757d; font-family: Times New Roman, Times, serif;">Accepted formats: PDF, JPG, JPEG, PNG (Max size: 5MB)</small>
+                    </div>
                 </div>
                 <hr style="border: 1.5px solid #222; margin: 16px 0;">
 
@@ -235,8 +265,8 @@
                     <input type="radio" name="willing_training" value="0" required> No
                 </div>
                 <div style="font-size: 16px; margin-bottom: 10px; font-family: Times New Roman, Times, serif;">
-                    <label>OTHER TALENTS/ SKILLS/ SOFT SKILLS/TECHNICAL SKILLS/HOBBIES, WRITE IT DOWN:</label>
-                    <textarea name="other_skills" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; height: 60px; background: #f7f7f7;"></textarea>
+                    <label>OTHER TALENTS/ SKILLS/ SOFT SKILLS/TECHNICAL SKILLS/HOBBIES, WRITE IT DOWN: (Optional)</label>
+                    <textarea name="other_skills" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; height: 60px; background: #f7f7f7;"></textarea>
                 </div>
                 <div style="text-align: right; margin-top: 18px;">
                     <button type="submit" style="padding: 8px 32px; font-size: 18px; background: #fff; color: #222; border: 2px solid #222; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: Times New Roman, Times, serif; letter-spacing: 2px; transition: background 0.2s;">Submit</button>
@@ -292,35 +322,274 @@
         </style>
         <style>
         @media print {
+            @page {
+                size: A4;
+                margin: 0.4in;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                box-sizing: border-box !important;
+            }
+            
             body * {
                 visibility: hidden !important;
             }
-            /* Show only the form and its header block */
-            #applicationForm, #applicationForm * {
+            
+            /* Show only the print data */
+            .print-container, .print-container * {
                 visibility: visible !important;
             }
-            #applicationForm {
+            
+            .print-container {
                 position: absolute !important;
-                left: 0; top: 0; width: 100vw;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 12px !important;
+                margin: 0 !important;
                 background: #fff !important;
-                box-shadow: none !important;
-                z-index: 99999;
+                font-family: 'Times New Roman', serif !important;
+                font-size: 12px !important;
+                color: #000 !important;
             }
-            /* Hide navigation bar and banner for print */
-            .header-bar, .header-bar *, section, section *, nav, .header-bar nav {
+            
+            /* Hide original form when printing */
+            #applicationForm {
                 display: none !important;
                 visibility: hidden !important;
             }
-            /* Show only the form header block at the top */
-            .form-header-block, .form-header-block * {
-                display: block !important;
-                visibility: visible !important;
+            
+            /* Hide elements not needed for print */
+            .header-bar, section, footer, nav,
+            button, .modal-confirm-bg, .modal-confirm-box, 
+            #modalPrint, #modalConfirm, #cropperModal {
+                display: none !important;
+                visibility: hidden !important;
             }
-            .modal-confirm-bg, .modal-confirm-box, #modalPrint, #modalConfirm, #cropperModal {
+            
+            /* Print layout styles */
+            .print-header {
+                display: flex !important;
+                align-items: flex-start !important;
+                justify-content: space-between !important;
+                margin-bottom: 15px !important;
+                border-bottom: 2px solid #000 !important;
+                padding-bottom: 8px !important;
+            }
+            
+            .print-header-left {
+                display: flex !important;
+                align-items: center !important;
+                gap: 15px !important;
+            }
+            
+            .print-header img {
+                width: 60px !important;
+                height: 60px !important;
+            }
+            
+            .print-university-info {
+                font-size: 14px !important;
+                font-weight: bold !important;
+                line-height: 1.3 !important;
+            }
+            
+            .print-header-right {
+                text-align: right !important;
+                font-size: 11px !important;
+                font-weight: bold !important;
+                line-height: 1.4 !important;
+            }
+            
+            .print-section {
+                margin-bottom: 12px !important;
+            }
+            
+            .print-section-title {
+                font-size: 13px !important;
+                font-weight: bold !important;
+                margin-bottom: 8px !important;
+                border-bottom: 1px solid #000 !important;
+                padding-bottom: 3px !important;
+            }
+            
+            .print-personal-layout {
+                display: flex !important;
+                gap: 20px !important;
+                align-items: flex-start !important;
+            }
+            
+            .print-personal-info {
+                flex-grow: 1 !important;
+            }
+            
+            .print-photo {
+                width: 100px !important;
+                height: 120px !important;
+                border: 2px solid #000 !important;
+                flex-shrink: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            .print-photo img {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+            }
+            
+            .print-field {
+                display: flex !important;
+                margin-bottom: 6px !important;
+                align-items: baseline !important;
+            }
+            
+            .print-field-label {
+                font-weight: bold !important;
+                width: 140px !important;
+                flex-shrink: 0 !important;
+                font-size: 11px !important;
+            }
+            
+            .print-field-value {
+                border-bottom: 1px solid #000 !important;
+                flex-grow: 1 !important;
+                min-height: 16px !important;
+                padding-left: 5px !important;
+                font-size: 11px !important;
+            }
+            
+            .print-grid-2 {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 15px !important;
+                margin-bottom: 6px !important;
+            }
+            
+            .print-grid-3 {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 12px !important;
+                margin-bottom: 6px !important;
+            }
+            
+            .print-checkbox {
+                display: inline-block !important;
+                width: 12px !important;
+                height: 12px !important;
+                border: 1px solid #000 !important;
+                margin-right: 5px !important;
+                position: relative !important;
+                top: 2px !important;
+            }
+            
+            .print-checkbox.checked::after {
+                content: "✓" !important;
+                position: absolute !important;
+                top: -2px !important;
+                left: 1px !important;
+                font-size: 10px !important;
+                font-weight: bold !important;
+            }
+            
+            .print-radio {
+                display: inline-block !important;
+                width: 12px !important;
+                height: 12px !important;
+                border: 1px solid #000 !important;
+                border-radius: 50% !important;
+                margin-right: 5px !important;
+                position: relative !important;
+                top: 2px !important;
+            }
+            
+            .print-radio.checked::after {
+                content: "●" !important;
+                position: absolute !important;
+                top: -1px !important;
+                left: 2px !important;
+                font-size: 8px !important;
+            }
+            
+            .print-questions {
+                font-size: 11px !important;
+                margin-top: 8px !important;
+                line-height: 1.4 !important;
+            }
+            
+            .print-question {
+                margin-bottom: 4px !important;
+            }
+            
+            #picturePreviewLabel {
                 display: none !important;
             }
-            button[type="submit"], #cameraBtn {
+            
+            /* Format grid layouts */
+            div[style*="display: grid"] {
+                display: grid !important;
+                gap: 10px !important;
+                margin-bottom: 10px !important;
+            }
+            
+            div[style*="grid-template-columns: 2fr 1fr"] {
+                grid-template-columns: 2fr 1fr !important;
+            }
+            
+            div[style*="grid-template-columns: 2fr 1fr 1fr"] {
+                grid-template-columns: 2fr 1fr 1fr !important;
+            }
+            
+            /* Format horizontal rules */
+            hr {
+                border: 1px solid #000 !important;
+                margin: 15px 0 !important;
+                page-break-after: avoid !important;
+            }
+            
+            /* Ensure proper page breaks */
+            .page-break {
+                page-break-before: always !important;
+            }
+            
+            /* Format text areas */
+            textarea {
+                min-height: 60px !important;
+                resize: none !important;
+            }
+            
+            /* Hide specific elements that shouldn't print */
+            span[id*="picturePreviewLabel"],
+            button,
+            .modal-confirm-bg,
+            .modal-confirm-box {
                 display: none !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure proper font sizes */
+            body, * {
+                font-family: 'Times New Roman', serif !important;
+                font-size: 12px !important;
+                line-height: 1.4 !important;
+            }
+            
+            h3 {
+                font-size: 16px !important;
+                font-weight: bold !important;
+            }
+            
+            /* Format the university header */
+            div[style*="font-size: 19px; font-weight: bold"] {
+                font-size: 14px !important;
+            }
+            
+            div[style*="text-align: right; font-size: 15px"] {
+                font-size: 11px !important;
             }
         }
         </style>
@@ -386,7 +655,9 @@
                 return;
             }
             if (!isPhotoUploaded()) {
-                alert('Please upload and crop your photo before submitting the form.');
+                var photoError = document.getElementById('photoError');
+                photoError.style.display = 'block';
+                setTimeout(function() { photoError.style.display = 'none'; }, 3000);
                 return;
             }
             if (!allowSubmit) {
@@ -463,12 +734,217 @@
 
         btnPrintYes.addEventListener('click', function() {
             modalPrint.style.display = 'none';
-            window.print();
-            // After print dialog closes, redirect to show page
+            createPrintLayout();
             setTimeout(function() {
-                window.location.href = '/apply/show';
-            }, 500);
+                window.print();
+                // After print dialog closes, redirect to show page
+                setTimeout(function() {
+                    window.location.href = '/apply/show';
+                }, 1000);
+            }, 100);
         });
+        
+        function createPrintLayout() {
+            const form = document.getElementById('applicationForm');
+            const formData = new FormData(form);
+            
+            // Get photo source
+            const photoImg = document.getElementById('profile-preview');
+            const photoSrc = photoImg && photoImg.style.display !== 'none' ? photoImg.src : '';
+            
+            // Check if parent consent file is uploaded
+            const parentConsentFile = document.querySelector('input[name="parent_consent"]').files[0];
+            const parentConsentStatus = parentConsentFile ? 'Uploaded' : 'Not uploaded';
+            
+            // Get tools
+            const tools = [];
+            const toolCheckboxes = document.querySelectorAll('input[name="tools[]"]:checked');
+            toolCheckboxes.forEach(cb => {
+                const toolNames = {
+                    'office': 'Microsoft Office Suite',
+                    'design': 'Design Software', 
+                    'video_conf': 'Email & Video Conferencing',
+                    'social': 'Social Media Platforms',
+                    'cloud': 'Cloud Storage Services'
+                };
+                tools.push(toolNames[cb.value] || cb.value);
+            });
+            
+            const printHTML = `
+                <div class="print-container">
+                    <div class="print-header">
+                        <div class="print-header-left">
+                            <img src="/images/uddlogo.png" alt="UDD Logo">
+                            <div class="print-university-info">
+                                UNIVERSIDAD DE DAGUPAN<br>
+                                <span style="font-size: 9px; font-weight: normal;">(formerly Colegio de Dagupan)</span>
+                            </div>
+                        </div>
+                        <div class="print-header-right">
+                            Student Assistant Application Form<br>
+                            UNIVERSIDAD DE DAGUPAN<br>
+                            Arellano St., Dagupan City,<br>
+                            Pangasinan
+                        </div>
+                    </div>
+                    
+                    <div class="print-section">
+                        <div class="print-section-title">Personal Information</div>
+                        <div class="print-personal-layout">
+                            <div class="print-personal-info">
+                                <div class="print-field">
+                                    <span class="print-field-label">Student's Name:</span>
+                                    <span class="print-field-value">${formData.get('student_name') || ''}</span>
+                                </div>
+                                <div class="print-grid-3">
+                                    <div class="print-field">
+                                        <span class="print-field-label">Course:</span>
+                                        <span class="print-field-value">${formData.get('course') || ''}</span>
+                                    </div>
+                                    <div class="print-field">
+                                        <span class="print-field-label">Year Level:</span>
+                                        <span class="print-field-value">${formData.get('year_level') || ''}</span>
+                                    </div>
+                                    <div class="print-field">
+                                        <span class="print-field-label">Age:</span>
+                                        <span class="print-field-value">${formData.get('age') || ''}</span>
+                                    </div>
+                                </div>
+                                <div class="print-field">
+                                    <span class="print-field-label">ID Number:</span>
+                                    <span class="print-field-value">${formData.get('id_number') || ''}</span>
+                                </div>
+                                <div class="print-field">
+                                    <span class="print-field-label">Address:</span>
+                                    <span class="print-field-value">${formData.get('address') || ''}</span>
+                                </div>
+                                <div class="print-grid-2">
+                                    <div class="print-field">
+                                        <span class="print-field-label">Email:</span>
+                                        <span class="print-field-value">${formData.get('email') || ''}</span>
+                                    </div>
+                                    <div class="print-field">
+                                        <span class="print-field-label">Telephone:</span>
+                                        <span class="print-field-value">${formData.get('telephone') || ''}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="print-photo">
+                                ${photoSrc ? `<img src="${photoSrc}" alt="Photo">` : '<span style="font-size: 8px; color: #999;">Photo</span>'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="print-section">
+                        <div class="print-section-title">Family Background</div>
+                        <div class="print-grid-3">
+                            <div class="print-field">
+                                <span class="print-field-label">Father's Name:</span>
+                                <span class="print-field-value">${formData.get('father_name') || ''}</span>
+                            </div>
+                            <div class="print-field">
+                                <span class="print-field-label">Age:</span>
+                                <span class="print-field-value">${formData.get('father_age') || ''}</span>
+                            </div>
+                            <div class="print-field">
+                                <span class="print-field-label">Occupation:</span>
+                                <span class="print-field-value">${formData.get('father_occupation') || ''} ${formData.get('father_deceased') ? '(Deceased)' : ''}</span>
+                            </div>
+                        </div>
+                        <div class="print-grid-3">
+                            <div class="print-field">
+                                <span class="print-field-label">Mother's Name:</span>
+                                <span class="print-field-value">${formData.get('mother_name') || ''}</span>
+                            </div>
+                            <div class="print-field">
+                                <span class="print-field-label">Age:</span>
+                                <span class="print-field-value">${formData.get('mother_age') || ''}</span>
+                            </div>
+                            <div class="print-field">
+                                <span class="print-field-label">Occupation:</span>
+                                <span class="print-field-value">${formData.get('mother_occupation') || ''} ${formData.get('mother_deceased') ? '(Deceased)' : ''}</span>
+                            </div>
+                        </div>
+                        <div class="print-field">
+                            <span class="print-field-label">Monthly Household Income:</span>
+                            <span class="print-field-value">${formData.get('monthly_income') || ''}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="print-section">
+                        <div class="print-section-title">Parent Consent</div>
+                        <div class="print-field">
+                            <span class="print-field-label">Parent Consent Form:</span>
+                            <span class="print-field-value">${parentConsentStatus}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="print-section">
+                        <div class="print-section-title">Computer Literacy & Skills Assessment</div>
+                        <div class="print-field" style="margin-bottom: 6px;">
+                            <span class="print-field-label">Computer Literate:</span>
+                            <span class="print-radio ${formData.get('is_literate') === '1' ? 'checked' : ''}"></span> Yes
+                            <span class="print-radio ${formData.get('is_literate') === '0' ? 'checked' : ''}"></span> No
+                        </div>
+                        
+                        ${tools.length > 0 ? `
+                        <div class="print-field">
+                            <span class="print-field-label">Tools & Software:</span>
+                            <span class="print-field-value" style="font-size: 9px;">${tools.join(', ')}</span>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="print-questions">
+                            <div class="print-question">
+                                <strong>Can commit to minimum hours weekly:</strong>
+                                <span class="print-checkbox ${formData.get('can_commit') === '1' ? 'checked' : ''}"></span> Yes
+                                <span class="print-checkbox ${formData.get('can_commit') === '0' ? 'checked' : ''}"></span> No
+                            </div>
+                            <div class="print-question">
+                                <strong>Willing to work overtime:</strong>
+                                <span class="print-checkbox ${formData.get('willing_overtime') === '1' ? 'checked' : ''}"></span> Yes
+                                <span class="print-checkbox ${formData.get('willing_overtime') === '0' ? 'checked' : ''}"></span> No
+                            </div>
+                            <div class="print-question">
+                                <strong>Comfortable with clerical task:</strong>
+                                <span class="print-checkbox ${formData.get('comfortable_clerical') === '1' ? 'checked' : ''}"></span> Yes
+                                <span class="print-checkbox ${formData.get('comfortable_clerical') === '0' ? 'checked' : ''}"></span> No
+                            </div>
+                            <div class="print-question">
+                                <strong>Strong communication skills:</strong>
+                                <span class="print-checkbox ${formData.get('strong_communication') === '1' ? 'checked' : ''}"></span> Yes
+                                <span class="print-checkbox ${formData.get('strong_communication') === '0' ? 'checked' : ''}"></span> No
+                            </div>
+                            <div class="print-question">
+                                <strong>Willing to undergo training:</strong>
+                                <span class="print-checkbox ${formData.get('willing_training') === '1' ? 'checked' : ''}"></span> Yes
+                                <span class="print-checkbox ${formData.get('willing_training') === '0' ? 'checked' : ''}"></span> No
+                            </div>
+                        </div>
+                        
+                        ${formData.get('other_skills') ? `
+                        <div class="print-field" style="margin-top: 4px;">
+                            <span class="print-field-label">Other Skills:</span>
+                            <span class="print-field-value">${formData.get('other_skills')}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Insert print layout
+            const body = document.body;
+            const printDiv = document.createElement('div');
+            printDiv.innerHTML = printHTML;
+            body.appendChild(printDiv);
+            
+            // Clean up after printing
+            window.addEventListener('afterprint', function() {
+                if (printDiv.parentNode) {
+                    printDiv.parentNode.removeChild(printDiv);
+                }
+            });
+        }
         btnPrintNo.addEventListener('click', function() {
             modalPrint.style.display = 'none';
             window.location.href = '/apply/show';
