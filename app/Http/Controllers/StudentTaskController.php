@@ -135,11 +135,15 @@ class StudentTaskController extends Controller {
     // Reject a task (AJAX)
     public function rejectTask(Request $request, $id)
     {
-    $task = StudentTask::findOrFail($id);
-    // Office users can reject any task
-    $task->status = 'rejected';
-    $task->save();
-    return response()->json(['success' => true, 'status' => 'rejected']);
+        $task = StudentTask::findOrFail($id);
+        // Office users can reject any task
+        $task->status = 'rejected';
+        $task->save();
+
+        // Broadcast rejection event for student dashboard
+        broadcast(new \App\Events\StudentTaskRejected($task->id, $task->user_id));
+
+        return response()->json(['success' => true, 'status' => 'rejected']);
     }
     public function tasksForMonth(Request $request)
     {
@@ -160,5 +164,23 @@ class StudentTaskController extends Controller {
             ];
         });
         return response()->json($tasks);
+    }
+
+    // Get task notifications for current student (AJAX)
+    public function getNotifications(Request $request)
+    {
+        $userId = auth()->id();
+        
+        // Get tasks that have been verified or rejected recently (last 7 days)
+        $notifications = StudentTask::where('user_id', $userId)
+            ->where(function($query) {
+                $query->where('verified', true)
+                      ->orWhere('status', 'rejected');
+            })
+            ->where('updated_at', '>=', now()->subDays(7))
+            ->orderBy('updated_at', 'desc')
+            ->get(['id', 'title', 'verified', 'status', 'started_date', 'updated_at']);
+        
+        return response()->json($notifications);
     }
 }

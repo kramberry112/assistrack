@@ -7,12 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 class Attendance extends Model {
+    use HasFactory;
+
     // Relationship to Student
     public function student()
     {
+        return $this->belongsTo(\App\Models\Student::class, 'student_id', 'id');
+    }
+
+    // Relationship to User  
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+    }
+
+    // Legacy relationship using id_number for backward compatibility
+    public function studentByIdNumber()
+    {
         return $this->belongsTo(\App\Models\Student::class, 'id_number', 'id_number');
     }
-    use HasFactory;
 
     // For backward compatibility
     public static function getTodayGroupedRecords()
@@ -22,6 +35,8 @@ class Attendance extends Model {
     use HasFactory;
 
     protected $fillable = [
+        'student_id',
+        'user_id',
         'id_number',
         'name',
         'action',

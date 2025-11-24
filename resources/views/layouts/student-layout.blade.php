@@ -253,11 +253,19 @@
         background: #fff;
         border-radius: 12px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-        min-width: 320px;
+        min-width: 380px;
+        max-width: 420px;
+        max-height: 500px;
+        overflow-y: auto;
         z-index: 100;
         padding: 16px;
         border: 1px solid #e5e7eb;
         margin-top: 8px;
+    }
+
+    .community-notification:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
     }
 
     /* Responsive */
@@ -432,26 +440,77 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Notification functionality
     function updateNotificationCount() {
-        fetch('/community/join-requests')
-            .then(response => response.json())
-            .then(data => {
-                const countSpan = document.getElementById('notificationCount');
-                if (data.length > 0) {
-                    countSpan.textContent = data.length;
-                    countSpan.style.display = 'inline-block';
-                } else {
-                    countSpan.textContent = '0';
-                    countSpan.style.display = 'inline-block';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching notifications:', error);
+        // Fetch community join requests, task notifications, and community notifications
+        Promise.all([
+            fetch('/community/join-requests').then(response => response.json()).catch(() => []),
+            fetch('/student/task-notifications').then(response => response.json()).catch(() => []),
+            fetch('/student/community-notifications').then(response => response.json()).catch(() => [])
+        ])
+        .then(([communityRequests, taskNotifications, communityNotifications]) => {
+            console.log('Notification fetch results:', {
+                communityRequests: communityRequests.length,
+                taskNotifications: taskNotifications.length,
+                communityNotifications: communityNotifications.length,
+                communityNotificationsData: communityNotifications
             });
+            
+            // Count only unread community notifications
+            const unreadCommunityNotifications = communityNotifications.filter(n => !n.read_at);
+            const totalCount = communityRequests.length + taskNotifications.length + unreadCommunityNotifications.length;
+            const countSpan = document.getElementById('notificationCount');
+            if (totalCount > 0) {
+                countSpan.textContent = totalCount;
+                countSpan.style.display = 'inline-block';
+            } else {
+                countSpan.textContent = '0';
+                countSpan.style.display = 'inline-block';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching notifications:', error);
+        });
     }
+
+    // Mark notification as read
+    window.markNotificationAsRead = function(notificationId) {
+        fetch(`/notifications/${notificationId}/read`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the notification visually
+                const notificationEl = document.querySelector(`.community-notification[data-notification-id="${notificationId}"]`);
+                if (notificationEl) {
+                    // Remove unread styling
+                    notificationEl.style.boxShadow = 'none';
+                    notificationEl.style.border = 'none';
+                    // Remove unread indicators
+                    const unreadDot = notificationEl.querySelector('span[style*="background:#3b82f6"]');
+                    const newLabel = notificationEl.querySelector('div[style*="color:#3b82f6"]');
+                    if (unreadDot) unreadDot.remove();
+                    if (newLabel) newLabel.remove();
+                }
+                // Update notification count
+                updateNotificationCount();
+            }
+        })
+        .catch(error => {
+            console.error('Error marking notification as read:', error);
+        });
+    };
 
     // Update notification count on page load and every 30 seconds
     updateNotificationCount();
     setInterval(updateNotificationCount, 30000);
+    
+    // Make updateNotificationCount available globally for real-time updates
+    window.updateNotificationCount = updateNotificationCount;
 
     // Notification dropdown functionality
     const notificationBellContainer = document.getElementById('notificationBellContainer');
@@ -469,13 +528,80 @@ document.addEventListener('DOMContentLoaded', function() {
                 notificationDropdown.style.display = 'block';
                 notificationContent.innerHTML = 'Loading...';
                 
-                fetch('/community/join-requests')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length === 0) {
-                            notificationContent.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
-                        } else {
-                            notificationContent.innerHTML = data.map(req => `
+                // Fetch community requests, task notifications, and community join notifications
+                Promise.all([
+                    fetch('/community/join-requests').then(response => response.json()).catch(() => []),
+                    fetch('/student/task-notifications').then(response => response.json()).catch(() => []),
+                    fetch('/student/community-notifications').then(response => response.json()).catch(() => [])
+                ])
+                .then(([communityRequests, taskNotifications, communityNotifications]) => {
+                    if (communityRequests.length === 0 && taskNotifications.length === 0 && communityNotifications.length === 0) {
+                        notificationContent.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
+                    } else {
+                        let notificationHTML = '';
+                        
+                        // Add task notifications first (highest priority)
+                        if (taskNotifications.length > 0) {
+                            notificationHTML += '<div style="font-weight:700;color:#2563eb;margin-bottom:12px;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">Task Notifications</div>';
+                            taskNotifications.forEach(task => {
+                                const statusColor = task.verified ? '#22c55e' : (task.status === 'rejected' ? '#ef4444' : '#f59e42');
+                                const statusText = task.verified ? 'Verified ✓' : (task.status === 'rejected' ? 'Rejected ✗' : 'Pending');
+                                const statusIcon = task.verified ? '✅' : (task.status === 'rejected' ? '❌' : '⏳');
+                                
+                                notificationHTML += `
+                                    <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:8px;border-left:4px solid ${statusColor};">
+                                        <div style="font-weight:600;color:#111827;display:flex;align-items:center;gap:8px;">
+                                            <span>${statusIcon}</span>
+                                            <span>${task.title}</span>
+                                        </div>
+                                        <div style="color:#6b7280;font-size:0.9rem;margin-top:4px;">Status: <span style="color:${statusColor};font-weight:600;">${statusText}</span></div>
+                                        ${task.status === 'rejected' ? '<div style="color:#ef4444;font-size:0.85rem;margin-top:4px;font-style:italic;">This task was rejected and cannot be started.</div>' : ''}
+                                        ${task.verified && !task.started_date ? '<div style="color:#22c55e;font-size:0.85rem;margin-top:4px;font-style:italic;">Task verified! You can now start working on it.</div>' : ''}
+                                    </div>
+                                `;
+                            });
+                        }
+                        
+                        // Add community join request notifications
+                        if (communityNotifications.length > 0) {
+                            if (taskNotifications.length > 0) {
+                                notificationHTML += '<div style="font-weight:700;color:#2563eb;margin:16px 0 12px 0;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">Community Updates</div>';
+                            } else {
+                                notificationHTML += '<div style="font-weight:700;color:#2563eb;margin-bottom:12px;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">Community Updates</div>';
+                            }
+                            
+                            communityNotifications.forEach(notification => {
+                                const isAccepted = notification.type === 'join_request_accepted';
+                                const statusColor = isAccepted ? '#22c55e' : '#ef4444';
+                                const statusIcon = isAccepted ? '🎉' : '❌';
+                                const bgColor = isAccepted ? '#f0fdf4' : '#fef2f2';
+                                
+                                const isUnread = !notification.read_at;
+                                const unreadStyle = isUnread ? 'box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15); border: 1px solid #dbeafe;' : '';
+                                
+                                notificationHTML += `
+                                    <div class="community-notification" data-notification-id="${notification.id}" style="margin-bottom:12px;padding:12px;background:${bgColor};border-radius:8px;border-left:4px solid ${statusColor};cursor:pointer;transition:all 0.2s;${unreadStyle}" onclick="markNotificationAsRead('${notification.id}')">
+                                        <div style="font-weight:600;color:#111827;display:flex;align-items:center;gap:8px;">
+                                            <span>${statusIcon}</span>
+                                            <span>${isAccepted ? 'Join Request Accepted!' : 'Join Request Rejected'}</span>
+                                            ${isUnread ? '<span style="background:#3b82f6;color:#fff;border-radius:50%;width:8px;height:8px;display:inline-block;margin-left:auto;"></span>' : ''}
+                                        </div>
+                                        <div style="color:#6b7280;font-size:0.9rem;margin-top:4px;">${notification.message}</div>
+                                        <div style="color:#9ca3af;font-size:0.8rem;margin-top:4px;">${new Date(notification.created_at).toLocaleDateString()} ${new Date(notification.created_at).toLocaleTimeString()}</div>
+                                        ${isUnread ? '<div style="color:#3b82f6;font-size:0.8rem;margin-top:4px;font-weight:600;">• New</div>' : ''}
+                                    </div>
+                                `;
+                            });
+                        }
+                        
+                        // Add community requests (for group owners)
+                        if (communityRequests.length > 0) {
+                            if (taskNotifications.length > 0 || communityNotifications.length > 0) {
+                                notificationHTML += '<div style="font-weight:700;color:#2563eb;margin:16px 0 12px 0;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">Pending Requests</div>';
+                            } else {
+                                notificationHTML += '<div style="font-weight:700;color:#2563eb;margin-bottom:12px;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">Pending Requests</div>';
+                            }
+                            notificationHTML += communityRequests.map(req => `
                                 <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">
                                     <div style="font-weight:600;color:#2563eb;">${req.user.name} (@${req.user.username})</div>
                                     <div style="color:#374151;font-size:0.95rem;">wants to join your group.</div>
@@ -485,6 +611,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
                                 </div>
                             `).join('');
+                        }
+                        
+                        notificationContent.innerHTML = notificationHTML;
                             
                             // Add event listeners for accept/reject buttons
                             setTimeout(() => {

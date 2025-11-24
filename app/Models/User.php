@@ -71,4 +71,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Relationship with Grades (if user is a student)
+    public function grades()
+    {
+        return $this->hasMany(Grade::class);
+    }
+
+    // Relationship with Attendances (if user is a student)
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    // Get user's latest grade record
+    public function latestGrade()
+    {
+        return $this->hasOne(Grade::class)->latest();
+    }
 }

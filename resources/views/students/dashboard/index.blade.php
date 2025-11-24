@@ -492,11 +492,11 @@ window.currentUserId = {{ auth()->id() }};
                                     @endif
                                 </span>
                                 @if($task->status === 'rejected')
-                                    <span class="status-badge" style="background:#fee2e2;color:#b91c1c;margin-left:10px;">Rejected</span>
+                                    <span class="status-badge" style="background:#fee2e2;color:#b91c1c;margin-left:10px;padding:4px 12px;border-radius:12px;font-size:0.8rem;font-weight:600;">Rejected ❌</span>
                                 @elseif(isset($task->verified) && $task->verified)
-                                    <span class="status-badge status-completed" style="margin-left:10px;">Verified</span>
+                                    <span class="status-badge status-completed" style="background:#d1fae5;color:#065f46;margin-left:10px;padding:4px 12px;border-radius:12px;font-size:0.8rem;font-weight:600;">Verified ✅</span>
                                 @else
-                                    <span class="status-badge status-pending" style="margin-left:10px;">Not Verified</span>
+                                    <span class="status-badge status-pending" style="background:#fef3c7;color:#92400e;margin-left:10px;padding:4px 12px;border-radius:12px;font-size:0.8rem;font-weight:600;">Pending ⏳</span>
                                 @endif
                             </div>
                             <div class="task-description" style="font-size:0.95rem;color:#6b7280;margin-bottom:12px;">{{ $task->description }}</div>
@@ -531,12 +531,14 @@ window.currentUserId = {{ auth()->id() }};
                             <div class="task-actions">
                                 @if($tab == 'todo')
                                     @if($task->status === 'rejected')
-                                        <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;">Start</button>
+                                        <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" disabled style="background:#fee2e2;color:#b91c1c;cursor:not-allowed;" title="This task was rejected">❌ Rejected</button>
+                                    @elseif(isset($task->verified) && $task->verified)
+                                        <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" style="background:#7c83e7;color:#fff;" title="Task is verified, you can start">▶️ Start</button>
                                     @else
-                                        <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" data-verified="{{ $task->verified ? '1' : '0' }}" @if(!isset($task->verified) || !$task->verified) disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;" @endif>Start</button>
+                                        <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;" title="Waiting for verification">⏳ Pending</button>
                                     @endif
                                 @elseif($task->status == 'in_progress')
-                                    <button class="task-action complete" data-id="{{ $task->id }}" data-status="completed">Complete</button>
+                                    <button class="task-action complete" data-id="{{ $task->id }}" data-status="completed" style="background:#22c55e;color:#fff;" title="Complete this task">✅ Complete</button>
                                 @endif
                             </div>
                         </div>
@@ -695,7 +697,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="task-header">
                             <span class="task-title">${data.task.title}</span>
                             <span class="task-status todo">To-Do</span>
-                            <span class="status-badge status-pending" style="margin-left:10px;">Not Verified</span>
+                            <span class="status-badge status-pending" style="background:#fef3c7;color:#92400e;margin-left:10px;padding:4px 12px;border-radius:12px;font-size:0.8rem;font-weight:600;">Pending ⏳</span>
                         </div>
                         <div class="task-description">${data.task.description}</div>
                         <div class="task-meta">
@@ -709,7 +711,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <span class="task-progress">&nbsp;</span>
                         </div>
                         <div class="task-actions">
-                            <button class="task-action start" data-id="${data.task.id}" data-status="in_progress" disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;">Start</button>
+                            <button class="task-action start" data-id="${data.task.id}" data-status="in_progress" disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;" title="Waiting for verification">⏳ Pending</button>
                         </div>
                     `;
                     container.prepend(card);
@@ -950,21 +952,59 @@ document.addEventListener('DOMContentLoaded', function() {
         var card = document.querySelector('.task-card[data-task-id="' + taskId + '"]');
         if (card) {
             // Mark as verified visually
-            var statusBadge = card.querySelector('.task-status');
+            var statusBadge = card.querySelector('.status-badge');
             if (statusBadge) {
                 statusBadge.textContent = 'Verified';
-                statusBadge.className = 'task-status verified';
+                statusBadge.className = 'status-badge status-completed';
+                statusBadge.style.background = '#d1fae5';
+                statusBadge.style.color = '#065f46';
             }
             // Enable Start button
             var startBtn = card.querySelector('.task-action.start');
             if (startBtn) {
                 startBtn.disabled = false;
-                startBtn.style.background = '#2563eb';
+                startBtn.style.background = '#7c83e7';
                 startBtn.style.color = '#fff';
                 startBtn.style.cursor = 'pointer';
             }
         }
         updateTabCounts();
+        
+        // Update notifications in layout header
+        if (window.updateNotificationCount) {
+            window.updateNotificationCount();
+        }
+    });
+
+    // Listen for office rejection event to update dashboard instantly
+    window.addEventListener('task-rejected', function(e) {
+        var taskId = e.detail.taskId;
+        var card = document.querySelector('.task-card[data-task-id="' + taskId + '"]');
+        if (card) {
+            // Mark as rejected visually
+            var statusBadge = card.querySelector('.status-badge');
+            if (statusBadge) {
+                statusBadge.textContent = 'Rejected';
+                statusBadge.className = 'status-badge';
+                statusBadge.style.background = '#fee2e2';
+                statusBadge.style.color = '#b91c1c';
+            }
+            // Disable Start button
+            var startBtn = card.querySelector('.task-action.start');
+            if (startBtn) {
+                startBtn.disabled = true;
+                startBtn.style.background = '#e5e7eb';
+                startBtn.style.color = '#888';
+                startBtn.style.cursor = 'not-allowed';
+                startBtn.textContent = 'Start (Rejected)';
+            }
+        }
+        updateTabCounts();
+        
+        // Update notifications in layout header
+        if (window.updateNotificationCount) {
+            window.updateNotificationCount();
+        }
     });
 });
 </script>

@@ -34,8 +34,13 @@ class GradeController extends Controller
             $scheduleUrl = $request->file('scheduleFileInput')->store('schedules', 'public');
         }
 
+        // Get current user and their student record
+        $user = auth()->user();
+        $student = $user->student;
 
         Grade::create([
+            'student_id' => $student ? $student->id : null,
+            'user_id' => $user->id,
             'student_name' => $request->student_name,
             'year_level' => $request->year_level,
             'semester' => $request->semester,
@@ -56,7 +61,7 @@ class GradeController extends Controller
     // Admin views all grades
     public function index()
     {
-        $grades = Grade::all();
+        $grades = Grade::with(['student', 'user'])->orderBy('created_at', 'desc')->get();
         return view('admin.reports.grades', compact('grades'));
     }
 

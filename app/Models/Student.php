@@ -46,4 +46,22 @@ class Student extends Model
     {
         return $this->evaluations()->exists();
     }
+
+    // Relationship with Grades
+    public function grades()
+    {
+        return $this->hasMany(Grade::class);
+    }
+
+    // Relationship with Attendances
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    // Get student's latest grade record
+    public function latestGrade()
+    {
+        return $this->hasOne(Grade::class)->latest();
+    }
 }

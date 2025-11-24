@@ -5,7 +5,7 @@ namespace App\Notifications;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class JoinRequestRejected extends Notification
+class JoinRequestAccepted extends Notification
 {
 
     protected $groupName;
@@ -23,17 +23,17 @@ class JoinRequestRejected extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Community Group Join Request Rejected')
-            ->line('Your request to join the group "' . $this->groupName . '" was rejected.')
-            ->line('If you have questions, please contact the group owner.');
+            ->subject('Community Group Join Request Accepted')
+            ->line('Your request to join the group "' . $this->groupName . '" was accepted!')
+            ->line('You are now a member of the group and can participate in group activities.');
     }
 
     public function toDatabase($notifiable)
     {
         return [
             'group_name' => $this->groupName,
-            'message' => 'Your request to join the group "' . $this->groupName . '" was rejected.',
-            'type' => 'join_request_rejected'
+            'message' => 'Your request to join the group "' . $this->groupName . '" was accepted!',
+            'type' => 'join_request_accepted'
         ];
     }
 
@@ -41,10 +41,8 @@ class JoinRequestRejected extends Notification
     {
         return [
             'group_name' => $this->groupName,
-            'message' => 'Your request to join the group "' . $this->groupName . '" was rejected.',
-            'type' => 'join_request_rejected'
+            'message' => 'Your request to join the group "' . $this->groupName . '" was accepted!',
+            'type' => 'join_request_accepted'
         ];
     }
-
-    // Optionally, add toDatabase or toBroadcast methods
 }

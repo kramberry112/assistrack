@@ -74,12 +74,60 @@ class CommunityGroupJoinRequestController extends Controller
                 'message' => $joinMsg,
             ]);
             broadcast(new \App\Events\GroupMessageSent($group->id, $joinRequest->user->only(['id','name','username','profile_photo']), $joinMsg))->toOthers();
+            
+            // Notify the user that their request was accepted
+            \Log::info('Sending acceptance notification to user: ' . $joinRequest->user_id . ' for group: ' . $group->name);
+            $joinRequest->user->notify(new \App\Notifications\JoinRequestAccepted($group->name));
         } else {
             $joinRequest->status = 'rejected';
             $joinRequest->save();
             // Notify the user that their request was rejected
+            \Log::info('Sending rejection notification to user: ' . $joinRequest->user_id . ' for group: ' . $group->name);
             $joinRequest->user->notify(new \App\Notifications\JoinRequestRejected($group->name));
         }
         return response()->json(['success' => true]);
+    }
+
+    // Get community join request notifications for current user
+    public function getUserNotifications(Request $request)
+    {
+        $userId = Auth::id();
+        
+        // Get user's notifications related to community join requests (last 30 days for testing)
+        $notifications = auth()->user()->notifications()
+            ->where(function($query) {
+                $query->where('type', 'LIKE', '%JoinRequestAccepted%')
+                      ->orWhere('type', 'LIKE', '%JoinRequestRejected%');
+            })
+            ->where('created_at', '>=', now()->subDays(30))
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        \Log::info('User ' . $userId . ' has ' . $notifications->count() . ' community notifications');
+        
+        return response()->json($notifications->map(function($notification) {
+            $data = $notification->data;
+            return [
+                'id' => $notification->id,
+                'type' => $data['type'] ?? 'unknown',
+                'group_name' => $data['group_name'] ?? 'Unknown Group',
+                'message' => $data['message'] ?? 'No message',
+                'created_at' => $notification->created_at,
+                'read_at' => $notification->read_at
+            ];
+        }));
+    }
+
+    // Mark notification as read
+    public function markAsRead(Request $request, $id)
+    {
+        $notification = auth()->user()->notifications()->where('id', $id)->first();
+        
+        if ($notification) {
+            $notification->markAsRead();
+            return response()->json(['success' => true]);
+        }
+        
+        return response()->json(['success' => false, 'message' => 'Notification not found']);
     }
 }

@@ -387,6 +387,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/community/join-request', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'store'])->name('community.join_request');
     Route::get('/community/join-requests', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'index'])->name('community.join_requests');
     Route::post('/community/join-request/{id}/action', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'update'])->name('community.join_request.action');
+    
+    // Task notifications for students
+    Route::get('/student/task-notifications', [\App\Http\Controllers\StudentTaskController::class, 'getNotifications'])->name('student.task_notifications');
+    
+    // Community join request notifications
+    Route::get('/student/community-notifications', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'getUserNotifications'])->name('student.community_notifications');
+    
+    // Mark notification as read
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'markAsRead'])->name('notifications.read');
     // Add more student routes here as needed
 });
 

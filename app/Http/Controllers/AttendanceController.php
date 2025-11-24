@@ -106,6 +106,8 @@ class AttendanceController extends Controller {
         }
 
         Attendance::create([
+            'student_id' => $student->id,
+            'user_id' => $student->user_id,
             'id_number' => $validated['id_number'],
             'name' => $student->student_name, // Use student_name from Student model
             'action' => $validated['action'],

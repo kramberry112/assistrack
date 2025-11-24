@@ -318,7 +318,7 @@
     function showSuccessToast(message) {
         let toast = document.createElement('div');
         toast.textContent = message;
-        toast.style.position = 'absolute';
+        toast.style.position = 'fixed';
         toast.style.left = '50%';
         toast.style.bottom = '24px';
         toast.style.transform = 'translateX(-50%)';
@@ -330,12 +330,12 @@
         toast.style.fontSize = '1rem';
         toast.style.zIndex = '10001';
         toast.style.boxShadow = '0 4px 16px rgba(16,185,129,0.15)';
-        // Append to modal content
-        const modalContent = modal.querySelector('div');
-        modalContent.appendChild(toast);
+        
+        // Append to body for global toast
+        document.body.appendChild(toast);
         setTimeout(() => {
             toast.remove();
-        }, 1100);
+        }, 3000);
     }
 </script>
         </div>
@@ -374,10 +374,28 @@
                                 @if($task->status === 'rejected')
                                     <button class="btn-view" disabled style="background:#fee2e2;color:#b91c1c;cursor:not-allowed;">Rejected</button>
                                 @elseif(!$task->verified)
-                                    <button type="button" class="btn-verify" data-task-id="{{ $task->id }}">Verify</button>
-                                    <button type="button" class="btn-reject" data-task-id="{{ $task->id }}">Reject</button>
+                                    <div style="display:flex;gap:8px;">
+                                        <button type="button" class="btn-verify" data-task-id="{{ $task->id }}" title="Verify this task">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="20,6 9,17 4,12"/>
+                                            </svg>
+                                            Verify
+                                        </button>
+                                        <button type="button" class="btn-reject" data-task-id="{{ $task->id }}" title="Reject this task">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                                <line x1="6" y1="6" x2="18" y2="18"/>
+                                            </svg>
+                                            Reject
+                                        </button>
+                                    </div>
                                 @else
-                                    <button class="btn-view" disabled>Verified</button>
+                                    <button class="btn-view" disabled style="background:#d1fae5;color:#065f46;cursor:not-allowed;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="20,6 9,17 4,12"/>
+                                        </svg>
+                                        Verified
+                                    </button>
                                 @endif
                             </td>
                         </tr>
@@ -468,6 +486,9 @@
                     fetchTasks();
                     // Emit custom event for cross-tab/dashboard update
                     window.dispatchEvent(new CustomEvent('task-verified', { detail: { taskId } }));
+                    
+                    // Show success message
+                    showSuccessToast('Task verified successfully!');
                 })
                 .catch(() => {
                     alert('Failed to verify task.');
@@ -498,8 +519,27 @@
                             ${task.status === 'rejected'
                                 ? `<button class='btn-view' disabled style='background:#fee2e2;color:#b91c1c;cursor:not-allowed;'>Rejected</button>`
                                 : (!task.verified
-                                    ? `<button type='button' class='btn-verify' data-task-id='${task.id}'>Verify</button> <button type='button' class='btn-reject' data-task-id='${task.id}'>Reject</button>`
-                                    : `<button class='btn-view' disabled style='background:#93c5fd;color:#fff;cursor:not-allowed;'>Verified</button>`)}
+                                    ? `<div style='display:flex;gap:8px;'>
+                                         <button type='button' class='btn-verify' data-task-id='${task.id}' title='Verify this task'>
+                                           <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>
+                                             <polyline points='20,6 9,17 4,12'/>
+                                           </svg>
+                                           Verify
+                                         </button>
+                                         <button type='button' class='btn-reject' data-task-id='${task.id}' title='Reject this task'>
+                                           <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>
+                                             <line x1='18' y1='6' x2='6' y2='18'/>
+                                             <line x1='6' y1='6' x2='18' y2='18'/>
+                                           </svg>
+                                           Reject
+                                         </button>
+                                       </div>`
+                                    : `<button class='btn-view' disabled style='background:#d1fae5;color:#065f46;cursor:not-allowed;'>
+                                         <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>
+                                           <polyline points='20,6 9,17 4,12'/>
+                                         </svg>
+                                         Verified
+                                       </button>`)}
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -533,6 +573,12 @@
                     if (data.success) {
                         row.querySelector('td:nth-child(6)').innerHTML = `<span class="status-badge" style="background:#fee2e2;color:#b91c1c;">Rejected</span>`;
                         row.querySelector('td:nth-child(7)').innerHTML = `<button class='btn-view' disabled style='background:#fee2e2;color:#b91c1c;cursor:not-allowed;'>Rejected</button>`;
+                        
+                        // Emit custom event for cross-tab/dashboard update
+                        window.dispatchEvent(new CustomEvent('task-rejected', { detail: { taskId } }));
+                        
+                        // Show success message
+                        showSuccessToast('Task rejected successfully!');
                     } else {
                         alert('Failed to reject task.');
                     }
