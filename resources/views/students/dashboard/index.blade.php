@@ -133,6 +133,59 @@ window.currentUserId = {{ auth()->id() }};
         box-shadow: 0 4px 16px rgba(45,46,131,0.25);
     }
 
+    /* Filter Dropdown Styles */
+    .filter-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .filter-options {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        z-index: 100;
+        min-width: 160px;
+        margin-top: 4px;
+    }
+
+    .filter-options.show {
+        display: block;
+    }
+
+    .filter-option {
+        padding: 12px 16px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #374151;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background-color 0.2s;
+    }
+
+    .filter-option:last-child {
+        border-bottom: none;
+    }
+
+    .filter-option:hover {
+        background: #f9fafb;
+    }
+
+    .filter-option.active {
+        background: #eff6ff;
+        color: #2563eb;
+        font-weight: 600;
+    }
+
+    .filter-btn.active {
+        background: #2563eb;
+        color: white;
+    }
+
     /* Tabs */
     .tabs-section {
         display: flex;
@@ -438,6 +491,186 @@ window.currentUserId = {{ auth()->id() }};
     .task-action.complete:hover {
         background: #16a34a;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        body {
+            overflow-x: hidden !important;
+        }
+
+        .main-content {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+        }
+
+        .page-header {
+            margin: 0 !important;
+            padding: 16px !important;
+        }
+
+        .content-area {
+            margin: 0 !important;
+            padding: 16px !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+        }
+
+        .controls-section {
+            flex-direction: column !important;
+            gap: 12px !important;
+            padding: 0 !important;
+            margin: 0 0 16px 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .controls-right {
+            flex-direction: column !important;
+            gap: 12px !important;
+            width: 100% !important;
+        }
+
+        .search-input {
+            width: 100% !important;
+            max-width: 100% !important;
+            font-size: 16px !important; /* Prevents iOS zoom */
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .filter-btn, .create-btn {
+            width: 100% !important;
+            max-width: 100% !important;
+            justify-content: center !important;
+            padding: 12px !important;
+            font-size: 0.9rem !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .tabs-section {
+            overflow-x: auto !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+            padding: 0 !important;
+            margin: 0 0 16px 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+        }
+
+        .tabs-section::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        .tab {
+            white-space: nowrap !important;
+            min-width: fit-content !important;
+            font-size: 0.9rem !important;
+            padding: 8px 16px !important;
+        }
+
+        .tasks-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .task-card {
+            padding: 16px !important;
+        }
+
+        .task-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+        }
+
+        .task-title {
+            font-size: 1rem !important;
+            line-height: 1.4 !important;
+        }
+
+        .task-priority {
+            align-self: flex-end !important;
+        }
+
+        .task-meta {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+        }
+
+        .task-actions {
+            flex-direction: column !important;
+            gap: 8px !important;
+            margin-top: 16px !important;
+        }
+
+        .task-action {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 12px !important;
+            font-size: 0.9rem !important;
+        }
+
+        /* Modal Mobile Styles */
+        .modal-content {
+            width: 95% !important;
+            max-width: none !important;
+            margin: 10px !important;
+            max-height: 90vh !important;
+            overflow-y: auto !important;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            font-size: 16px !important; /* Prevents iOS zoom */
+            padding: 12px !important;
+        }
+
+        .form-actions {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+
+        .btn {
+            width: 100% !important;
+            padding: 12px !important;
+            font-size: 0.9rem !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .content-area {
+            padding: 12px !important;
+        }
+
+        .task-card {
+            padding: 12px !important;
+        }
+
+        .task-title {
+            font-size: 0.9rem !important;
+        }
+
+        .task-description {
+            font-size: 0.85rem !important;
+        }
+
+        .task-action {
+            padding: 10px !important;
+            font-size: 0.85rem !important;
+        }
+    }
 </style>
 
         <!-- Content Area -->
@@ -446,13 +679,21 @@ window.currentUserId = {{ auth()->id() }};
             <div class="controls-section">
                 <input type="text" placeholder="Search" class="search-input">
                 <div class="controls-right">
-                    <button class="filter-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                        </svg>
-                        Filter
-                    </button>
+                    <div class="filter-dropdown">
+                        <button id="filterBtn" class="filter-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                            </svg>
+                            <span id="filterText">All Tasks</span>
+                        </button>
+                        <div id="filterOptions" class="filter-options">
+                            <div class="filter-option active" data-filter="all">All Tasks</div>
+                            <div class="filter-option" data-filter="todo">To-Do</div>
+                            <div class="filter-option" data-filter="in_progress">In Progress</div>
+                            <div class="filter-option" data-filter="completed">Completed</div>
+                            <div class="filter-option" data-filter="due">Due</div>
+                        </div>
+                    </div>
                     <button id="createTaskBtn" class="create-btn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
                             <line x1="12" y1="5" x2="12" y2="19"/>
@@ -910,10 +1151,15 @@ document.addEventListener('DOMContentLoaded', function() {
                             titleSpan.setAttribute('data-original', originalTitle);
                         }
                         if (originalTitle.toLowerCase().includes(keyword)) {
-                            card.style.display = '';
-                            var regex = new RegExp('('+keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+')', 'gi');
-                            titleSpan.innerHTML = originalTitle.replace(regex, '<span class="highlight">$1</span>');
-                            if (!firstMatch) firstMatch = card;
+                            // Check if current filter allows this card
+                            if (currentFilter === 'all' || card.getAttribute('data-status') === currentFilter) {
+                                card.style.display = '';
+                                var regex = new RegExp('('+keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+')', 'gi');
+                                titleSpan.innerHTML = originalTitle.replace(regex, '<span class="highlight">$1</span>');
+                                if (!firstMatch) firstMatch = card;
+                            } else {
+                                card.style.display = 'none';
+                            }
                         } else {
                             card.style.display = 'none';
                             titleSpan.innerHTML = originalTitle;
@@ -923,24 +1169,32 @@ document.addEventListener('DOMContentLoaded', function() {
                         firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 } else {
-                    // Restore tab filter and remove highlights
-                    if (lastActiveTab) {
-                        lastActiveTab.classList.add('active');
-                    }
-                    var activeTab = document.querySelector('.tab.active');
-                    var status = activeTab ? activeTab.id.replace('tab-','') : 'todo';
-                    if (status === 'inprogress' || status === 'in_progress') status = 'in_progress';
+                    // Restore previous state based on current filter
                     cards.forEach(function(card) {
                         var titleSpan = card.querySelector('.task-title');
                         if (!titleSpan) return;
                         var originalTitle = titleSpan.getAttribute('data-original') || titleSpan.textContent;
                         titleSpan.innerHTML = originalTitle;
-                        if (card.getAttribute('data-status') === status) {
-                            card.style.display = '';
-                        } else {
-                            card.style.display = 'none';
-                        }
                     });
+                    
+                    // Apply current filter
+                    if (currentFilter === 'all') {
+                        if (lastActiveTab) {
+                            lastActiveTab.classList.add('active');
+                        }
+                        var activeTab = document.querySelector('.tab.active');
+                        var status = activeTab ? activeTab.id.replace('tab-','') : 'todo';
+                        if (status === 'inprogress' || status === 'in_progress') status = 'in_progress';
+                        cards.forEach(function(card) {
+                            if (card.getAttribute('data-status') === status) {
+                                card.style.display = '';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    } else {
+                        applyFilter(currentFilter);
+                    }
                     lastActiveTab = null;
                 }
             });
@@ -1006,6 +1260,104 @@ document.addEventListener('DOMContentLoaded', function() {
             window.updateNotificationCount();
         }
     });
+
+    // Filter functionality
+    var filterBtn = document.getElementById('filterBtn');
+    var filterOptions = document.getElementById('filterOptions');
+    var filterText = document.getElementById('filterText');
+    var currentFilter = 'all';
+    
+    if (filterBtn && filterOptions && filterText) {
+        // Toggle filter dropdown
+        filterBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            filterOptions.classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!filterBtn.contains(e.target) && !filterOptions.contains(e.target)) {
+                filterOptions.classList.remove('show');
+            }
+        });
+        
+        // Handle filter option selection
+        filterOptions.addEventListener('click', function(e) {
+            if (e.target.classList.contains('filter-option')) {
+                var selectedFilter = e.target.getAttribute('data-filter');
+                var selectedText = e.target.textContent;
+                
+                // Update UI
+                document.querySelectorAll('.filter-option').forEach(function(option) {
+                    option.classList.remove('active');
+                });
+                e.target.classList.add('active');
+                
+                filterText.textContent = selectedText;
+                currentFilter = selectedFilter;
+                
+                // Update filter button appearance
+                if (selectedFilter === 'all') {
+                    filterBtn.classList.remove('active');
+                } else {
+                    filterBtn.classList.add('active');
+                }
+                
+                // Apply filter
+                applyFilter(selectedFilter);
+                
+                // Close dropdown
+                filterOptions.classList.remove('show');
+            }
+        });
+        
+        // Filter function
+        function applyFilter(filter) {
+            var cards = document.querySelectorAll('.task-card');
+            var tabs = document.querySelectorAll('.tab');
+            
+            if (filter === 'all') {
+                // Show all cards based on active tab
+                var activeTab = document.querySelector('.tab.active');
+                if (activeTab) {
+                    var tabStatus = activeTab.id.replace('tab-', '');
+                    cards.forEach(function(card) {
+                        card.style.display = card.getAttribute('data-status') === tabStatus ? '' : 'none';
+                    });
+                }
+                // Enable tabs
+                tabs.forEach(function(tab) {
+                    tab.style.pointerEvents = 'auto';
+                    tab.style.opacity = '1';
+                });
+            } else {
+                // Show only cards matching the filter
+                cards.forEach(function(card) {
+                    card.style.display = card.getAttribute('data-status') === filter ? '' : 'none';
+                });
+                
+                // Disable tabs and activate the corresponding one
+                tabs.forEach(function(tab) {
+                    tab.classList.remove('active');
+                    if (tab.id === 'tab-' + filter) {
+                        tab.classList.add('active');
+                    }
+                    tab.style.pointerEvents = 'none';
+                    tab.style.opacity = '0.6';
+                });
+            }
+        }
+        
+        // Override tab click when filter is active
+        document.querySelectorAll('.tab').forEach(function(tab) {
+            tab.addEventListener('click', function(e) {
+                if (currentFilter !== 'all') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    }
 });
 </script>
 @vite(['resources/js/app.js'])

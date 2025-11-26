@@ -3,51 +3,93 @@
 @section('content')
 
 <style>
+    /* Mobile Menu Styles */
+    .mobile-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #eaeaea;
+        border-top: 1px solid #ccc;
+        padding: 12px 0;
+        z-index: 1000;
+    }
+    
+    .mobile-menu a {
+        display: block;
+        padding: 8px 24px;
+        color: #23408e;
+        font-weight: bold;
+        font-size: 16px;
+        text-decoration: none;
+        transition: background-color 0.2s;
+    }
+    
+    .mobile-menu a:hover {
+        background-color: #ddd;
+    }
+    
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 4px;
+    }
+    
+    .hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: #23408e;
+        margin: 3px 0;
+        transition: 0.3s;
+    }
+    
     /* Header */
     .header-bar {
-        background: #f5f6fa;
+        background: #eaeaea;
         color: #1a237e;
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0 24px;
-        height: 70px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
+        height: 56px;
+        position: relative;
     }
-    .logo {
+    
+    .header-logo {
         display: flex;
         align-items: center;
     }
-    .logo img {
-        height: 48px;
-        width: 48px;
+    
+    .header-logo img {
+        height: 44px;
+        width: 44px;
+        object-fit: contain;
         margin-right: 12px;
     }
     .logo-text {
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 22px;
+        font-weight: bold;
         color: #1a237e;
         letter-spacing: 1px;
     }
-    nav {
+    
+    .desktop-nav {
         display: flex;
-        gap: 24px;
+        gap: 32px;
     }
-    nav a {
+    
+    .desktop-nav a {
         color: #23408e;
-        font-weight: 600;
-        font-size: 16px;
+        font-weight: bold;
+        font-size: 18px;
         text-decoration: none;
-        padding-bottom: 3px;
-        transition: 0.2s;
+        transition: color 0.2s;
     }
-    nav a:hover,
-    nav a.active {
-        color: #0d1b4c;
-        border-bottom: none;
+    
+    .desktop-nav a:hover {
+        color: #1a237e;
     }
 
     /* Contact */
@@ -131,7 +173,106 @@
         box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     }
 
-    /* Responsive */
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .header-bar {
+            flex-wrap: wrap;
+            position: relative;
+            padding: 0 16px;
+            height: auto;
+            min-height: 56px;
+        }
+        
+        .logo-text {
+            font-size: 16px !important;
+        }
+        
+        .desktop-nav {
+            display: none !important;
+        }
+        
+        .hamburger {
+            display: flex !important;
+        }
+        
+        .mobile-menu.active {
+            display: block;
+        }
+        
+        .contact-header {
+            font-size: 28px;
+            padding: 20px 16px;
+        }
+        
+        .contact-section {
+            padding: 40px 16px;
+        }
+        
+        .contact-wrapper {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        
+        .contact-container {
+            padding: 24px 20px;
+        }
+        
+        .contact-title {
+            font-size: 20px;
+        }
+        
+        .map-container {
+            min-height: 250px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .header-bar {
+            padding: 0 12px;
+        }
+        
+        .logo-text {
+            font-size: 14px !important;
+        }
+        
+        .contact-header {
+            font-size: 24px;
+            padding: 16px 12px;
+        }
+        
+        .contact-section {
+            padding: 32px 12px;
+        }
+        
+        .contact-wrapper {
+            gap: 20px;
+        }
+        
+        .contact-container {
+            padding: 20px 16px;
+        }
+        
+        .contact-title {
+            font-size: 18px;
+        }
+        
+        .contact-details {
+            font-size: 15px;
+        }
+        
+        .contact-icon {
+            font-size: 15px;
+        }
+        
+        .contact-icon .icon {
+            font-size: 20px;
+        }
+        
+        .map-container {
+            min-height: 200px;
+        }
+    }
+    
     @media (max-width: 992px) {
         .contact-wrapper {
             grid-template-columns: 1fr;
@@ -143,19 +284,39 @@
 </style>
 
     <!-- Header with Logo and Nav -->
-	<div class="header-bar" style="background: #eaeaea; color: #1a237e; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px;">
-		<div style="display: flex; align-items: center;">
-			<img src="/images/uddlogo.png" alt="UDD Logo" style="height: 44px; width: 44px; object-fit: contain; margin-right: 12px;">
-			<span class="logo-text" style="font-size: 22px; font-weight: bold; color: #1a237e; letter-spacing: 1px;">UNIVERSIDAD DE DAGUPAN</span>
-		</div>
-		<nav style="display: flex; gap: 32px;">
-			<a href="/about" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">About</a>
-			<a href="/welcome" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Home</a>
-			   <a href="/contact" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Contact Us</a>
-			<a href="/apply" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Apply</a>
-			<a href="/login" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Login</a>
-		</nav>
-	</div>
+    <div class="header-bar">
+        <div class="header-logo">
+            <img src="{{ asset('images/uddlogo.png') }}" alt="UDD Logo">
+            <span class="logo-text">UNIVERSIDAD DE DAGUPAN</span>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <a href="/about">About</a>
+            <a href="/welcome">Home</a>
+            <a href="/contact">Contact Us</a>
+            <a href="/apply">Apply</a>
+            <a href="/login">Login</a>
+        </nav>
+        
+        <!-- Mobile Menu Button -->
+        <div class="hamburger" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <nav class="mobile-menu" id="mobileMenu">
+            <a href="/about">About</a>
+            <a href="/welcome">Home</a>
+            <a href="/contact">Contact Us</a>
+            <a href="/apply">Apply</a>
+            <a href="/login">Login</a>
+        </nav>
+    </div>
+
+<div class="contact-header">Contact Us</div>
 
 <div class="contact-section">
     <div class="contact-wrapper">
@@ -205,6 +366,31 @@
         </div>
     </div>
 </div>
+
+<script>
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenu.classList.toggle('active');
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (!hamburger.contains(event.target) && !mobileMenu.contains(event.target)) {
+        mobileMenu.classList.remove('active');
+    }
+});
+
+// Close mobile menu when window is resized to desktop
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        document.getElementById('mobileMenu').classList.remove('active');
+    }
+});
+</script>
+
 @endsection
 
 

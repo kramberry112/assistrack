@@ -40,6 +40,8 @@
         }
     }
 
+
+
     @media (max-width: 600px) {
         main {
             padding-top: 24px;
@@ -198,17 +200,15 @@
         }
         .container {
             flex-direction: column;
-            width: 100vw;
+            width: 95vw;
             min-width: 0;
-            border-radius: 0;
-            box-shadow: none;
-            margin: 0;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
         }
         .banner {
-            width: 100vw;
-            min-width: 0;
+            width: 100%;
             padding: 32px 16px;
-            border-radius: 0;
+            border-radius: 16px 16px 0 0;
         }
         .banner img {
             width: 180px;
@@ -217,11 +217,10 @@
             font-size: 2rem;
         }
         .login-card {
-            width: 100vw;
-            min-width: 0;
+            width: 100%;
             padding: 32px 16px;
             border-left: none;
-            border-radius: 0;
+            border-radius: 0 0 16px 16px;
         }
         h2 {
             font-size: 1.5rem;

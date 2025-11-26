@@ -373,6 +373,18 @@
         align-items: start;
     }
 
+    /* Mobile responsive styles for form wrapper */
+    @media (max-width: 768px) {
+        .form-wrapper {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+        }
+        
+        .form-right {
+            order: -1 !important; /* Move file upload section to top on mobile */
+        }
+    }
+
     .form-left {
         flex: 1;
     }
@@ -559,6 +571,196 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        body {
+            overflow-x: hidden !important;
+        }
+        
+        .container {
+            padding: 16px !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+        
+        .form-container {
+            padding: 16px !important;
+            margin-bottom: 16px !important;
+        }
+        
+        .instructions-box {
+            padding: 12px !important;
+            margin-bottom: 16px !important;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+        }
+
+        .stat-card {
+            padding: 16px !important;
+        }
+
+        .stat-title {
+            font-size: 0.9rem !important;
+        }
+
+        .stat-value {
+            font-size: 1.5rem !important;
+        }
+
+        .filters-section {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+
+        .filter-group {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+
+        .filter-group select {
+            font-size: 16px !important; /* Prevents iOS zoom */
+            padding: 12px !important;
+        }
+
+        .grades-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+        }
+
+        .grade-card {
+            padding: 16px !important;
+        }
+
+        .grade-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+        }
+
+        .grade-title {
+            font-size: 1rem !important;
+        }
+
+        .grade-score {
+            align-self: flex-end !important;
+        }
+
+        .grade-details {
+            flex-direction: column !important;
+            gap: 8px !important;
+        }
+
+        /* Table Mobile Styles */
+        .grades-table {
+            overflow-x: auto !important;
+        }
+
+        .grades-table table {
+            min-width: 600px !important;
+        }
+
+        .grades-table th,
+        .grades-table td {
+            padding: 8px 6px !important;
+            font-size: 0.85rem !important;
+        }
+
+        /* Modal Mobile Styles */
+        .modal-content {
+            width: 95% !important;
+            max-width: none !important;
+            margin: 10px !important;
+            max-height: 90vh !important;
+            overflow-y: auto !important;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            font-size: 16px !important; /* Prevents iOS zoom */
+            padding: 12px !important;
+        }
+
+        /* Subjects table mobile improvements */
+        .subjects-table {
+            overflow-x: auto !important;
+            font-size: 0.85rem !important;
+        }
+        
+        .subjects-table th,
+        .subjects-table td {
+            padding: 8px 6px !important;
+            min-width: 80px !important;
+        }
+        
+        .subjects-table input,
+        .subjects-table select {
+            font-size: 14px !important;
+            padding: 8px !important;
+        }
+        
+        /* File upload area mobile improvements */
+        .file-upload-area {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-height: 200px !important;
+            padding: 16px !important;
+        }
+        
+        .upload-icon {
+            width: 48px !important;
+            height: 48px !important;
+        }
+        
+        .upload-icon svg {
+            width: 24px !important;
+            height: 24px !important;
+        }
+
+        .form-actions {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+
+        .btn {
+            width: 100% !important;
+            padding: 12px !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            padding: 12px !important;
+        }
+
+        .grade-card {
+            padding: 12px !important;
+        }
+
+        .grade-title {
+            font-size: 0.9rem !important;
+        }
+
+        .grade-score {
+            font-size: 1.1rem !important;
+        }
+
+        .grades-table th,
+        .grades-table td {
+            padding: 6px 4px !important;
+            font-size: 0.8rem !important;
+        }
     }
 </style>
 

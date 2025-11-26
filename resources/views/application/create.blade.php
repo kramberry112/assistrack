@@ -3,28 +3,288 @@
 @section('title', 'Student Assistants Society')
 
 @section('content')
+<style>
+/* Mobile Menu Styles */
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #eaeaea;
+    border-top: 1px solid #ccc;
+    padding: 12px 0;
+    z-index: 1000;
+}
+
+.mobile-menu a {
+    display: block;
+    padding: 8px 24px;
+    color: #23408e;
+    font-weight: bold;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.mobile-menu a:hover {
+    background-color: #ddd;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: #23408e;
+    margin: 3px 0;
+    transition: 0.3s;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+}
+
+.header-logo img {
+    height: 44px;
+    width: 44px;
+    object-fit: contain;
+    margin-right: 12px;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: #1a237e;
+    letter-spacing: 1px;
+}
+
+.desktop-nav {
+    display: flex;
+    gap: 32px;
+}
+
+.desktop-nav a {
+    color: #23408e;
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.desktop-nav a:hover {
+    color: #1a237e;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .header-bar {
+        flex-wrap: wrap !important;
+        position: relative !important;
+        padding: 0 16px !important;
+        height: auto !important;
+        min-height: 56px !important;
+    }
+    
+    .logo-text {
+        font-size: 16px !important;
+    }
+    
+    .desktop-nav {
+        display: none !important;
+    }
+    
+    .hamburger {
+        display: flex !important;
+    }
+    
+    .mobile-menu.active {
+        display: block;
+    }
+    
+    /* Banner adjustments */
+    .banner {
+        height: 200px !important;
+    }
+    
+    .banner-content {
+        margin-left: 20px !important;
+        padding: 20px 40px !important;
+        font-size: 32px !important;
+    }
+    
+    /* Form adjustments */
+    .form-container {
+        padding: 24px 20px !important;
+        margin: 16px !important;
+    }
+    
+    .form-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 16px !important;
+    }
+    
+    .form-header-left {
+        align-items: flex-start !important;
+    }
+    
+    .form-header-right {
+        text-align: left !important;
+        font-size: 13px !important;
+        margin-left: 0 !important;
+    }
+    
+    .university-logo {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    
+    .university-name {
+        font-size: 16px !important;
+    }
+    
+    /* Personal info layout */
+    .personal-section {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 24px !important;
+    }
+    
+    .photo-section {
+        order: -1 !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+    
+    .photo-container {
+        width: 250px !important;
+        height: 200px !important;
+        margin: 0 auto !important;
+    }
+    
+    /* Form fields */
+    .form-row {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+    
+    .form-grid-3 {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+    
+    .form-field {
+        flex: 1 !important;
+    }
+    
+    .form-input, .form-select {
+        padding: 10px 12px !important;
+        font-size: 16px !important;
+    }
+    
+    .form-label {
+        font-size: 14px !important;
+    }
+    
+    .section-title {
+        font-size: 20px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-bar {
+        padding: 0 12px !important;
+    }
+    
+    .logo-text {
+        font-size: 14px !important;
+    }
+    
+    .banner {
+        height: 150px !important;
+    }
+    
+    .banner-content {
+        margin-left: 10px !important;
+        padding: 16px 24px !important;
+        font-size: 24px !important;
+        height: auto !important;
+    }
+    
+    .form-container {
+        padding: 16px 12px !important;
+        margin: 8px !important;
+    }
+    
+    .photo-container {
+        width: 200px !important;
+        height: 160px !important;
+    }
+    
+    .form-input, .form-select {
+        font-size: 15px !important;
+    }
+    
+    .section-title {
+        font-size: 18px !important;
+    }
+    
+    .submit-btn {
+        padding: 10px 24px !important;
+        font-size: 16px !important;
+    }
+}
+</style>
+
 <div style="background: #4a6ba3; min-height: 100vh; font-family: 'Segoe UI', Arial, sans-serif; padding: 0;">
 
     {{-- HEADER --}}
-    <div class="header-bar" style="background: #eaeaea; color: #1a237e; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px;">
-        <div style="display: flex; align-items: center;">
-            <img src="/images/uddlogo.png" alt="UDD Logo" style="height: 44px; width: 44px; object-fit: contain; margin-right: 12px;">
-            <span class="logo-text" style="font-size: 22px; font-weight: bold; color: #1a237e; letter-spacing: 1px;">UNIVERSIDAD DE DAGUPAN</span>
+    <div class="header-bar" style="background: #eaeaea; color: #1a237e; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: relative;">
+        <div class="header-logo">
+            <img src="{{ asset('images/uddlogo.png') }}" alt="UDD Logo">
+            <span class="logo-text">UNIVERSIDAD DE DAGUPAN</span>
         </div>
-        <nav style="display: flex; gap: 32px;">
-            <a href="/about" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">About</a>
-            <a href="/welcome" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Home</a>
-            <a href="/contact" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Contact Us</a>
-            <a href="/apply" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Apply</a>
-            <a href="/login" style="color: #23408e; font-weight: bold; font-size: 18px; text-decoration: none; transition: color 0.2s;">Login</a>
+        
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <a href="/about">About</a>
+            <a href="/welcome">Home</a>
+            <a href="/contact">Contact Us</a>
+            <a href="/apply">Apply</a>
+            <a href="/login">Login</a>
+        </nav>
+        
+        <!-- Mobile Menu Button -->
+        <div class="hamburger" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <nav class="mobile-menu" id="mobileMenu">
+            <a href="/about">About</a>
+            <a href="/welcome">Home</a>
+            <a href="/contact">Contact Us</a>
+            <a href="/apply">Apply</a>
+            <a href="/login">Login</a>
         </nav>
     </div>
 
     {{-- BANNER --}}
-    <section style="position: relative; height: 320px; border-bottom: 6px solid #3a5a8c; overflow: hidden; background: #e3eaf7;">
+    <section class="banner" style="position: relative; height: 320px; border-bottom: 6px solid #3a5a8c; overflow: hidden; background: #e3eaf7;">
         <img src="/images/application.png" alt="Application Banner" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: blur(4px) brightness(0.85);">
         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-start; z-index: 2;">
-            <div style="background: #fff; padding: 36px 110px; border-radius: 6px; margin-left: 80px; display: flex; align-items: center; justify-content: center; height: 180px; box-shadow: 0 4px 24px rgba(0,0,0,0.10);">
+            <div class="banner-content" style="background: #fff; padding: 36px 110px; border-radius: 6px; margin-left: 80px; display: flex; align-items: center; justify-content: center; height: 180px; box-shadow: 0 4px 24px rgba(0,0,0,0.10);">
                 <span style="font-size: 62px; font-weight: bold; color: #002c77; letter-spacing: 2px; text-align: center; display: block;">Application<br>Form</span>
             </div>
         </div>
@@ -33,18 +293,18 @@
 
     {{-- FORM --}}
     <main style="display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 48px 0;">
-        <div style="max-width: 980px; width: 100%; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); padding: 38px 38px 24px 38px; margin-top: 32px;">
+        <div class="form-container" style="max-width: 980px; width: 100%; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); padding: 38px 38px 24px 38px; margin-top: 32px;">
 
         {{-- Header with logo --}}
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px;">
-            <div style="display: flex; align-items: center; gap: 18px;">
-                <img src="/images/uddlogo.png" alt="UDD Seal" style="width: 80px; height: 80px; object-fit: contain; display: block;">
-                <div style="font-size: 19px; font-weight: bold; color: #1a237e; line-height: 1.2;">
+        <div class="form-header" style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px;">
+            <div class="form-header-left" style="display: flex; align-items: center; gap: 18px;">
+                <img src="/images/uddlogo.png" alt="UDD Seal" class="university-logo" style="width: 80px; height: 80px; object-fit: contain; display: block;">
+                <div class="university-name" style="font-size: 19px; font-weight: bold; color: #1a237e; line-height: 1.2;">
                     UNIVERSIDAD DE DAGUPAN<br>
                     <span style="font-size: 14px; font-weight: normal; color: #333;">(formerly Colegio de Dagupan)</span>
                 </div>
             </div>
-            <div style="text-align: right; font-size: 15px; font-weight: bold; line-height: 1.4; margin-left: auto;">
+            <div class="form-header-right" style="text-align: right; font-size: 15px; font-weight: bold; line-height: 1.4; margin-left: auto;">
                 Student Assistant Application Form<br>
                 UNIVERSIDAD DE DAGUPAN<br>
                 Arellano St., Dagupan City,<br>
@@ -58,19 +318,19 @@
             @csrf
 
             {{-- PERSONAL INFORMATION --}}
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 38px; align-items: flex-start; margin-bottom: 0;">
+            <div class="personal-section" style="display: grid; grid-template-columns: 2fr 1fr; gap: 38px; align-items: flex-start; margin-bottom: 0;">
                 <div>
-                    <h3 style="font-size: 24px; font-family: 'Times New Roman', Times, serif; font-weight: bold; margin-bottom: 8px; margin-top: 18px; text-align: left;">Personal Information</h3>
+                    <h3 class="section-title" style="font-size: 24px; font-family: 'Times New Roman', Times, serif; font-weight: bold; margin-bottom: 8px; margin-top: 18px; text-align: left;">Personal Information</h3>
                        <div style="display: flex; gap: 18px; margin-bottom: 8px;">
                            <div style="flex: 2;">
                                <label style="font-size: 16px; font-weight: bold; text-align: left;">Student’s Name:</label>
                                <input type="text" name="student_name" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
                            </div>
                        </div>
-                       <div style="display: flex; gap: 18px; margin-bottom: 8px;">
-                           <div style="flex: 1;">
-                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Course:</label>
-                               <select name="course" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                       <div class="form-grid-3" style="display: flex; gap: 18px; margin-bottom: 8px;">
+                           <div class="form-field" style="flex: 1;">
+                               <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">Course:</label>
+                               <select name="course" required class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
                                    <option value="">Select</option>
                                    <option value="SOH">SOH</option>
                                    <option value="STE">STE</option>
@@ -82,9 +342,9 @@
                                    <option value="SOC">SOC</option>
                                </select>
                            </div>
-                           <div style="flex: 1;">
-                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Year Level:</label>
-                               <select name="year_level" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                           <div class="form-field" style="flex: 1;">
+                               <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">Year Level:</label>
+                               <select name="year_level" required class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
                                    <option value="">Select</option>
                                    <option>First Year</option>
                                    <option>Second Year</option>
@@ -93,13 +353,13 @@
                                    <option>Fifth Year</option>
                                </select>
                            </div>
-                           <div style="flex: 1;">
-                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Age:</label>
-                               <input type="text" name="age" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
+                           <div class="form-field" style="flex: 1;">
+                               <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">Age:</label>
+                               <input type="text" name="age" required class="form-input" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
                            </div>
-                           <div style="flex: 1;">
-                               <label style="font-size: 16px; font-weight: bold; text-align: left;">ID Number:</label>
-                               <input type="text" name="id_number" required pattern="[0-9]{2}-[0-9]{4}-[0-9]{3}" title="Format: 22-0313-407" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
+                           <div class="form-field" style="flex: 1;">
+                               <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">ID Number:</label>
+                               <input type="text" name="id_number" required pattern="[0-9]{2}-[0-9]{4}-[0-9]{3}" title="Format: 22-0313-407" class="form-input" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
                            </div>
                        </div>
                        <div style="display: flex; gap: 18px; margin-bottom: 8px;">
@@ -119,8 +379,8 @@
                            </div>
                        </div>
                 </div>
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
-                    <div style="width: 320px; height: 300px; position: relative; margin-bottom: 0; border: 2px solid #222; background: #f6f2f2; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <div class="photo-section" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+                    <div class="photo-container" style="width: 320px; height: 300px; position: relative; margin-bottom: 0; border: 2px solid #222; background: #f6f2f2; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                         <img id="profile-preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0; display: none; position: absolute; top: 0; left: 0;">
                         <span id="picturePreviewLabel" style="font-size: 38px; font-family: 'Segoe UI', Arial, sans-serif; color: #222; letter-spacing: 4px; text-align: center; font-weight: 500; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Upload<br>Photo</span>
                         <button type="button" id="cameraBtn" style="position: absolute; bottom: 12px; right: 12px; background: #fff; border-radius: 8px; border: 2px solid #23408e; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.10); cursor: pointer;">
@@ -158,35 +418,35 @@
                 <hr style="border: 1.5px solid #222; margin: 16px 0;">
                 <h3 style="font-size: 24px; font-weight: bold; margin-bottom: 8px; margin-top: 18px; font-family: Times New Roman, Times, serif;">Family Background</h3>
                 <hr style="border: 1.5px solid #222; margin-bottom: 18px; margin-top: 0;">
-                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 8px;">
+                <div class="form-grid-3" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 8px;">
                     <div>
-                        <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Father's Name:</label>
-                        <input type="text" name="father_name" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <label class="form-label" style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Father's Name:</label>
+                        <input type="text" name="father_name" required class="form-input" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
                     </div>
                     <div>
-                        <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Age:</label>
-                        <input type="text" name="father_age" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <label class="form-label" style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Age:</label>
+                        <input type="text" name="father_age" required class="form-input" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
                     </div>
                     <div>
-                        <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Occupation:</label>
-                        <input type="text" name="father_occupation" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <label class="form-label" style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Occupation:</label>
+                        <input type="text" name="father_occupation" required class="form-input" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
                         <div style="margin-top: 6px;">
                             <input type="checkbox" name="father_deceased" value="1" id="father_deceased" style="margin-right: 8px;">
                             <label for="father_deceased" style="font-size: 14px; font-weight: normal;">Deceased</label>
                         </div>
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 8px;">
+                <div class="form-grid-3" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 8px;">
                     <div>
-                        <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Mother's Name:</label>
-                        <input type="text" name="mother_name" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <label class="form-label" style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Mother's Name:</label>
+                        <input type="text" name="mother_name" required class="form-input" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
                     </div>
                     <div>
-                        <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Age:</label>
-                        <input type="text" name="mother_age" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <label class="form-label" style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Age:</label>
+                        <input type="text" name="mother_age" required class="form-input" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
                     </div>
                     <div>
-                        <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Occupation:</label>
+                        <label class="form-label" style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Occupation:</label>
                         <input type="text" name="mother_occupation" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
                         <div style="margin-top: 6px;">
                             <input type="checkbox" name="mother_deceased" value="1" id="mother_deceased" style="margin-right: 8px;">
@@ -269,7 +529,7 @@
                     <textarea name="other_skills" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; height: 60px; background: #f7f7f7;"></textarea>
                 </div>
                 <div style="text-align: right; margin-top: 18px;">
-                    <button type="submit" style="padding: 8px 32px; font-size: 18px; background: #fff; color: #222; border: 2px solid #222; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: Times New Roman, Times, serif; letter-spacing: 2px; transition: background 0.2s;">Submit</button>
+                    <button type="submit" class="submit-btn" style="padding: 8px 32px; font-size: 18px; background: #fff; color: #222; border: 2px solid #222; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: Times New Roman, Times, serif; letter-spacing: 2px; transition: background 0.2s;">Submit</button>
                 </div>
 
         <style>
@@ -1030,4 +1290,29 @@
             &copy; 2023 - 2024 by MRCY Inc., a non-profit organization. All rights reserved.
         </footer>
     </div>
+
+<script>
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenu.classList.toggle('active');
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (!hamburger.contains(event.target) && !mobileMenu.contains(event.target)) {
+        mobileMenu.classList.remove('active');
+    }
+});
+
+// Close mobile menu when window is resized to desktop
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        document.getElementById('mobileMenu').classList.remove('active');
+    }
+});
+</script>
+
 @endsection

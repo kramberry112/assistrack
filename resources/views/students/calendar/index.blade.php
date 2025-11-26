@@ -47,6 +47,17 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             margin: 24px;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+
+        /* Ensure mobile calendar uses full available space */
+        @media (max-width: 768px) {
+            .calendar-container {
+                box-shadow: none !important;
+                border-top: 1px solid #e5e7eb !important;
+            }
         }
 
         .calendar-header {
@@ -117,6 +128,8 @@
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
+            width: 100%;
+            height: fit-content;
         }
 
         .calendar-header-cell {
@@ -130,13 +143,14 @@
         }
 
         .calendar-cell {
-            min-height: 120px;
+            min-height: 90px;
             border-bottom: 1px solid #e5e7eb;
             border-right: 1px solid #e5e7eb;
-            padding: 12px 8px;
+            padding: 8px 6px;
             position: relative;
             background: white;
             transition: background 0.2s;
+            overflow: hidden;
         }
 
         .calendar-cell:hover {
@@ -177,18 +191,24 @@
         .calendar-events {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
+            max-height: calc(100% - 20px);
+            overflow: hidden;
         }
 
         .calendar-event {
-            font-size: 0.75rem;
-            padding: 2px 6px;
+            font-size: 0.7rem;
+            padding: 1px 4px;
             border-radius: 3px;
             background: #dbeafe;
             color: #1e40af;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            margin-bottom: 1px;
+            display: block;
+            line-height: 1.2;
+            max-width: 100%;
         }
 
         .calendar-event.event-red {
@@ -231,6 +251,198 @@
             color: #222;
             padding: 12px;
             flex: 1;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden !important;
+            }
+            
+            .calendar-container {
+                margin: 0 !important;
+                border-radius: 0 !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
+                width: 100vw !important;
+            }
+
+            .calendar-header {
+                padding: 16px !important;
+                flex-direction: column !important;
+                gap: 12px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .calendar-nav {
+                justify-content: center !important;
+                width: 100% !important;
+            }
+            
+            .nav-button {
+                width: 40px !important;
+                height: 40px !important;
+            }
+            
+            .current-month {
+                font-size: 1.3rem !important;
+                margin: 0 16px !important;
+            }
+
+            .view-toggles {
+                justify-content: center !important;
+                width: 100% !important;
+            }
+            
+            .view-toggle {
+                padding: 8px 16px !important;
+                font-size: 0.9rem !important;
+                flex: 1 !important;
+                max-width: 100px !important;
+                text-align: center !important;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr) !important;
+                width: 100% !important;
+            }
+
+            .calendar-header-cell {
+                padding: 10px 2px !important;
+                font-size: 0.75rem !important;
+                text-align: center !important;
+            }
+
+            .calendar-cell {
+                min-height: 65px !important;
+                padding: 4px 2px !important;
+                border-right: 1px solid #e5e7eb !important;
+            }
+
+            .calendar-date {
+                font-size: 0.8rem !important;
+                margin-bottom: 3px !important;
+                font-weight: 600 !important;
+            }
+
+            .calendar-events {
+                gap: 0px !important;
+                max-height: calc(100% - 16px) !important;
+            }
+
+            .calendar-event {
+                padding: 0px 2px !important;
+                font-size: 0.65rem !important;
+                border-radius: 2px !important;
+                line-height: 1.1 !important;
+                margin-bottom: 0px !important;
+            }
+
+            /* Week view mobile styles */
+            .week-view {
+                margin: 0 !important;
+                padding: 16px !important;
+                border-radius: 0 !important;
+            }
+            
+            .week-row {
+                min-height: 60px !important;
+                margin-bottom: 6px !important;
+                border-width: 1px !important;
+            }
+            
+            .week-day {
+                font-size: 0.9rem !important;
+                padding: 8px !important;
+            }
+            
+            .calendar-events {
+                margin-top: 4px !important;
+            }
+
+            /* Add Event Modal */
+            .modal-content {
+                width: 95% !important;
+                max-width: none !important;
+                margin: 10px !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                font-size: 16px !important; /* Prevents iOS zoom */
+                padding: 12px !important;
+            }
+
+            .form-actions {
+                flex-direction: column !important;
+                gap: 12px !important;
+            }
+
+            .btn {
+                width: 100% !important;
+                padding: 12px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-container {
+                margin: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            .calendar-header {
+                padding: 12px !important;
+            }
+            
+            .calendar-header-cell {
+                padding: 8px 1px !important;
+                font-size: 0.7rem !important;
+            }
+
+            .current-month {
+                font-size: 1.1rem !important;
+                margin: 0 12px !important;
+            }
+            
+            .nav-button {
+                width: 36px !important;
+                height: 36px !important;
+            }
+
+            .calendar-cell {
+                min-height: 50px !important;
+                padding: 3px 1px !important;
+            }
+
+            .calendar-date {
+                font-size: 0.75rem !important;
+                margin-bottom: 2px !important;
+            }
+
+            .calendar-event {
+                font-size: 0.6rem !important;
+                padding: 0px 1px !important;
+                line-height: 1 !important;
+            }
+
+            .view-toggle {
+                padding: 6px 12px !important;
+                font-size: 0.8rem !important;
+            }
+            
+            .week-view {
+                margin: 0 !important;
+                padding: 12px !important;
+            }
+            
+            .week-day {
+                font-size: 0.8rem !important;
+                padding: 6px !important;
+            }
         }
     </style>
 
@@ -379,7 +591,13 @@
                     calendarGrid.appendChild(header);
                 }
 
-                for (let week = 0; week < 6; week++) {
+                // Calculate the number of weeks needed for this month
+                const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+                const endDate = new Date(lastDay);
+                const daysFromStart = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+                const weeksNeeded = Math.ceil((daysFromStart + 1) / 7);
+                
+                for (let week = 0; week < weeksNeeded; week++) {
                     for (let day = 0; day < 7; day++) {
                         const cellDate = new Date(startDate);
                         cellDate.setDate(startDate.getDate() + (week * 7) + day);
@@ -429,12 +647,26 @@
                     if (weekTasks[eventKey]) {
                         const eventsDiv = document.createElement('div');
                         eventsDiv.className = 'calendar-events';
-                        weekTasks[eventKey].forEach(event => {
+                        const maxEvents = window.innerWidth <= 768 ? 4 : 6;
+                        const eventsToShow = weekTasks[eventKey].slice(0, maxEvents);
+                        const remainingCount = weekTasks[eventKey].length - maxEvents;
+                        
+                        eventsToShow.forEach(event => {
                             const eventDiv = document.createElement('div');
                             eventDiv.className = `calendar-event ${event.type}`;
                             eventDiv.textContent = event.title;
+                            eventDiv.title = event.title;
                             eventsDiv.appendChild(eventDiv);
                         });
+                        
+                        if (remainingCount > 0) {
+                            const moreDiv = document.createElement('div');
+                            moreDiv.className = 'calendar-event';
+                            moreDiv.textContent = `+${remainingCount} more`;
+                            moreDiv.style.background = '#f3f4f6';
+                            moreDiv.style.color = '#6b7280';
+                            eventsDiv.appendChild(moreDiv);
+                        }
                         dayCell.appendChild(eventsDiv);
                     }
                     row.appendChild(dayCell);
@@ -464,12 +696,27 @@
                 if (this.events[eventKey]) {
                     const eventsDiv = document.createElement('div');
                     eventsDiv.className = 'calendar-events';
-                    this.events[eventKey].forEach(event => {
+                    const maxEvents = window.innerWidth <= 480 ? 2 : (window.innerWidth <= 768 ? 3 : 4);
+                    const eventsToShow = this.events[eventKey].slice(0, maxEvents);
+                    const remainingCount = this.events[eventKey].length - maxEvents;
+                    
+                    eventsToShow.forEach(event => {
                         const eventDiv = document.createElement('div');
                         eventDiv.className = `calendar-event ${event.type}`;
                         eventDiv.textContent = event.title;
+                        eventDiv.title = event.title; // Add tooltip for full text
                         eventsDiv.appendChild(eventDiv);
                     });
+                    
+                    if (remainingCount > 0) {
+                        const moreDiv = document.createElement('div');
+                        moreDiv.className = 'calendar-event';
+                        moreDiv.textContent = `+${remainingCount} more`;
+                        moreDiv.style.background = '#f3f4f6';
+                        moreDiv.style.color = '#6b7280';
+                        moreDiv.style.fontWeight = '500';
+                        eventsDiv.appendChild(moreDiv);
+                    }
                     cell.appendChild(eventsDiv);
                 }
                 return cell;

@@ -202,6 +202,199 @@
         background: #374151;
         color: white;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        body {
+            overflow-x: hidden !important;
+        }
+
+        .main-content {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+        }
+
+        .page-header {
+            margin: 0 !important;
+            padding: 16px !important;
+        }
+
+        .content-section {
+            padding: 16px !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+        }
+
+        .community-list {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .community-card {
+            padding: 16px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .community-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+        }
+
+        .community-title {
+            font-size: 1.1rem !important;
+        }
+
+        .community-info {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+            width: 100% !important;
+        }
+
+        .community-actions {
+            width: 100% !important;
+            justify-content: stretch !important;
+        }
+
+        .join-btn, .view-btn, .create-btn {
+            flex: 1 !important;
+            padding: 10px 16px !important;
+            font-size: 0.9rem !important;
+            text-align: center !important;
+        }
+
+        /* Chat Modal Mobile Styles */
+        .modal-content {
+            width: 95% !important;
+            height: 90vh !important;
+            margin: 5vh auto !important;
+        }
+
+        .chat-container {
+            height: calc(90vh - 120px) !important;
+        }
+
+        .messages-area {
+            padding: 12px !important;
+        }
+
+        .message-item {
+            padding: 8px 12px !important;
+            font-size: 0.9rem !important;
+        }
+
+        .message-input {
+            padding: 12px !important;
+            font-size: 16px !important; /* Prevents iOS zoom */
+        }
+
+        .send-btn {
+            padding: 12px 16px !important;
+        }
+
+        /* Create Community Form Mobile */
+        .create-community {
+            flex: none !important;
+            width: 100% !important;
+            margin: 16px 0 !important;
+            padding: 16px !important;
+            order: 1 !important; /* Move above community list */
+        }
+
+        .content-section {
+            flex-direction: column !important;
+            gap: 16px !important;
+            align-items: stretch !important;
+        }
+
+        .community-list {
+            order: 2 !important;
+            margin-top: 16px !important;
+        }
+
+        /* Create Group Modal */
+        .form-group input,
+        .form-group textarea {
+            font-size: 16px !important; /* Prevents iOS zoom */
+            padding: 12px !important;
+        }
+
+        .form-actions {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+
+        .btn {
+            width: 100% !important;
+            padding: 12px !important;
+        }
+
+        .form-title {
+            font-size: 1rem !important;
+        }
+
+        .create-btn {
+            width: 100% !important;
+            padding: 12px !important;
+            margin-top: 8px !important;
+        }
+
+        /* Join Request Modal Mobile */
+        #joinRequestModal > div {
+            margin: 20px !important;
+            min-width: 280px !important;
+            max-width: 90% !important;
+            padding: 24px !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .content-section {
+            padding: 12px !important;
+        }
+
+        .community-card {
+            padding: 12px !important;
+        }
+
+        .community-title {
+            font-size: 1rem !important;
+        }
+
+        .community-description {
+            font-size: 0.85rem !important;
+        }
+
+        .join-btn, .view-btn, .create-btn {
+            padding: 8px 12px !important;
+            font-size: 0.85rem !important;
+        }
+
+        .create-community {
+            padding: 12px !important;
+        }
+
+        .form-title {
+            font-size: 0.9rem !important;
+        }
+
+        .form-group {
+            margin-bottom: 12px !important;
+        }
+    }
 </style>
 
 <!-- Content -->

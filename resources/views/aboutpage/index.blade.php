@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universidad de Dagupan </title>
     <style>
 @keyframes swipeLeft {
@@ -14,128 +15,70 @@
         transform: translateX(0);
     }
 }
-    body { background: #fff; margin: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-    .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-    }
-    .section-header {
+
+/* Mobile Menu Styles */
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #eaeaea;
+    border-top: 1px solid #ccc;
+    padding: 12px 0;
+    z-index: 1000;
+}
+
+.mobile-menu a {
     display: block;
-    background: #23408e;
-    color: #fff;
-    font-size: 32px;
-    font-weight: 700;
-    text-align: center;
-    margin-left: -24px;
-    margin-right: -24px;
-    padding: 18px 0;
-    margin-bottom: 32px;
-    letter-spacing: 1px;
-    border: none;
-    border-radius: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-    .about-row {
-        display: flex;
-        gap: 48px;
-        align-items: flex-start;
-        margin-bottom: 48px;
-        flex-wrap: wrap;
-    }
-    .about-left {
-        flex: 2;
-        min-width: 280px;
-    }
-    .about-left .about-title {
-        font-size: 22px;
-        font-weight: 600;
-        margin-bottom: 12px;
-        color: #23408e;
-        display: flex;
-        align-items: center;
-    }
-    .about-left .about-desc {
-        font-size: 17px;
-        color: #222;
-        line-height: 1.7;
-        margin-bottom: 0;
-    }
-    .about-right {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 220px;
-    }
-    .about-right img {
-        width: 100%;
-        max-width: 340px;
-        height: auto;
-        object-fit: cover;
-        border-radius: 12px;
-        border: 1px solid #dbeafe;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.09);
-    }
-    .divider {
-        width: 100%;
-        height: 1px;
-        background: #eaeaea;
-        margin: 32px 0;
-        border: none;
-    }
-    .grid-row {
-        display: flex;
-        gap: 32px;
-        margin-bottom: 40px;
-        flex-wrap: wrap;
-    }
-    .grid-item {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.09);
-    border: 1px solid #dbeafe;
-    flex: 1 1 280px;
-    min-width: 260px;
-    max-width: 340px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0;
-    }
-    .grid-item img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 12px 12px 0 0;
-    margin-bottom: 0;
-    background: #fff;
-    }
-    .grid-item .caption {
-    font-size: 16px;
-    color: #222;
-    text-align: left;
-    font-weight: 400;
-    margin: 12px 0 0 0;
-    padding: 0 16px 16px 16px;
-    }
-    .more-btn {
-    background: #0033cc;
-    color: #fff;
+    padding: 8px 24px;
+    color: #23408e;
     font-weight: bold;
-    border-radius: 0;
-    padding: 12px 32px;
-    font-size: 18px;
-    border: none;
+    font-size: 16px;
     text-decoration: none;
-    display: inline-block;
-    margin: 0 0 24px 0;
-    box-shadow: none;
-    transition: background 0.2s;
-    }
-    .more-btn:hover {
-        background: #1a237e;
-    }
+    transition: background-color 0.2s;
+}
+
+.mobile-menu a:hover {
+    background-color: #ddd;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: #23408e;
+    margin: 3px 0;
+    transition: 0.3s;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+}
+
+.header-logo img {
+    height: 44px;
+    width: 44px;
+    object-fit: contain;
+    margin-right: 12px;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: #1a237e;
+    letter-spacing: 1px;
+}
+
+
+
         .header-bar {
             background: #eaeaea;
             color: #1a237e;
@@ -144,31 +87,23 @@
             justify-content: space-between;
             padding: 0 24px;
             height: 56px;
+            position: relative;
         }
-        .header-bar img {
-            height: 44px;
-            width: 44px;
-            object-fit: contain;
-            margin-right: 12px;
-        }
-        .header-bar .logo-text {
-            font-size: 22px;
-            font-weight: bold;
-            color: #1a237e;
-            letter-spacing: 1px;
-        }
-        .header-bar nav {
+        
+        .desktop-nav {
             display: flex;
             gap: 32px;
         }
-        .header-bar nav a {
+        
+        .desktop-nav a {
             color: #23408e;
             font-weight: bold;
             font-size: 18px;
             text-decoration: none;
             transition: color 0.2s;
         }
-        .header-bar nav a:hover {
+        
+        .desktop-nav a:hover {
             color: #1a237e;
         }
         .banner {
@@ -178,6 +113,8 @@
             background-size: cover;
             overflow: hidden;
             border-bottom: 6px solid #3a5a8c;
+            width: 100%;
+            margin: 0;
         }
         .banner-bg {
             display: none;
@@ -185,14 +122,36 @@
         .main-content {
             background: #fff;
             padding: 0;
+            width: 100%;
+            margin: 0;
         }
+        body { 
+            background: #fff; 
+            margin: 0; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+        
         .white-box {
             background: none;
             border-radius: 0;
             margin: 0 auto;
-            max-width: 1400px;
+            max-width: 1200px;
             padding: 0 32px;
             box-shadow: none;
+        }
+        
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: #eaeaea;
+            margin: 32px 0;
+            border: none;
         }
         .section-header {
             background: #23408e;
@@ -288,25 +247,193 @@
             margin-top: 0;
             letter-spacing: 1px;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .header-bar {
+                flex-wrap: wrap;
+                position: relative;
+                padding: 0 16px;
+                height: auto;
+                min-height: 56px;
+            }
+            
+            .logo-text {
+                font-size: 16px !important;
+            }
+            
+            .desktop-nav {
+                display: none !important;
+            }
+            
+            .hamburger {
+                display: flex !important;
+            }
+            
+            .mobile-menu.active {
+                display: block;
+            }
+            
+            .banner {
+                height: 200px !important;
+            }
+            
+            .container {
+                padding: 0 16px;
+            }
+            
+            .white-box {
+                padding: 0 16px;
+            }
+            
+            .section-header {
+                font-size: 18px !important;
+                margin-left: -16px;
+                margin-right: -16px;
+                border-radius: 0;
+            }
+            
+            .about-row {
+                flex-direction: column;
+                gap: 24px;
+            }
+            
+            .about-right img {
+                width: 100% !important;
+                max-width: 300px;
+                height: auto !important;
+            }
+            
+            .grid-row {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .grid-item {
+                min-width: auto;
+                max-width: none;
+            }
+            
+            .grid-item {
+                min-width: auto;
+                max-width: none;
+                flex: none;
+                width: 100%;
+            }
+            
+            .grid-item img {
+                width: 100% !important;
+                height: 160px !important;
+            }
+            
+            .white-box {
+                padding: 0 16px;
+            }
+            
+            .about-left .about-title {
+                font-size: 18px !important;
+            }
+            
+            .about-left .about-desc {
+                font-size: 15px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-bar {
+                padding: 0 12px;
+            }
+            
+            .logo-text {
+                font-size: 14px !important;
+            }
+            
+            .banner {
+                height: 150px !important;
+            }
+            
+            .container {
+                padding: 0 12px;
+            }
+            
+            .white-box {
+                padding: 0 12px;
+            }
+            
+            .white-box {
+                padding: 0 12px;
+            }
+            
+            .section-header {
+                font-size: 16px !important;
+                margin-left: -12px;
+                margin-right: -12px;
+                padding: 10px 0;
+                border-radius: 0;
+            }
+            
+            .about-title {
+                font-size: 16px !important;
+            }
+            
+            .about-desc {
+                font-size: 14px !important;
+            }
+            
+            .grid-item {
+                padding: 8px;
+            }
+            
+            .grid-item img {
+                height: 140px !important;
+            }
+            
+            .caption {
+                font-size: 14px !important;
+            }
+            
+            .more-btn {
+                font-size: 14px !important;
+                padding: 6px 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header-bar">
-        <div style="display: flex; align-items: center;">
+        <div class="header-logo">
             <img src="{{ asset('images/uddlogo.png') }}" alt="UDD Logo">
             <span class="logo-text">UNIVERSIDAD DE DAGUPAN</span>
         </div>
-        <nav style="display: flex; gap: 32px; font-size: 17px; font-weight: bold;">
-               <a href="/about" style="color: #1a237e; text-decoration: none;">About</a>
-               <a href="/welcome" style="color: #1a237e; text-decoration: none;">Home</a>
-               <a href="/contact" style="color: #1a237e; text-decoration: none;">Contact Us</a>
-               <a href="/apply" style="color: #1a237e; text-decoration: none;">Apply</a>
-               <a href="/login" style="color: #1a237e; text-decoration: none;">Login</a>
-		</nav>
+        
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+               <a href="/about">About</a>
+               <a href="/welcome">Home</a>
+               <a href="/contact">Contact Us</a>
+               <a href="/apply">Apply</a>
+               <a href="/login">Login</a>
+        </nav>
+        
+        <!-- Mobile Menu Button -->
+        <div class="hamburger" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <nav class="mobile-menu" id="mobileMenu">
+            <a href="/about">About</a>
+            <a href="/welcome">Home</a>
+            <a href="/contact">Contact Us</a>
+            <a href="/apply">Apply</a>
+            <a href="/login">Login</a>
+        </nav>
     </div>
     <div class="banner"></div>
     <main class="main-content">
-        <div class="container">
+        <div class="white-box">
             <div style="height: 32px;"></div>
             <div class="section-header">About Universidad de Dagupan</div>
             <div class="about-row">
@@ -367,6 +494,30 @@
     <footer class="footer">
         &copy; 2023 - 2025 Universidad de Dagupan. All rights reserved.
     </footer>
+    
+    <script>
+    function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenu.classList.toggle('active');
+    }
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const hamburger = document.querySelector('.hamburger');
+        
+        if (!hamburger.contains(event.target) && !mobileMenu.contains(event.target)) {
+            mobileMenu.classList.remove('active');
+        }
+    });
+    
+    // Close mobile menu when window is resized to desktop
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            document.getElementById('mobileMenu').classList.remove('active');
+        }
+    });
+    </script>
 </body>
 </html>
         
