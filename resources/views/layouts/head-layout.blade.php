@@ -248,13 +248,24 @@
     }
 
     #headLogoutMenu button {
-        background: linear-gradient(90deg, #ef4444, #dc2626);
-        color: #fff;
+        background: linear-gradient(90deg, #ef4444, #dc2626) !important;
+        color: #fff !important;
     }
 
     #headLogoutMenu button:hover {
-        background: linear-gradient(90deg, #b91c1c, #dc2626);
-        box-shadow: 0 4px 16px rgba(239,68,68,0.15);
+        background: linear-gradient(90deg, #b91c1c, #dc2626) !important;
+        box-shadow: 0 4px 16px rgba(239,68,68,0.15) !important;
+    }
+
+    /* Ensure Settings button stays blue */
+    #headLogoutMenu a {
+        background: #4f8ef7 !important;
+        color: #fff !important;
+        text-decoration: none !important;
+    }
+
+    #headLogoutMenu a:hover {
+        background: #2563eb !important;
     }
 
     /* Main Content */
@@ -444,6 +455,23 @@
             border: none;
             padding: 10px;
             border-radius: 5px;
+        }
+
+        /* Fix logout menu positioning on mobile to keep it in sidebar */
+        #headLogoutMenu {
+            position: fixed !important;
+            bottom: 80px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 1100 !important;
+            min-width: 200px !important;
+            max-width: 220px !important;
+        }
+
+        /* Ensure logout menu stays within sidebar bounds when sidebar is active */
+        .sidebar.active #headLogoutMenu {
+            left: 130px !important;
+            transform: translateX(-50%) !important;
         }
     }
 

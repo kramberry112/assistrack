@@ -16,6 +16,22 @@
     body {
         background: #fff !important;
     }
+    
+    /* Ensure sidebar elements have higher z-index than page elements on mobile */
+    @media (max-width: 768px) {
+        .sidebar {
+            z-index: 2000 !important;
+        }
+        
+        #headLogoutMenu {
+            z-index: 2100 !important;
+        }
+        
+        .mobile-overlay {
+            z-index: 1999 !important;
+        }
+    }
+    
     /* Student List */
     .studentlist-title {
         font-size: 1.2rem;
