@@ -7,21 +7,14 @@
 
 @section('content')
 <style>
-    .content-card {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
+    .content-wrapper {
+        background: #fff !important;
     }
-    .content-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 16px 20px;
-        border-bottom: 1px solid #e5e7eb;
-        background: #f9fafb;
-        font-size: 0.95rem;
-        color: #374151;
-        font-weight: 600;
+    .admin-content-wrapper {
+        background: #fff !important;
+    }
+    body {
+        background: #fff !important;
     }
     /* Student List */
     .studentlist-title {
@@ -38,32 +31,38 @@
     }
     .table-container {
         width: 100%;
-        padding: 0 24px 24px 24px;
+        padding: 0;
         overflow-x: auto;
+        margin-top: 16px;
     }
     .student-table {
         width: 100%;
         border-collapse: collapse;
         background: #fff;
+        border: 1px solid #e5e7eb;
         border-radius: 8px;
         overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     .student-table thead th {
-        background: #f3f4f6;
-        color: #111827;
-        font-size: 0.9rem;
-        font-weight: 600;
-        padding: 12px 16px;
+        background: #f8fafc;
+        color: #374151;
+        font-size: 0.875rem;
+        font-weight: 700;
+        padding: 16px;
         text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+        letter-spacing: 0.025em;
     }
     .student-table tbody td {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         color: #374151;
-        padding: 12px 16px;
-        border-bottom: 1px solid #e5e7eb;
+        padding: 16px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
     }
     .student-table tbody tr:hover td {
-        background: #f9fafb;
+        background: #f8fafc;
     }
     .student-table tbody tr:last-child td {
         border-bottom: none;
@@ -174,11 +173,351 @@
     .filter-clear:hover {
         background: #dc2626;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        /* Main container adjustments */
+        div[style*="padding: 24px"] {
+            padding: 16px !important;
+        }
+        
+        /* Header section - stack title and controls */
+        div[style*="flex-direction: row"] {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 16px !important;
+        }
+        
+        .studentlist-title {
+            font-size: 1.1rem !important;
+            margin: 0 !important;
+        }
+        
+        .studentlist-desc {
+            font-size: 0.9rem !important;
+            padding: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        
+        /* Controls section - stack filter, search, and pagination */
+        div[style*="flex: 0 0 auto"] {
+            flex-direction: column !important;
+            gap: 12px !important;
+            margin-top: 0 !important;
+        }
+        
+        /* Filter and search row */
+        div[style*="display: flex; align-items: center; gap: 8px;"]:first-child {
+            flex-direction: column !important;
+            gap: 16px !important;
+            align-items: stretch !important;
+        }
+        
+        /* Filter button - compact mobile friendly */
+        .filter-container {
+            width: 100%;
+        }
+        
+        .filter-button {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 10px 16px !important;
+            font-size: 0.9rem !important;
+            border-radius: 8px !important;
+            box-shadow: 0 1px 4px rgba(59, 130, 246, 0.12) !important;
+            transition: all 0.2s ease !important;
+        }
+        
+        .filter-button:active {
+            transform: scale(0.98) !important;
+        }
+        
+        .filter-dropdown {
+            left: 0 !important;
+            right: 0 !important;
+            min-width: 100% !important;
+            margin-top: 4px !important;
+            border-radius: 8px !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12) !important;
+        }
+        
+        /* Search form - compact card appearance */
+        form[style*="display: flex"] {
+            background: #f8fafc !important;
+            border-radius: 8px !important;
+            padding: 12px !important;
+            gap: 8px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            border: 1px solid #e5e7eb !important;
+        }
+        
+        form input[type="text"] {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 10px 12px !important;
+            border-radius: 6px !important;
+            border: 1px solid #d1d5db !important;
+            font-size: 15px !important;
+            background: #fff !important;
+            transition: border-color 0.2s ease !important;
+        }
+        
+        form input[type="text"]:focus {
+            outline: none !important;
+            border-color: #3b82f6 !important;
+        }
+        
+        form button[type="submit"] {
+            width: 100% !important;
+            padding: 10px 16px !important;
+            border-radius: 6px !important;
+            background: #2563eb !important;
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            box-shadow: 0 1px 4px rgba(37, 99, 235, 0.15) !important;
+            transition: all 0.2s ease !important;
+        }
+        
+        form button[type="submit"]:hover {
+            background: #1d4ed8 !important;
+        }
+        
+        form button[type="submit"]:active {
+            transform: scale(0.98) !important;
+        }
+        
+        /* Pagination - mobile style like the image */
+        .pagination-section {
+            margin-top: 24px !important;
+        }
+        
+        span[style*="border-radius:18px"] {
+            background: #e5e7eb !important;
+            border: none !important;
+            border-radius: 24px !important;
+            padding: 12px 20px !important;
+            box-shadow: none !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 16px !important;
+            font-weight: 500 !important;
+            font-size: 1rem !important;
+            color: #6b7280 !important;
+        }
+        
+        span[style*="border-radius:18px"] a,
+        span[style*="border-radius:18px"] span[style*="cursor:not-allowed"] {
+            background: transparent !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            transition: all 0.2s ease !important;
+            min-width: auto !important;
+            height: auto !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        span[style*="border-radius:18px"] a {
+            color: #6b7280 !important;
+        }
+        
+        span[style*="border-radius:18px"] a:active {
+            transform: scale(0.95) !important;
+        }
+        
+        span[style*="border-radius:18px"] svg {
+            width: 20px !important;
+            height: 20px !important;
+        }
+        
+        span[style*="border-radius:18px"] span[style*="font-size:1rem"] {
+            color: #374151 !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Hide pagination in top controls on mobile */
+        div[style*="flex: 0 0 auto"] .pagination-section {
+            display: none !important;
+        }
+        
+        /* Show pagination at bottom on mobile */
+        .pagination-section {
+            display: flex !important;
+            justify-content: center !important;
+            margin-top: 20px !important;
+        }
+        
+        /* Hide table on mobile and show cards instead */
+        .table-container {
+            display: none !important;
+        }
+        
+        /* Mobile card layout */
+        .mobile-student-cards {
+            display: block !important;
+            margin-top: 16px;
+        }
+        
+        .student-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .student-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .student-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0;
+        }
+        
+        .student-course {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .student-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .detail-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        
+        .detail-value {
+            font-size: 0.875rem;
+            color: #374151;
+            font-weight: 500;
+        }
+        
+        .student-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .status-badge {
+            font-size: 0.75rem !important;
+            padding: 4px 8px !important;
+            border-radius: 6px !important;
+            font-weight: 500 !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        /* Ultra mobile card adjustments */
+        .student-card {
+            padding: 12px !important;
+            margin-bottom: 10px !important;
+        }
+        
+        .student-name {
+            font-size: 0.9rem !important;
+        }
+        
+        .student-course {
+            font-size: 0.7rem !important;
+            padding: 2px 6px !important;
+        }
+        
+        .student-details {
+            grid-template-columns: 1fr !important;
+            gap: 6px !important;
+        }
+        
+        .detail-label {
+            font-size: 0.7rem !important;
+        }
+        
+        .detail-value {
+            font-size: 0.8rem !important;
+        }
+        
+        .status-badge {
+            font-size: 0.7rem !important;
+            padding: 3px 6px !important;
+        }
+        
+        .studentlist-title {
+            font-size: 1rem !important;
+        }
+        
+        .studentlist-desc {
+            font-size: 0.85rem !important;
+        }
+        
+        /* Filter button ultra mobile */
+        .filter-button {
+            font-size: 0.9rem !important;
+            padding: 12px 16px !important;
+        }
+        
+        /* Search form ultra mobile */
+        form[style*="display: flex"] {
+            padding: 12px !important;
+        }
+        
+        form input[type="text"] {
+            font-size: 16px !important;
+            padding: 12px 14px !important;
+        }
+        
+        form button[type="submit"] {
+            font-size: 14px !important;
+            padding: 12px 16px !important;
+        }
+        
+        /* Pagination ultra mobile */
+        span[style*="border-radius:18px"] {
+            padding: 12px !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            text-align: center !important;
+        }
+        
+        span[style*="border-radius:18px"] a,
+        span[style*="border-radius:18px"] span[style*="cursor:not-allowed"] {
+            padding: 6px 8px !important;
+        }
+    }
 </style>
 
-<!-- Main Content -->
-<div class="content-card">
-            <div style="display: flex; flex-direction: row; align-items: flex-start; padding: 0 24px; margin-bottom: 12px;">
+<div style="background: #fff; padding: 24px;">
+            <div style="display: flex; flex-direction: row; align-items: flex-start; margin-bottom: 20px;">
                 <div style="flex: 1 1 auto;">
                     <div class="studentlist-title" style="margin-bottom:0;">Student Official List</div>
                     <div class="studentlist-desc" style="margin-bottom:0;">This list contains Official Student Assistants of Universidad de Dagupan</div>
@@ -267,35 +606,7 @@
                             <button type="submit" style="padding: 7px 18px; border-radius: 6px; background: #2563eb; color: #fff; border: none; font-size: 15px; cursor: pointer;">Search</button>
                         </form>
                     </div>
-                    <span style="font-size:1rem;color:#374151;padding:6px 18px;border-radius:18px;background:#f3f4f6;display:inline-flex;align-items:center;gap:12px;">
-                        @if ($students->onFirstPage())
-                        <span style="color:#d1d5db;cursor:not-allowed;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                            </svg>
-                        </span>
-                        @else
-                        <a href="{{ $students->previousPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                            </svg>
-                        </a>
-                        @endif
-                        <span style="font-size:1rem;color:#374151;">Page {{ $students->currentPage() }} of {{ $students->lastPage() }}</span>
-                        @if ($students->hasMorePages())
-                        <a href="{{ $students->nextPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                            </svg>
-                        </a>
-                        @else
-                        <span style="color:#d1d5db;cursor:not-allowed;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                            </svg>
-                        </span>
-                        @endif
-                    </span>
+
                 </div>
             </div>
             <div class="table-container" style="margin-top:0;">
@@ -306,8 +617,9 @@
                             <th>Course</th>
                             <th>Year Level</th>
                             <th>Student ID</th>
+                            <th>Full Matriculation</th>
                             <th>Designated Office</th>
-                            
+                            <th>Account Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -317,14 +629,78 @@
                                 <td>{{ $student->course }}</td>
                                 <td>{{ $student->year_level }}</td>
                                 <td>{{ $student->id_number }}</td>
+                                <td>
+                                    <span style="background: {{ $student->matriculation ? '#dcfce7' : '#f3f4f6' }}; color: {{ $student->matriculation ? '#166534' : '#6b7280' }}; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">
+                                        {{ $student->matriculation ?? 'Not Set' }}
+                                    </span>
+                                </td>
                                 <td>{{ $student->designated_office ?? 'N/A' }}</td>
+                                <td>
+                                    @if($student->user_id)
+                                        <span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">
+                                            Account Created
+                                        </span>
+                                    @else
+                                        <span style="background: #fef3c7; color: #d97706; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">
+                                            No Account
+                                        </span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-        </div>
+            
+            <!-- Mobile Card Layout (shown only on mobile) -->
+            <div class="mobile-student-cards" style="display: none;">
+                @foreach($students as $student)
+                    <div class="student-card">
+                        <div class="student-card-header">
+                            <h3 class="student-name">{{ $student->student_name }}</h3>
+                            <span class="student-course">{{ $student->course }}</span>
+                        </div>
+                        
+                        <div class="student-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Year Level</span>
+                                <span class="detail-value">{{ $student->year_level }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Student ID</span>
+                                <span class="detail-value">{{ $student->id_number }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Designated Office</span>
+                                <span class="detail-value">{{ $student->designated_office ?? 'N/A' }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="student-badges">
+                            <span class="status-badge" style="background: {{ $student->matriculation ? '#dcfce7' : '#f3f4f6' }}; color: {{ $student->matriculation ? '#166534' : '#6b7280' }};">
+                                {{ $student->matriculation ?? 'Not Set' }}
+                            </span>
+                            @if($student->user_id)
+                                <span class="status-badge" style="background: #dcfce7; color: #166534;">
+                                    Account Created
+                                </span>
+                            @else
+                                <span class="status-badge" style="background: #fef3c7; color: #d97706;">
+                                    No Account
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
+            <!-- Pagination (moved to bottom for mobile) -->
+            <div class="pagination-section" style="display: flex; justify-content: center; margin-top: 24px;">
+                <span style="font-size:1rem;color:#374151;padding:12px 20px;border-radius:24px;background:#e5e7eb;display:inline-flex;align-items:center;gap:16px;white-space:nowrap;flex-wrap:nowrap;">
+                    @if ($students->onFirstPage())<span style="color:#d1d5db;cursor:not-allowed;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" /></svg></span>@else<a href="{{ $students->previousPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" /></svg></a>@endif<span style="font-size:1rem;color:#374151;">Page {{ $students->currentPage() }} of {{ $students->lastPage() }}</span>@if ($students->hasMorePages())<a href="{{ $students->nextPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" /></svg></a>@else<span style="color:#d1d5db;cursor:not-allowed;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" /></svg></span>@endif
+                </span>
+            </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

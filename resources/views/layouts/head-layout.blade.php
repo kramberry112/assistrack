@@ -317,8 +317,90 @@
         flex-direction: column;
     }
 
+    /* Mobile Hamburger Menu */
+    .mobile-hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 4px;
+        z-index: 1001;
+    }
+
+    .mobile-hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: #2563eb;
+        margin: 3px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+    }
+
+    .mobile-hamburger.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-6px, 6px);
+    }
+
+    .mobile-hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-hamburger.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-6px, -6px);
+    }
+
+    /* Mobile Hamburger Menu */
+    .mobile-hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 4px;
+        z-index: 1001;
+    }
+
+    .mobile-hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: #2563eb;
+        margin: 3px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+    }
+
+    .mobile-hamburger.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-6px, 6px);
+    }
+
+    .mobile-hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-hamburger.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-6px, -6px);
+    }
+
+    /* Mobile Overlay */
+    .mobile-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .mobile-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
+        .mobile-hamburger {
+            display: flex !important;
+        }
         .sidebar {
             position: fixed;
             left: -260px;
@@ -326,6 +408,7 @@
             height: 100vh;
             z-index: 1000;
             transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
         .sidebar.active {
@@ -372,11 +455,9 @@
 </style>
 
 <div class="dashboard-container" style="overflow-x:hidden;">
-    <!-- Mobile Menu Button -->
-    <button class="mobile-menu-btn" onclick="toggleSidebarHead()">
-        <i class="bi bi-list" style="font-size: 1.2rem;"></i>
-    </button>
-
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebarHead()"></div>
+    
     <!-- Sidebar -->
     <aside class="sidebar" id="headSidebar">
         <div>
@@ -482,7 +563,13 @@
     <section class="main-content w-full">
         <!-- Header -->
         <header class="main-header">
-            <div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <!-- Mobile Hamburger Menu -->
+                <div class="mobile-hamburger" id="mobileHamburger" onclick="toggleSidebarHead()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
                 <h1 class="header-title">@yield('page-title', 'Dashboard')</h1>
             </div>
             <div class="header-actions">
@@ -567,5 +654,65 @@ document.addEventListener('click', function(e) {
             sidebar.classList.remove('active');
         }
     }
+});
+
+// Mobile sidebar toggle
+function toggleSidebarHead() {
+    const sidebar = document.getElementById('headSidebar');
+    sidebar.classList.toggle('active');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+    const sidebar = document.getElementById('headSidebar');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    
+    if (window.innerWidth <= 768 && sidebar && menuBtn) {
+        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+            sidebar.classList.remove('active');
+        }
+    }
+});
+
+// Enhanced close sidebar function
+function closeSidebarHead() {
+    const sidebar = document.getElementById('headSidebar');
+    const overlay = document.getElementById('mobileOverlay');
+    const hamburger = document.getElementById('mobileHamburger');
+    
+    if (sidebar) sidebar.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
+    if (hamburger) hamburger.classList.remove('active');
+    document.body.style.overflow = ''; // Restore scrolling
+}
+
+// Enhanced toggle sidebar function
+function toggleSidebarHead() {
+    const sidebar = document.getElementById('headSidebar');
+    const overlay = document.getElementById('mobileOverlay');
+    const hamburger = document.getElementById('mobileHamburger');
+    
+    if (sidebar && sidebar.classList.contains('active')) {
+        closeSidebarHead();
+    } else if (sidebar && overlay) {
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+        if (hamburger) hamburger.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+}
+
+// Close sidebar when navigation links are clicked on mobile
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('headSidebar');
+    const navLinks = document.querySelectorAll('.sidebar .nav a');
+    
+    navLinks.forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                closeSidebarHead();
+            }
+        });
+    });
 });
 </script>

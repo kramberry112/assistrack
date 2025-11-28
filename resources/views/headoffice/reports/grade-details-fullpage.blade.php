@@ -46,6 +46,264 @@
             color: #1e293b;
         }
         
+        /* Comprehensive Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem !important;
+                flex-direction: row !important;
+                gap: 1rem !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+            }
+            
+            .header-title {
+                font-size: 1.25rem !important;
+                text-align: left !important;
+                width: auto !important;
+                flex: 1 !important;
+            }
+            
+            .back-btn {
+                width: auto !important;
+                justify-content: flex-start !important;
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.875rem !important;
+            }
+            
+            .container {
+                padding: 1rem !important;
+            }
+            
+            .grade-card {
+                padding: 1.5rem !important;
+                border-radius: 8px !important;
+            }
+            
+            .student-info {
+                padding: 1.5rem !important;
+                border-radius: 8px !important;
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            
+            .student-info h2 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .student-info p {
+                font-size: 1rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            
+            .section-title {
+                font-size: 1.1rem !important;
+                margin-bottom: 0.75rem !important;
+                margin-top: 1.5rem !important;
+            }
+            
+            .grades-table-container {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                margin: 0 -1.5rem !important;
+                padding: 0 1.5rem !important;
+            }
+            
+            .grades-table {
+                min-width: 600px !important;
+                font-size: 0.875rem !important;
+            }
+            
+            .grades-table th,
+            .grades-table td {
+                padding: 0.75rem 0.5rem !important;
+                font-size: 0.875rem !important;
+                white-space: nowrap !important;
+            }
+            
+            .grades-table th {
+                font-size: 0.8rem !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.05em !important;
+            }
+            
+            .print-section {
+                padding: 1rem !important;
+                margin-top: 1.5rem !important;
+            }
+            
+            .print-btn {
+                width: 100% !important;
+                padding: 1rem !important;
+                font-size: 1rem !important;
+                border-radius: 8px !important;
+            }
+            
+            /* Mobile card alternative for grades */
+            .mobile-grades-cards {
+                display: block !important;
+            }
+            
+            .grades-table-container {
+                display: none !important;
+            }
+            
+            .grade-item-card {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .grade-item-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 0.75rem;
+            }
+            
+            .subject-name {
+                font-weight: 600;
+                color: #1e293b;
+                font-size: 0.9rem;
+                line-height: 1.3;
+            }
+            
+            .grade-value {
+                font-weight: 700;
+                font-size: 1.1rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                background: #667eea;
+                color: white;
+            }
+            
+            .grade-details {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+                font-size: 0.85rem;
+                color: #64748b;
+            }
+            
+            .grade-detail-item {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0 0.75rem !important;
+            }
+            
+            .container {
+                padding: 0.75rem !important;
+            }
+            
+            .grade-card {
+                padding: 1rem !important;
+            }
+            
+            .student-info {
+                padding: 1rem !important;
+                gap: 1rem !important;
+            }
+            
+            .student-info h2 {
+                font-size: 1.25rem !important;
+            }
+            
+            .student-info p {
+                font-size: 0.9rem !important;
+            }
+            
+            .section-title {
+                font-size: 1rem !important;
+            }
+            
+            .grades-table th,
+            .grades-table td {
+                padding: 0.5rem 0.25rem !important;
+                font-size: 0.8rem !important;
+            }
+            
+            .grades-table-container {
+                margin: 0 -1rem !important;
+                padding: 0 1rem !important;
+            }
+            
+            .grade-item-card {
+                padding: 0.75rem !important;
+            }
+            
+            .subject-name {
+                font-size: 0.85rem !important;
+            }
+            
+            .grade-value {
+                font-size: 1rem !important;
+            }
+            
+            .grade-details {
+                font-size: 0.8rem !important;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .header-title {
+                font-size: 1.1rem !important;
+            }
+            
+            .back-btn {
+                font-size: 0.8rem !important;
+                padding: 0.4rem 0.6rem !important;
+            }
+            
+            .student-info h2 {
+                font-size: 1.1rem !important;
+            }
+            
+            .section-title {
+                font-size: 0.95rem !important;
+            }
+            
+            .grade-details {
+                grid-template-columns: 1fr !important;
+                gap: 0.25rem !important;
+            }
+            
+            .documents-section {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            .proof-section {
+                padding: 1rem !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 8px !important;
+                background: #f8fafc !important;
+            }
+            
+            .actions {
+                padding: 1rem !important;
+                text-align: center !important;
+            }
+            
+            .btn {
+                width: 100% !important;
+                padding: 1rem !important;
+                font-size: 1rem !important;
+            }
+        }
+        
+        /* Desktop - hide mobile cards */
+        .mobile-grades-cards {
+            display: none;
+        }
+
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -377,7 +635,7 @@
         <div class="header-content">
             <h1 class="header-title">
                 <i class="bi bi-award-fill"></i>
-                Grade Details - Head Office
+                Grade Details
             </h1>
             <a href="{{ route('head.reports.grades') }}" class="back-btn">
                 <i class="bi bi-arrow-left"></i>
@@ -408,7 +666,8 @@
                 Subjects & Grades
             </div>
             
-            <div style="overflow-x: auto; margin-bottom: 2rem;">
+            <!-- Desktop Table View -->
+            <div class="grades-table-container" style="overflow-x: auto; margin-bottom: 2rem;">
                 <table class="grades-table">
                     <thead>
                         <tr>
@@ -431,8 +690,31 @@
                 </table>
             </div>
             
+            <!-- Mobile Card View -->
+            <div class="mobile-grades-cards" style="margin-bottom: 2rem;">
+                @foreach ($grade->subjects as $subject)
+                    <div class="grade-item-card">
+
+                        <div class="grade-details">
+                            <div class="grade-detail-item">
+                                <span>Subject:</span>
+                                <span>{{ $subject['subject'] }}</span>
+                            </div>
+                            <div class="grade-detail-item">
+                                <span>Grade:</span>
+                                <span>{{ $subject['grade'] }}</span>
+                            </div>
+                            <div class="grade-detail-item">
+                                <span>Remarks:</span>
+                                <span>{{ $subject['remarks'] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
             <!-- Documents Section -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <div class="documents-section" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
                 <!-- Grade Proof Document -->
                 <div class="proof-section">
                     <div class="section-title" style="margin-bottom: 0.5rem; border: none; padding: 0;">

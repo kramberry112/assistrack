@@ -14,13 +14,15 @@
     .welcome-section {
         padding: 36px 24px 24px 24px;
         background: #fff;
-    body, .admin-content-wrapper {
         box-shadow: 0 8px 32px rgba(80,80,180,0.10);
         max-width: 1100px;
         margin: 32px auto 0 auto;
-    /* .content-wrapper removed */
+        border-radius: 12px;
+    }
+    .welcome-message {
+        font-size: 2rem;
         font-weight: 800;
-        color: #2d2e83;
+        color: #000000;
         margin: 0 0 4px 0;
         letter-spacing: 0.01em;
     }
@@ -119,11 +121,32 @@
                 <div class="stat-label">Total Users</div>
             </div>
         </a>
-        <a href="{{ route('student.list') }}" class="stat-card">
+        <a href="{{ url('/admin/reports/tasks') }}" class="stat-card">
             <span class="stat-icon"><i class="bi bi-check2-circle"></i></span>
             <div>
                 <div class="stat-number">{{ \App\Models\StudentTask::where('status', 'completed')->count() }}</div>
                 <div class="stat-label">Completed Tasks</div>
+            </div>
+        </a>
+        <a href="{{ route('admin.attendance.report') }}" class="stat-card">
+            <span class="stat-icon"><i class="bi bi-calendar-check"></i></span>
+            <div>
+                <div class="stat-number">{{ \App\Models\Attendance::count() }}</div>
+                <div class="stat-label">Total Attendance</div>
+            </div>
+        </a>
+        <a href="{{ route('admin.evaluations.index') }}" class="stat-card">
+            <span class="stat-icon"><i class="bi bi-clipboard-data"></i></span>
+            <div>
+                <div class="stat-number">{{ \App\Models\Evaluation::count() }}</div>
+                <div class="stat-label">Total Evaluations</div>
+            </div>
+        </a>
+        <a href="{{ url('/admin/reports/grades') }}" class="stat-card">
+            <span class="stat-icon"><i class="bi bi-award"></i></span>
+            <div>
+                <div class="stat-number">{{ \App\Models\Grade::count() }}</div>
+                <div class="stat-label">Total Grades</div>
             </div>
         </a>
     </div>

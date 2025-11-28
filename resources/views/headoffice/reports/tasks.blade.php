@@ -111,6 +111,120 @@
         font-weight: 600;
         font-size: 13px;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        /* Container adjustments */
+        div[style*="padding: 24px"] {
+            padding: 16px !important;
+        }
+        
+        .main-content-card {
+            padding: 20px !important;
+            margin: 0 !important;
+        }
+        
+        /* Hide table on mobile */
+        .reports-table {
+            display: none;
+        }
+        
+        /* Show mobile cards instead */
+        .mobile-report-cards {
+            display: block !important;
+        }
+        
+        .report-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .report-card-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .report-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 8px 0;
+        }
+        
+        .report-card-subtitle {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin: 0;
+        }
+        
+        .report-card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .report-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .report-detail-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .report-detail-value {
+            font-size: 0.9rem;
+            color: #111827;
+            font-weight: 600;
+        }
+        
+        /* Office filter notice */
+        div[style*="background: #e0f2fe"] {
+            padding: 12px 16px !important;
+            margin-bottom: 16px !important;
+            border-radius: 8px !important;
+        }
+        
+        /* Empty state adjustments */
+        .empty-state {
+            padding: 30px 20px !important;
+        }
+        
+        .empty-state-icon {
+            font-size: 36px !important;
+        }
+        
+        .empty-state-text {
+            font-size: 14px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        div[style*="padding: 24px"] {
+            padding: 12px !important;
+        }
+        
+        .report-card {
+            padding: 16px !important;
+        }
+        
+        .report-card-title {
+            font-size: 1rem !important;
+        }
+    }
+    
+    /* Desktop - hide mobile cards */
+    .mobile-report-cards {
+        display: none;
+    }
 </style>
 
     @if(isset($currentUser) && $currentUser->role === 'offices')
@@ -121,6 +235,7 @@
         </div>
     @endif
 
+    <!-- Desktop Table View -->
     <table class="reports-table">
         <thead>
             <tr>
@@ -158,5 +273,38 @@
             @endforelse
         </tbody>
     </table>
+    
+    <!-- Mobile Card View -->
+    <div class="mobile-report-cards">
+        @forelse($students as $user)
+            <div class="report-card">
+                <div class="report-card-header">
+                    <h3 class="report-card-title">{{ $user->name }}</h3>
+                    <p class="report-card-subtitle">{{ $user->student->id_number ?? 'N/A' }}</p>
+                </div>
+                <div class="report-card-details">
+                    <div class="report-detail-item">
+                        <span class="report-detail-label">Designated Office</span>
+                        <span class="report-detail-value">{{ $user->student->designated_office ?? 'Not Assigned' }}</span>
+                    </div>
+                    <div class="report-detail-item">
+                        <span class="report-detail-label">Tasks Completed</span>
+                        <span class="task-count-badge">{{ $user->student_tasks_count }}</span>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <div class="empty-state-text">
+                    @if(isset($currentUser) && $currentUser->role === 'offices')
+                        No completed tasks found for {{ $currentUser->office_name ?? 'your office' }}
+                    @else
+                        No completed tasks found
+                    @endif
+                </div>
+            </div>
+        @endforelse
+    </div>
 </div>
 @endsection

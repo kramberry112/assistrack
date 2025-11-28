@@ -10,6 +10,129 @@
     .content-wrapper {
         background: #fff !important;
     }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        /* Container adjustments */
+        div[style*="padding: 24px"] {
+            padding: 16px !important;
+        }
+        
+        .main-content-card {
+            padding: 20px !important;
+            margin: 0 !important;
+        }
+        
+        /* Hide table on mobile */
+        .reports-table {
+            display: none;
+        }
+        
+        /* Show mobile cards instead */
+        .mobile-evaluation-cards {
+            display: block !important;
+        }
+        
+        .evaluation-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .evaluation-card-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .evaluation-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 8px 0;
+        }
+        
+        .evaluation-card-subtitle {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin: 0;
+        }
+        
+        .evaluation-card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .evaluation-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .evaluation-detail-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .evaluation-detail-value {
+            font-size: 0.9rem;
+            color: #111827;
+            font-weight: 600;
+        }
+        
+        .evaluation-actions {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #f3f4f6;
+        }
+        
+        .evaluation-action-button {
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            padding: 12px 16px !important;
+            font-size: 0.9rem !important;
+        }
+        
+        /* Empty state */
+        .empty-evaluation-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+        
+        .empty-evaluation-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        div[style*="padding: 24px"] {
+            padding: 12px !important;
+        }
+        
+        .evaluation-card {
+            padding: 16px !important;
+        }
+        
+        .evaluation-card-title {
+            font-size: 1rem !important;
+        }
+    }
+    
+    /* Desktop - hide mobile cards */
+    .mobile-evaluation-cards {
+        display: none;
+    }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
 
@@ -197,5 +320,50 @@
             @endforelse
         </tbody>
     </table>
+    
+    <!-- Mobile Card View -->
+    <div class="mobile-evaluation-cards">
+        @forelse($evaluations as $evaluation)
+            <div class="evaluation-card">
+                <div class="evaluation-card-header">
+                    <h3 class="evaluation-card-title">{{ $evaluation->student->student_name ?? 'N/A' }}</h3>
+                    <p class="evaluation-card-subtitle">Student ID: {{ $evaluation->student->id_number ?? 'N/A' }}</p>
+                </div>
+                <div class="evaluation-card-details">
+                    <div class="evaluation-detail-item">
+                        <span class="evaluation-detail-label">Department</span>
+                        <span class="evaluation-detail-value">{{ $evaluation->department }}</span>
+                    </div>
+                    <div class="evaluation-detail-item">
+                        <span class="evaluation-detail-label">Evaluated by</span>
+                        <span class="evaluation-detail-value">{{ $evaluation->evaluator->name ?? 'Unknown' }}</span>
+                    </div>
+                    <div class="evaluation-detail-item">
+                        <span class="evaluation-detail-label">Average Rating</span>
+                        <span class="evaluation-detail-value">
+                            <span style="display: inline-block; padding: 4px 12px; background: #dcfce7; color: #166534; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
+                                Avg: {{ $evaluation->average_rating }}/5
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="evaluation-actions">
+                    <a href="{{ route('head.evaluations.view', $evaluation->id) }}" 
+                       class="evaluation-action-button"
+                       style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; padding: 10px 20px; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; transition: all 0.2s ease;">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M1.42.682a.5.5 0 1 1 .658.756L.646 2.146A.5.5 0 1 1 .354 1.854l1.066-.772zM8 1a3.5 3.5 0 0 1 3.5 3.5c0 .729-.195 1.4-.518 1.983l.493.493a1.5 1.5 0 0 1 0 2.121L9.121 11.45a1.5 1.5 0 0 1-2.121 0L1.854 6.304a.5.5 0 0 1 .292-.801L3.5 5.25A3.5 3.5 0 0 1 8 1z"/>
+                        </svg>
+                        View
+                    </a>
+                </div>
+            </div>
+        @empty
+            <div class="empty-evaluation-state">
+                <div class="empty-evaluation-icon">📊</div>
+                <div>No evaluation records found</div>
+            </div>
+        @endforelse
+    </div>
 </div>
 @endsection

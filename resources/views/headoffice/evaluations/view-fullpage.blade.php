@@ -44,18 +44,20 @@
             font-size: 1.5rem;
             font-weight: 600;
             color: #1e293b;
+            flex: 1;
         }
         
         .back-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             background: #6366f1;
             color: white;
             text-decoration: none;
             border-radius: 0.5rem;
             font-weight: 500;
+            font-size: 0.875rem;
             transition: all 0.2s ease;
         }
         
@@ -144,23 +146,185 @@
             border-left: 4px solid #667eea;
         }
         
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .header-content {
-                padding: 0 1rem;
-                flex-direction: column;
-                gap: 1rem;
+                padding: 0 1rem !important;
+                flex-direction: row !important;
+                gap: 0.5rem !important;
+                align-items: center !important;
+            }
+            
+            .header-title {
+                font-size: 1.25rem !important;
+                flex: 1 !important;
+            }
+            
+            .back-btn {
+                padding: 0.5rem !important;
+                font-size: 0.875rem !important;
+                gap: 0.25rem !important;
             }
             
             .container {
-                padding: 1rem;
+                padding: 1rem !important;
+            }
+            
+            .evaluation-card {
+                padding: 1.5rem !important;
+                margin-bottom: 1rem !important;
+                border-radius: 8px !important;
+            }
+            
+            .student-info {
+                padding: 1.5rem !important;
+                border-radius: 8px !important;
+                margin-bottom: 1.5rem !important;
             }
             
             .student-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                text-align: left !important;
+            }
+            
+            .student-grid > div:last-child {
+                text-align: left !important;
+            }
+            
+            .student-grid h2 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .student-grid p {
+                font-size: 1rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            
+            .section-title {
+                font-size: 1.1rem !important;
+                margin-bottom: 0.75rem !important;
+                margin-top: 1.5rem !important;
             }
             
             .rating-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            
+            .rating-item {
+                padding: 1rem !important;
+                border-radius: 6px !important;
+                border-left-width: 3px !important;
+            }
+            
+            .rating-name {
+                font-size: 0.9rem !important;
+                margin-bottom: 0.5rem !important;
+                line-height: 1.4 !important;
+            }
+            
+            .rating-score {
+                padding: 0.25rem 0.5rem !important;
+                font-size: 0.8rem !important;
+            }
+            
+            .comments-section {
+                padding: 1rem !important;
+                border-radius: 6px !important;
+                border-left-width: 3px !important;
+                margin-top: 1rem !important;
+            }
+            
+            .comments-section h3 {
+                font-size: 1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .comments-section p {
+                font-size: 0.9rem !important;
+                line-height: 1.5 !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0 0.75rem !important;
+            }
+            
+            .container {
+                padding: 0.75rem !important;
+            }
+            
+            .evaluation-card {
+                padding: 1rem !important;
+            }
+            
+            .student-info {
+                padding: 1rem !important;
+            }
+            
+            .student-grid h2 {
+                font-size: 1.25rem !important;
+            }
+            
+            .student-grid p {
+                font-size: 0.9rem !important;
+            }
+            
+            .section-title {
+                font-size: 1rem !important;
+            }
+            
+            .rating-item {
+                padding: 0.75rem !important;
+            }
+            
+            .rating-name {
+                font-size: 0.85rem !important;
+            }
+            
+            .rating-score {
+                font-size: 0.75rem !important;
+                padding: 0.2rem 0.4rem !important;
+            }
+            
+            .comments-section {
+                padding: 0.75rem !important;
+            }
+            
+            .comments-section h3 {
+                font-size: 0.9rem !important;
+            }
+            
+            .comments-section p {
+                font-size: 0.85rem !important;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .header-title {
+                font-size: 1.1rem !important;
+            }
+            
+            .back-btn {
+                font-size: 0.9rem !important;
+                padding: 0.6rem 0.8rem !important;
+            }
+            
+            .student-grid h2 {
+                font-size: 1.1rem !important;
+            }
+            
+            .section-title {
+                font-size: 0.95rem !important;
+            }
+            
+            .rating-name {
+                font-size: 0.8rem !important;
+                line-height: 1.3 !important;
             }
         }
         
@@ -185,7 +349,7 @@
         <div class="header-content">
             <h1 class="header-title">
                 <i class="bi bi-graph-up-arrow"></i>
-                Evaluation Details - Head Office
+                Evaluation Details
             </h1>
             <a href="{{ route('head.reports.evaluation') }}" class="back-btn">
                 <i class="bi bi-arrow-left"></i>
