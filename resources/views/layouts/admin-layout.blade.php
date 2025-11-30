@@ -209,7 +209,7 @@
         box-shadow: 0 4px 16px rgba(239,68,68,0.15);
     }
 
-    /* Header */
+    /* Header - FIXED ALIGNMENT */
     .main-header {
         background: #ffffff;
         border-bottom: 1px solid #e5e7eb;
@@ -222,12 +222,21 @@
         box-sizing: border-box;
     }
 
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
     .header-title {
         font-size: 1.5rem;
         font-weight: 600;
         color: #2563eb;
         margin: 0;
         text-transform: uppercase;
+        line-height: 1.5rem;
+        display: flex;
+        align-items: center;
     }
 
     .header-breadcrumb {
@@ -245,7 +254,51 @@
     .header-actions {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 16px;
+    }
+
+    .notification-bell-container {
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .notification-bell {
+        width: 24px;
+        height: 24px;
+        display: block;
+    }
+
+    .notification-count {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #ef4444;
+        color: #fff;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .notification-dropdown {
+        display: none;
+        position: absolute;
+        top: 36px;
+        right: 0;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        min-width: 260px;
+        z-index: 99999;
     }
 
     /* Main Content */
@@ -279,15 +332,69 @@
         background: transparent;
     }
 
+    /* Mobile Hamburger Menu */
+    .mobile-hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 4px;
+        z-index: 1100;
+        position: relative;
+    }
+
+    .mobile-hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: #2563eb;
+        margin: 3px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+    }
+
+    .mobile-hamburger.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-6px, 6px);
+    }
+
+    .mobile-hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-hamburger.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-6px, -6px);
+    }
+
+    /* Mobile Overlay */
+    .mobile-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .mobile-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
+        .mobile-hamburger {
+            display: flex !important;
+        }
         .sidebar {
             position: fixed;
             left: -260px;
             top: 0;
             height: 100vh;
-            z-index: 1000;
+            z-index: 1050;
             transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
         .sidebar.active {
@@ -341,11 +448,9 @@
 </style>
 
 <div class="dashboard-container" style="overflow-x:hidden;">
-    <!-- Mobile Menu Button -->
-    <button class="mobile-menu-btn" onclick="toggleSidebar()">
-        <i class="bi bi-list" style="font-size: 1.2rem;"></i>
-    </button>
-
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebar()"></div>
+    
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div>
@@ -473,90 +578,99 @@
 
     <!-- Main Content -->
     <section class="main-content w-full">
-        <!-- Header -->
+        <!-- Header - FIXED STRUCTURE -->
         <header class="main-header">
-            <div style="display: flex; align-items: center; width: 100%;">
+            <!-- Left side: Hamburger and Title -->
+            <div class="header-left">
+                <!-- Mobile Hamburger Menu -->
+                <div class="mobile-hamburger" id="mobileHamburger" onclick="toggleSidebar()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
                 <h1 class="header-title">@yield('page-title', 'Dashboard')</h1>
-                <div class="header-actions" style="margin-left:auto;display:flex;align-items:center;gap:16px;position:relative;">
-                    @yield('header-actions')
-                    <!-- Notification Bell -->
-                    <div class="notification-bell-container" id="adminNotificationBellContainer" style="position:relative;cursor:pointer;">
-                        <svg class="notification-bell" id="adminNotificationBell" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
-                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                        </svg>
-                        <span class="notification-count" id="adminNotificationCount" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:600;">0</span>
-                    </div>
-                    <div class="notification-dropdown" id="adminNotificationDropdown" style="display:none;position:absolute;top:36px;right:0;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.08);min-width:260px;z-index:99999;">
-                        <div id="adminNotificationContent" style="padding:16px;">Loading...</div>
-                    </div>
+            </div>
+            
+            <!-- Right side: Actions and Notification -->
+            <div class="header-actions">
+                @yield('header-actions')
+                <!-- Notification Bell -->
+                <div class="notification-bell-container" id="adminNotificationBellContainer">
+                    <svg class="notification-bell" id="adminNotificationBell" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="notification-count" id="adminNotificationCount">0</span>
+                </div>
+                <div class="notification-dropdown" id="adminNotificationDropdown">
+                    <div id="adminNotificationContent" style="padding:16px;">Loading...</div>
                 </div>
             </div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Admin notification functionality
-    function updateAdminNotificationCount() {
-        fetch('/admin/notifications')
-            .then(response => response.json())
-            .then(data => {
-                const countSpan = document.getElementById('adminNotificationCount');
-                if (data.length > 0) {
-                    countSpan.textContent = data.length;
-                    countSpan.style.display = 'inline-block';
-                } else {
-                    countSpan.textContent = '0';
-                    countSpan.style.display = 'inline-block';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching notifications:', error);
-            });
-    }
+        </header>
 
-    // Update notification count on page load and every 30 seconds
-    updateAdminNotificationCount();
-    setInterval(updateAdminNotificationCount, 30000);
-
-    // Notification dropdown functionality
-    const bellContainer = document.getElementById('adminNotificationBellContainer');
-    const dropdown = document.getElementById('adminNotificationDropdown');
-    const content = document.getElementById('adminNotificationContent');
-
-    if (bellContainer && dropdown && content) {
-        bellContainer.addEventListener('click', function(e) {
-            e.stopPropagation();
-            updateAdminNotificationCount();
-            if (dropdown.style.display === 'block') {
-                dropdown.style.display = 'none';
-            } else {
-                dropdown.style.display = 'block';
-                content.innerHTML = 'Loading...';
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Admin notification functionality
+            function updateAdminNotificationCount() {
                 fetch('/admin/notifications')
                     .then(response => response.json())
                     .then(data => {
-                        if (data.length === 0) {
-                            content.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
+                        const countSpan = document.getElementById('adminNotificationCount');
+                        if (data.length > 0) {
+                            countSpan.textContent = data.length;
+                            countSpan.style.display = 'flex';
                         } else {
-                            content.innerHTML = data.map(n => `
-                                <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">
-                                    <div style="font-weight:600;color:#2563eb;">${n.title}</div>
-                                    <div style="color:#374151;">${n.message}</div>
-                                </div>
-                            `).join('');
+                            countSpan.textContent = '0';
+                            countSpan.style.display = 'flex';
                         }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching notifications:', error);
                     });
             }
-        });
-        document.addEventListener('click', function(e) {
-            if (!bellContainer.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.style.display = 'none';
+
+            // Update notification count on page load and every 30 seconds
+            updateAdminNotificationCount();
+            setInterval(updateAdminNotificationCount, 30000);
+
+            // Notification dropdown functionality
+            const bellContainer = document.getElementById('adminNotificationBellContainer');
+            const dropdown = document.getElementById('adminNotificationDropdown');
+            const content = document.getElementById('adminNotificationContent');
+
+            if (bellContainer && dropdown && content) {
+                bellContainer.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    updateAdminNotificationCount();
+                    if (dropdown.style.display === 'block') {
+                        dropdown.style.display = 'none';
+                    } else {
+                        dropdown.style.display = 'block';
+                        content.innerHTML = 'Loading...';
+                        fetch('/admin/notifications')
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.length === 0) {
+                                    content.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
+                                } else {
+                                    content.innerHTML = data.map(n => `
+                                        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">
+                                            <div style="font-weight:600;color:#2563eb;">${n.title}</div>
+                                            <div style="color:#374151;">${n.message}</div>
+                                        </div>
+                                    `).join('');
+                                }
+                            });
+                    }
+                });
+                document.addEventListener('click', function(e) {
+                    if (!bellContainer.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                });
             }
         });
-    }
-});
-</script>
-            <!-- Only one header-actions section should be present -->
-        </header>
+        </script>
         
         <!-- Content Wrapper -->
         <div class="content-wrapper">
@@ -594,7 +708,6 @@ document.addEventListener('DOMContentLoaded', function() {
         parentToggle.addEventListener('click', function(e) {
             e.preventDefault();
             if (treeview) {
-                // Check if dropdown is currently visible
                 const currentDisplay = window.getComputedStyle(treeview).display;
                 const isVisible = currentDisplay !== 'none';
                 
@@ -617,11 +730,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Report links functionality (for AJAX loading if needed)
+    // Report links functionality
     document.querySelectorAll('.report-link').forEach(function(link) {
         link.addEventListener('click', function(e) {
-            // Remove default AJAX behavior - let normal navigation work
-            // You can add AJAX functionality here if needed later
+            // Normal navigation
         });
     });
 });
@@ -629,30 +741,44 @@ document.addEventListener('DOMContentLoaded', function() {
 // Mobile sidebar toggle
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('mobileOverlay');
+    const hamburger = document.getElementById('mobileHamburger');
+    
     sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+    hamburger.classList.toggle('active');
+}
+
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('mobileOverlay');
+    const hamburger = document.getElementById('mobileHamburger');
+    
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    hamburger.classList.remove('active');
 }
 
 // Close sidebar when clicking outside on mobile
 document.addEventListener('click', function(e) {
     const sidebar = document.getElementById('sidebar');
-    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const hamburger = document.getElementById('mobileHamburger');
     
-    if (window.innerWidth <= 768 && sidebar && menuBtn) {
-        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-            sidebar.classList.remove('active');
+    if (window.innerWidth <= 768 && sidebar && hamburger) {
+        if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+            closeSidebar();
         }
     }
 });
 
 // Close sidebar when navigation links are clicked on mobile
 document.addEventListener('DOMContentLoaded', function() {
-    const sidebar = document.getElementById('sidebar');
     const navLinks = document.querySelectorAll('.nav a');
     
     navLinks.forEach(function(link) {
         link.addEventListener('click', function() {
-            if (window.innerWidth <= 768 && sidebar) {
-                sidebar.classList.remove('active');
+            if (window.innerWidth <= 768) {
+                closeSidebar();
             }
         });
     });

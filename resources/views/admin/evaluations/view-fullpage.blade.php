@@ -145,22 +145,104 @@
         }
         
         @media (max-width: 768px) {
+            .header {
+                padding: 0.5rem 0 !important;
+            }
+            
             .header-content {
-                padding: 0 1rem;
-                flex-direction: column;
-                gap: 1rem;
+                padding: 0 1rem !important;
+                flex-direction: row !important;
+                gap: 0.5rem !important;
+                align-items: center !important;
+            }
+            
+            .header-title {
+                font-size: 1.25rem !important;
+                flex: 1 !important;
+            }
+            
+            .back-btn {
+                padding: 0.5rem !important;
+                font-size: 0.875rem !important;
+                gap: 0.25rem !important;
             }
             
             .container {
-                padding: 1rem;
+                padding: 1rem !important;
+            }
+            
+            .evaluation-card {
+                padding: 1.25rem !important;
+                margin-bottom: 1rem !important;
+                border-radius: 8px !important;
+            }
+            
+            .student-info {
+                padding: 1.25rem !important;
+                border-radius: 8px !important;
+                margin-bottom: 1rem !important;
             }
             
             .student-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            .student-grid h1 {
+                font-size: 1.4rem !important;
+                margin-bottom: 0.5rem !important;
+                line-height: 1.3 !important;
+            }
+            
+            .student-grid p {
+                font-size: 1rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            
+            .section-title {
+                font-size: 1.1rem !important;
+                margin-bottom: 0.75rem !important;
+                margin-top: 1.5rem !important;
             }
             
             .rating-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            
+            .rating-item {
+                padding: 1rem !important;
+                border-radius: 6px !important;
+                border-left-width: 3px !important;
+            }
+            
+            .rating-name {
+                font-size: 0.9rem !important;
+                margin-bottom: 0.5rem !important;
+                line-height: 1.4 !important;
+            }
+            
+            .rating-score {
+                padding: 0.25rem 0.5rem !important;
+                font-size: 0.8rem !important;
+            }
+            
+            .comments-section {
+                padding: 1rem !important;
+                border-radius: 6px !important;
+                border-left-width: 3px !important;
+                margin-top: 1rem !important;
+            }
+            
+            .comments-section h3 {
+                font-size: 1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .comments-section p {
+                font-size: 0.9rem !important;
+                line-height: 1.5 !important;
             }
         }
         

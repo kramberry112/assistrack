@@ -13,6 +13,119 @@
     .admin-content-wrapper {
         background: #fff !important;
     }
+    
+    /* Hide mobile cards by default */
+    .mobile-attendance-cards {
+        display: none;
+    }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        /* Container adjustments */
+        div[style*="padding: 24px"] {
+            padding: 16px !important;
+        }
+        
+        /* Date filter form - mobile friendly */
+        .mb-6 {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 12px !important;
+            margin-bottom: 20px !important;
+        }
+        
+        .mb-6 label {
+            font-size: 0.9rem !important;
+        }
+        
+        .mb-6 input[type="date"] {
+            width: 100% !important;
+            padding: 12px !important;
+            font-size: 1rem !important;
+        }
+        
+        .mb-6 button {
+            width: 100% !important;
+            padding: 12px !important;
+            font-size: 1rem !important;
+        }
+        
+        /* Hide table on mobile */
+        .overflow-x-auto table {
+            display: none;
+        }
+        
+        /* Show mobile cards instead */
+        .mobile-attendance-cards {
+            display: block !important;
+        }
+        
+        .attendance-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .attendance-card-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .attendance-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 4px 0;
+        }
+        
+        .attendance-card-subtitle {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin: 0;
+        }
+        
+        .attendance-card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .attendance-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .attendance-detail-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .attendance-detail-value {
+            font-size: 0.9rem;
+            color: #111827;
+            font-weight: 600;
+        }
+        
+        .status-badge-mobile {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-present { background: #d1fae5; color: #065f46; }
+        .status-late { background: #fef3c7; color: #92400e; }
+        .status-absent { background: #fee2e2; color: #991b1b; }
+        .status-default { background: #f3f4f6; color: #374151; }
+    }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
         <!-- Date Filter Form -->
@@ -108,6 +221,92 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        
+        <!-- Mobile Cards View -->
+        <div class="mobile-attendance-cards">
+            @forelse($records as $i => $record)
+                <div class="attendance-card">
+                    <div class="attendance-card-header">
+                        <h3 class="attendance-card-title">{{ $record['name'] ?? 'N/A' }}</h3>
+                        <p class="attendance-card-subtitle">ID: {{ $record['id_number'] }}</p>
+                    </div>
+                    
+                    <div class="attendance-card-details">
+                        <div class="attendance-detail-item">
+                            <span class="attendance-detail-label">Office:</span>
+                            <span class="attendance-detail-value">{{ $record['office'] ?? '-' }}</span>
+                        </div>
+                        
+                        <div class="attendance-detail-item">
+                            <span class="attendance-detail-label">Date:</span>
+                            <span class="attendance-detail-value">{{ $record['date'] ?? (isset($record['time_in']) ? \Carbon\Carbon::parse($record['time_in'])->format('M d, Y') : '-') }}</span>
+                        </div>
+                        
+                        <div class="attendance-detail-item">
+                            <span class="attendance-detail-label">Time In:</span>
+                            <span class="attendance-detail-value">
+                                @if($record['time_in'])
+                                    {{ \Carbon\Carbon::parse($record['time_in'])->format('h:i A') }}
+                                @else
+                                    -
+                                @endif
+                            </span>
+                        </div>
+                        
+                        <div class="attendance-detail-item">
+                            <span class="attendance-detail-label">Time Out:</span>
+                            <span class="attendance-detail-value">
+                                @if($record['time_out'])
+                                    {{ \Carbon\Carbon::parse($record['time_out'])->format('h:i A') }}
+                                @else
+                                    -
+                                @endif
+                            </span>
+                        </div>
+                        
+                        <div class="attendance-detail-item">
+                            <span class="attendance-detail-label">Total Hours:</span>
+                            <span class="attendance-detail-value">
+                                @if($record['total_hours'])
+                                    {{ number_format($record['total_hours'], 2) }} hrs
+                                @else
+                                    -
+                                @endif
+                            </span>
+                        </div>
+                        
+                        <div class="attendance-detail-item">
+                            <span class="attendance-detail-label">Status:</span>
+                            <span class="attendance-detail-value">
+                                @php $status = $record['status'] ?? '-' @endphp
+                                @if($status !== '-')
+                                    <span class="status-badge-mobile 
+                                        @if(strtolower($status) == 'present') status-present
+                                        @elseif(strtolower($status) == 'late') status-late
+                                        @elseif(strtolower($status) == 'absent') status-absent
+                                        @else status-default
+                                        @endif">
+                                        {{ $status }}
+                                    </span>
+                                @else
+                                    -
+                                @endif
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="attendance-card">
+                    <div style="text-align: center; padding: 24px;">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <p class="mt-2 text-sm text-gray-500">No attendance records found</p>
+                        <p class="text-xs text-gray-400">Records will appear here once students clock in</p>
+                    </div>
+                </div>
+            @endforelse
         </div>
 </div>
 @endsection

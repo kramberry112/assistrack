@@ -13,6 +13,86 @@
     .admin-content-wrapper {
         background: #fff !important;
     }
+    
+    /* Hide mobile cards by default */
+    .mobile-evaluation-cards {
+        display: none;
+    }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        /* Container adjustments */
+        div[style*="padding: 24px"] {
+            padding: 16px !important;
+        }
+        
+        .main-content-card {
+            padding: 20px !important;
+            margin: 0 !important;
+        }
+        
+        /* Hide table on mobile */
+        .reports-table {
+            display: none;
+        }
+        
+        /* Show mobile cards instead */
+        .mobile-evaluation-cards {
+            display: block !important;
+        }
+        
+        .evaluation-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .evaluation-card-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .evaluation-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 4px 0;
+        }
+        
+        .evaluation-card-subtitle {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin: 0;
+        }
+        
+        .evaluation-card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .evaluation-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .evaluation-detail-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .evaluation-detail-value {
+            font-size: 0.9rem;
+            color: #111827;
+            font-weight: 600;
+        }
+    }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
 
@@ -200,5 +280,54 @@
             @endforelse
         </tbody>
     </table>
+    
+    <!-- Mobile Cards View -->
+    <div class="mobile-evaluation-cards">
+        @forelse($evaluations as $evaluation)
+            <div class="evaluation-card">
+                <div class="evaluation-card-header">
+                    <h3 class="evaluation-card-title">{{ $evaluation->student->student_name ?? 'N/A' }}</h3>
+                    <p class="evaluation-card-subtitle">Student ID: {{ $evaluation->student->id_number ?? 'N/A' }}</p>
+                </div>
+                
+                <div class="evaluation-card-details">
+                    <div class="evaluation-detail-item">
+                        <span class="evaluation-detail-label">Department</span>
+                        <span class="evaluation-detail-value">{{ $evaluation->department }}</span>
+                    </div>
+                    
+                    <div class="evaluation-detail-item">
+                        <span class="evaluation-detail-label">Evaluated by</span>
+                        <span class="evaluation-detail-value">{{ $evaluation->evaluator->name ?? 'Unknown' }}</span>
+                    </div>
+                    
+                    <div class="evaluation-detail-item">
+                        <span class="evaluation-detail-label">Average Rating</span>
+                        <span class="evaluation-detail-value">
+                            <span style="display: inline-block; padding: 4px 12px; background: #d1fae5; color: #065f46; border-radius: 12px; font-size: 0.8rem; font-weight: 600;">
+                                Avg: {{ $evaluation->average_rating }}/5
+                            </span>
+                        </span>
+                    </div>
+                    
+                    <a href="{{ route('admin.evaluations.view', $evaluation->id) }}" 
+                       style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; background: #6366f1; color: white; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500; width: 100%; margin-top: 12px;">
+                        <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        View
+                    </a>
+                </div>
+            </div>
+        @empty
+            <div class="evaluation-card">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <div class="empty-state-text">No evaluation records found</div>
+                </div>
+            </div>
+        @endforelse
+    </div>
 </div>
 @endsection

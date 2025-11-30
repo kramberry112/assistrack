@@ -1,26 +1,11 @@
 @extends('layouts.app')
 
 @section('page-title')
-    <div style="display: flex; align-items: center; gap: 8px;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            <path d="M12 1v6"/>
-            <path d="M12 16v6"/>
-        </svg>
-        <span>User Management</span>
-    </div>
+    User Management
 @endsection
 
 
-@section('header-actions')
-    <button class="btn btn-primary" onclick="openCreateUserModal()" style="padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-        <i class="bi bi-person-plus"></i>
-        Create New User
-    </button>
-@endsection
+
 
 
 @section('content')
@@ -79,6 +64,7 @@
         display: flex;
         gap: 12px;
         align-items: center;
+        flex-wrap: wrap;
     }
 
     .search-input-wrapper {
@@ -88,6 +74,22 @@
 
     .filter-select-wrapper {
         min-width: 180px;
+    }
+
+    /* Form controls */
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .content-body {
@@ -524,6 +526,25 @@
     }
 
     @media (max-width: 768px) {
+        /* Mobile tablet */
+        .search-filter-section {
+            padding: 16px;
+        }
+        
+        .search-filter-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+        }
+        
+        .search-input-wrapper {
+            min-width: auto;
+        }
+        
+        .filter-select-wrapper {
+            min-width: auto;
+        }
+        
         /* Ultra compact for phones */
         th:nth-child(1), td:nth-child(1) { width: 16%; }
         th:nth-child(2), td:nth-child(2) { width: 14%; }
@@ -548,6 +569,67 @@
             text-overflow: ellipsis;
         }
     }
+    
+    @media (max-width: 480px) {
+        /* Mobile phone optimizations */
+        .search-filter-section {
+            padding: 12px;
+        }
+        
+        .content-body {
+            padding: 0;
+        }
+        
+        .table-container {
+            padding: 0 8px 8px 8px;
+            margin: 0;
+        }
+        
+        /* Hide less important columns on mobile */
+        th:nth-child(4), td:nth-child(4),  /* Password column */
+        th:nth-child(6), td:nth-child(6) { /* Office column */
+            display: none;
+        }
+        
+        /* Adjust remaining column widths */
+        th:nth-child(1), td:nth-child(1) { width: 20%; }
+        th:nth-child(2), td:nth-child(2) { width: 18%; }
+        th:nth-child(3), td:nth-child(3) { width: 25%; }
+        th:nth-child(5), td:nth-child(5) { width: 20%; }
+        th:nth-child(7), td:nth-child(7) { width: 12%; }
+        th:nth-child(8), td:nth-child(8) { width: 15%; }
+        
+        /* Improve mobile button styling */
+        .actions {
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .actions .btn {
+            width: 100%;
+            padding: 4px 6px;
+            font-size: 0.6rem;
+            min-height: 28px;
+        }
+        
+        .actions .btn i {
+            display: none;
+        }
+        
+        /* Mobile form styling */
+        .form-control {
+            font-size: 16px; /* Prevents zoom on iOS */
+            min-height: 44px; /* Touch target size */
+        }
+        
+        /* Mobile header actions */
+        .header-actions .btn {
+            padding: 12px 16px;
+            font-size: 0.875rem;
+            width: 100%;
+            justify-content: center;
+        }
+    }
 </style>
 
 <!-- Alerts -->
@@ -567,7 +649,7 @@
 
 <div style="background: #fff; min-height: calc(100vh - 76px); padding: 0;">
     <!-- Search and Filter Section -->
-    <div class="search-filter-section" style="padding: 16px 16px 0 16px;">
+    <div class="search-filter-section">
         <div class="search-filter-row">
             <div class="search-input-wrapper">
                 <input type="text" 
@@ -591,6 +673,11 @@
             
             <button onclick="clearFilters()" class="btn btn-gray">
                 <i class="bi bi-x-circle"></i> Clear
+            </button>
+            
+            <button class="btn btn-primary" onclick="openCreateUserModal()" style="padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500;">
+                <i class="bi bi-person-plus"></i>
+                Create New User
             </button>
         </div>
     </div>

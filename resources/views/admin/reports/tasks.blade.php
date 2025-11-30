@@ -13,6 +13,86 @@
     .admin-content-wrapper {
         background: #fff !important;
     }
+    
+    /* Hide mobile cards by default */
+    .mobile-task-cards {
+        display: none;
+    }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        /* Container adjustments */
+        div[style*="padding: 24px"] {
+            padding: 16px !important;
+        }
+        
+        .main-content-card {
+            padding: 20px !important;
+            margin: 0 !important;
+        }
+        
+        /* Hide table on mobile */
+        .reports-table {
+            display: none;
+        }
+        
+        /* Show mobile cards instead */
+        .mobile-task-cards {
+            display: block !important;
+        }
+        
+        .task-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .task-card-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .task-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 4px 0;
+        }
+        
+        .task-card-subtitle {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin: 0;
+        }
+        
+        .task-card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .task-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .task-detail-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .task-detail-value {
+            font-size: 0.9rem;
+            color: #111827;
+            font-weight: 600;
+        }
+    }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
 
@@ -158,5 +238,44 @@
             @endforelse
         </tbody>
     </table>
+    
+    <!-- Mobile Cards View -->
+    <div class="mobile-task-cards">
+        @forelse($students as $user)
+            <div class="task-card">
+                <div class="task-card-header">
+                    <h3 class="task-card-title">{{ $user->name }}</h3>
+                    <p class="task-card-subtitle">{{ $user->student->id_number ?? 'No ID Number' }}</p>
+                </div>
+                
+                <div class="task-card-details">
+                    <div class="task-detail-item">
+                        <span class="task-detail-label">Designated Office</span>
+                        <span class="task-detail-value">{{ $user->student->designated_office ?? 'Not Assigned' }}</span>
+                    </div>
+                    
+                    <div class="task-detail-item">
+                        <span class="task-detail-label">Tasks Completed</span>
+                        <span class="task-detail-value">
+                            <span class="task-count-badge">{{ $user->student_tasks_count }}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="task-card">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <div class="empty-state-text">
+                        @if(isset($currentUser) && $currentUser->role === 'offices')
+                            No completed tasks found for {{ $currentUser->office_name ?? 'your office' }}
+                        @else
+                            No completed tasks found
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endforelse
+    </div>
 </div>
 @endsection

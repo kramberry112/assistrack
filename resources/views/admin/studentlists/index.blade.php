@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
 @section('page-title')
-    <div style="display: flex; align-items: center; gap: 8px;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-        </svg>
-        <span>Student List</span>
-    </div>
+    <i class="bi bi-person-lines-fill" style="margin-right: 8px;"></i>
+    Student List
 @endsection
 
 @section('content')
 <style>
+    /* Mobile optimization */
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
     .content-wrapper {
         background: #fff !important;
     }
@@ -108,26 +108,34 @@
     }
 
     .filter-button {
-        display: inline-flex;
+        display: flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
-        padding: 6px 18px;
+        padding: 12px 16px;
         background: #3b82f6;
         color: #fff;
         border: none;
-        border-radius: 18px;
+        border-radius: 12px;
         font-size: 1rem;
         font-weight: 500;
         cursor: pointer;
-        .action-cell {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            gap: 8px;
-            align-items: center;
-            justify-content: flex-start;
-            white-space: nowrap !important;
-        }
+        transition: all 0.2s;
+        touch-action: manipulation;
+        min-height: 48px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .action-cell {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 8px;
+        align-items: center;
+        justify-content: flex-start;
+        white-space: nowrap !important;
+    }
 
         .action-cell form,
         .action-cell a {
@@ -189,6 +197,8 @@
 
     .filter-button:hover {
         background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
     .filter-dropdown {
@@ -208,6 +218,8 @@
     .filter-dropdown.show {
         display: block;
     }
+    
+
 
     .filter-label {
         display: flex;
@@ -219,6 +231,23 @@
         color: #374151;
         cursor: pointer;
         transition: background 0.2s;
+        white-space: nowrap;
+        overflow: hidden;
+        gap: 8px;
+        min-height: 40px;
+        box-sizing: border-box;
+    }
+    
+    .filter-label span {
+        flex: 1;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    
+    .filter-label svg {
+        flex-shrink: 0;
+        margin-left: auto;
     }
 
     .filter-label:hover {
@@ -242,6 +271,13 @@
         color: #374151;
         cursor: pointer;
         transition: background 0.2s;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 32px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
     }
 
     .filter-option:hover {
@@ -271,6 +307,366 @@
     .filter-clear:hover {
         background: #dc2626;
     }
+
+    /* Filter cascade styles */
+    .filter-cascade {
+        display: none;
+        background: #ffffff;
+        border-top: 1px solid #e5e7eb;
+        max-height: 200px;
+        overflow-y: auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .filter-cascade .filter-option {
+        padding: 8px 24px;
+        font-size: 0.85rem;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .filter-cascade .filter-option:last-child {
+        border-bottom: none;
+    }
+
+    /* Action Button Styles */
+    .btn-view {
+        transition: background 0.2s ease;
+    }
+
+    .btn-view:hover {
+        background: #2563eb !important;
+    }
+
+    .btn-create-account {
+        transition: background 0.2s ease;
+    }
+
+    .btn-create-account:hover {
+        background: #059669 !important;
+    }
+
+    .btn-account-created {
+        opacity: 0.8;
+    }
+
+    .btn-delete {
+        transition: background 0.2s ease;
+    }
+
+    .btn-delete:hover {
+        background: #dc2626 !important;
+    }
+
+    .desktop-actions {
+        align-items: center;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        /* Content adjustments */
+        .content-card {
+            border-radius: 8px !important;
+            margin: 8px !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .content-header {
+            padding: 12px 16px !important;
+            font-size: 0.9rem !important;
+        }
+
+        /* Header section mobile responsive */
+        .header-container {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 12px !important;
+            padding: 0 16px !important;
+        }
+        
+        .header-text {
+            width: 100% !important;
+        }
+        
+        .page-header-controls {
+            width: 100% !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            margin-top: 0 !important;
+        }
+
+        /* Header section */
+        .studentlist-title {
+            font-size: 1.1rem !important;
+            margin: 12px 0 4px 0 !important;
+        }
+
+        .studentlist-desc {
+            font-size: 0.9rem !important;
+            padding: 0 !important;
+            margin-bottom: 16px !important;
+        }
+
+        /* Filter and search controls */
+        .filter-container {
+            width: 100% !important;
+            order: 1 !important;
+        }
+
+        .filter-button {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 12px 16px !important;
+            font-size: 0.95rem !important;
+            min-height: 48px !important;
+            border-radius: 8px !important;
+            touch-action: manipulation !important;
+        }
+
+        /* Search form mobile responsive */
+        form[style*="display: flex"] {
+            flex-direction: row !important;
+            gap: 8px !important;
+            width: 100% !important;
+            align-items: stretch !important;
+            order: 2 !important;
+        }
+
+        form input[type="text"] {
+            flex: 1 !important;
+            padding: 12px 16px !important;
+            font-size: 0.95rem !important;
+            border-radius: 8px !important;
+            min-height: 48px !important;
+            border: 1px solid #d1d5db !important;
+            box-sizing: border-box !important;
+        }
+
+        form button {
+            padding: 12px 20px !important;
+            font-size: 0.95rem !important;
+            border-radius: 8px !important;
+            white-space: nowrap !important;
+            min-height: 48px !important;
+            min-width: 80px !important;
+        }
+
+        /* Table container */
+        .table-container {
+            padding: 0 16px 16px 16px !important;
+            overflow-x: auto !important;
+        }
+
+        /* Hide table on mobile and show cards instead */
+        .student-table {
+            display: none !important;
+        }
+
+        /* Mobile card layout */
+        .mobile-student-cards {
+            display: block !important;
+            gap: 12px !important;
+        }
+
+        .student-card {
+            background: #fff !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 8px !important;
+            padding: 16px !important;
+            margin-bottom: 12px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .student-card-header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: flex-start !important;
+            margin-bottom: 12px !important;
+        }
+
+        .student-card-name {
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            color: #111827 !important;
+            margin-bottom: 4px !important;
+        }
+
+        .student-card-details {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+            margin-bottom: 12px !important;
+        }
+
+        .student-card-item {
+            font-size: 0.85rem !important;
+            color: #374151 !important;
+        }
+
+        .student-card-item strong {
+            display: block !important;
+            font-size: 0.8rem !important;
+            color: #6b7280 !important;
+            font-weight: 500 !important;
+            margin-bottom: 2px !important;
+        }
+
+        .student-card-actions {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            justify-content: flex-start !important;
+        }
+
+        .student-card-actions button,
+        .student-card-actions a,
+        .student-card-actions span {
+            font-size: 0.8rem !important;
+            padding: 6px 12px !important;
+            border-radius: 4px !important;
+            flex: 1 1 auto !important;
+            text-align: center !important;
+            min-width: 80px !important;
+        }
+
+        /* Filter dropdown mobile - responsive positioning */
+        .filter-dropdown {
+            position: absolute !important;
+            left: 0 !important;
+            right: 16px !important;
+            top: calc(100% + 8px) !important;
+            bottom: auto !important;
+            width: auto !important;
+            min-width: 250px !important;
+            max-width: calc(100vw - 32px) !important;
+            max-height: 60vh !important;
+            overflow-y: auto !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+            z-index: 99999 !important;
+        }
+        
+        .filter-dropdown .filter-cascade {
+            max-height: 180px !important;
+        }
+        
+        /* Filter button mobile improvements */
+        .filter-button {
+            width: 100% !important;
+            max-width: none !important;
+            padding: 14px 16px !important;
+            font-size: 1rem !important;
+            min-height: 52px !important;
+            border-radius: 12px !important;
+            position: relative !important;
+        }
+        
+        .filter-container {
+            width: 100% !important;
+        }
+        
+        .page-header-controls {
+            width: 100% !important;
+            justify-content: stretch !important;
+        }
+        
+        /* Improve filter options for touch */
+        .filter-option {
+            padding: 12px 16px !important;
+            font-size: 0.9rem !important;
+            border-bottom: 1px solid #f3f4f6 !important;
+        }
+        
+        .filter-option:last-child {
+            border-bottom: none !important;
+        }
+        
+        .cascading-label {
+            padding: 12px 16px !important;
+            font-size: 0.95rem !important;
+            background: #f9fafb !important;
+            border-bottom: 1px solid #e5e7eb !important;
+        }
+        
+        .filter-clear {
+            margin: 12px 16px 8px 16px !important;
+            padding: 10px 16px !important;
+            font-size: 0.9rem !important;
+            border-radius: 8px !important;
+        }
+    }
+
+    /* Ultra mobile (small phones) */
+    @media (max-width: 480px) {
+        .content-card {
+            margin: 4px !important;
+            border-radius: 6px !important;
+        }
+
+        .studentlist-title {
+            font-size: 1rem !important;
+            margin: 8px 12px 4px 12px !important;
+        }
+
+        .studentlist-desc {
+            font-size: 0.85rem !important;
+            padding: 0 12px !important;
+        }
+
+        .table-container {
+            padding: 0 12px 12px 12px !important;
+        }
+
+        .student-card {
+            padding: 12px !important;
+            margin-bottom: 8px !important;
+        }
+
+        .student-card-details {
+            grid-template-columns: 1fr !important;
+            gap: 6px !important;
+        }
+
+        .student-card-actions button,
+        .student-card-actions a,
+        .student-card-actions span {
+            font-size: 0.75rem !important;
+            padding: 5px 8px !important;
+            min-width: 70px !important;
+        }
+    }
+
+    /* Tablet responsive (medium screens) */
+    @media (max-width: 1024px) and (min-width: 769px) {
+        .header-container {
+            padding: 0 20px !important;
+        }
+        
+        .studentlist-title {
+            font-size: 1.15rem !important;
+        }
+        
+        .table-container {
+            padding: 0 20px 20px 20px !important;
+            overflow-x: auto !important;
+        }
+        
+        .student-table {
+            font-size: 0.85rem !important;
+        }
+        
+        .student-table th,
+        .student-table td {
+            padding: 10px 12px !important;
+        }
+    }
+
+    /* Desktop: hide mobile cards */
+    @media (min-width: 769px) {
+        .mobile-student-cards {
+            display: none !important;
+        }
+    }
 </style>
 
 
@@ -287,20 +683,17 @@
         @endif
 
 <div style="background: #fff; min-height: calc(100vh - 76px); padding: 0;">
-            <div style="display: flex; flex-direction: row; align-items: flex-start; padding: 16px 16px 0 16px; margin-bottom: 8px;">
-                <div style="flex: 1 1 auto;">
+            <div class="header-container" style="display: flex; flex-direction: row; align-items: flex-start; padding: 0 24px 0 24px; margin-bottom: 16px;">
+                <div class="header-text" style="flex: 1 1 auto;">
                     <div class="studentlist-title" style="margin-bottom:0;">Student Official List</div>
                     <div class="studentlist-desc" style="margin-bottom:0;">This list contains Official Student Assistants of Universidad de Dagupan</div>
                 </div>
                 
-                <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 8px; margin-top: 16px;">
+                <div class="page-header-controls" style="flex: 0 0 auto; display: flex; align-items: center; gap: 8px; margin-top: 4px;">
                     <!-- Filter Button -->
                     <div class="filter-container">
                         <button class="filter-button" id="filterDropdownBtn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-                            </svg>
-                            Filter
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg><span>Filter</span>
                         </button>
                         
                         <div class="filter-dropdown" id="filterDropdownMenu">
@@ -374,42 +767,14 @@
                         </div>
                     </div>
                     
+                    <!-- Filter overlay for mobile -->
+                    <div class="filter-overlay" id="filterOverlay"></div>
+                    
                     <!-- Search Bar -->
                     <form method="GET" action="" style="display: flex; align-items: center; gap: 8px;">
                         <input type="text" name="keyword" id="studentSearchBar" value="{{ request('keyword') }}" placeholder="Search students..." style="padding: 7px 12px; border-radius: 6px; border: 1px solid #bbb; font-size: 15px;">
                         <button type="submit" style="padding: 7px 18px; border-radius: 6px; background: #2563eb; color: #fff; border: none; font-size: 15px; cursor: pointer;">Search</button>
                     </form>
-                    
-                    <!-- Pagination -->
-                    <span style="font-size:1rem;color:#374151;padding:6px 18px;border-radius:18px;background:#f3f4f6;display:inline-flex;align-items:center;gap:12px;">
-                        @if ($students->onFirstPage())
-                        <span style="color:#d1d5db;cursor:not-allowed;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                            </svg>
-                        </span>
-                        @else
-                        <a href="{{ $students->previousPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                            </svg>
-                        </a>
-                        @endif
-                        <span style="font-size:1rem;color:#374151;">Page {{ $students->currentPage() }} of {{ $students->lastPage() }}</span>
-                        @if ($students->hasMorePages())
-                        <a href="{{ $students->nextPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                            </svg>
-                        </a>
-                        @else
-                        <span style="color:#d1d5db;cursor:not-allowed;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                            </svg>
-                        </span>
-                        @endif
-                    </span>
                 </div>
             </div>
             
@@ -497,27 +862,163 @@
                                 </div>
                             </td>
                             <td class="action-cell">
-                                <a href="{{ route('students.show', $student->id) }}" style="background:#3b82f6;color:#fff;padding:6px 12px;border-radius:4px;text-decoration:none;margin-right:4px;">View</a>
-                                
-                                @if($student->user_id)
-                                    <span style="background:#10b981;color:#fff;padding:6px 12px;border-radius:4px;margin-right:4px;font-size:12px;">Account Created</span>
-                                @else
-                                    <form method="POST" action="{{ route('students.createAccount', $student->id) }}" style="display:inline-block; margin-right:4px;">
+                                <div class="desktop-actions" style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                    <a href="{{ route('students.show', $student->id) }}" class="btn-view" style="background:#3b82f6;color:#fff;padding:6px 12px;border-radius:4px;text-decoration:none;font-size:12px;display:inline-flex;align-items:center;justify-content:center;min-width:60px;">View</a>
+                                    
+                                    @if($student->user_id)
+                                        <span class="btn-account-created" style="background:#10b981;color:#fff;padding:6px 12px;border-radius:4px;font-size:12px;display:inline-flex;align-items:center;justify-content:center;min-width:80px;">Account Created</span>
+                                    @else
+                                        <form method="POST" action="{{ route('students.createAccount', $student->id) }}" style="display:inline-block;">
+                                            @csrf
+                                            <button type="submit" onclick="return confirm('Create account for {{ $student->student_name }}?')" class="btn-create-account" style="background:#10b981;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;justify-content:center;min-width:80px;">Create Account</button>
+                                        </form>
+                                    @endif
+                                    
+                                    <form method="POST" action="{{ route('students.delete', $student->id) }}" style="display:inline-block;">
                                         @csrf
-                                        <button type="submit" onclick="return confirm('Create account for {{ $student->student_name }}?')" style="background:#10b981;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Create Account</button>
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this student?')" class="btn-delete" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;justify-content:center;min-width:60px;">Delete</button>
                                     </form>
-                                @endif
-                                
-                                <form method="POST" action="{{ route('students.delete', $student->id) }}" style="display:inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this student?')" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Delete</button>
-                                </form>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
+                </table>
+
+                <!-- Mobile Card Layout (shown only on mobile) -->
+                <div class="mobile-student-cards" style="display: none;">
+                    @foreach($students as $student)
+                    <div class="student-card">
+                        <div class="student-card-header">
+                            <div class="student-card-name">{{ $student->student_name }}</div>
+                        </div>
+                        
+                        <div class="student-card-details">
+                            <div class="student-card-item">
+                                <strong>Course:</strong>
+                                {{ $student->course }}
+                            </div>
+                            <div class="student-card-item">
+                                <strong>Year Level:</strong>
+                                {{ $student->year_level }}
+                            </div>
+                            <div class="student-card-item">
+                                <strong>Student ID:</strong>
+                                {{ $student->id_number }}
+                            </div>
+                            <div class="student-card-item">
+                                <strong>Matriculation:</strong>
+                                <div class="matriculation-dropdown" style="position:relative; width:100%; overflow: visible; margin-top: 4px;">
+                                    <div style="position:relative;">
+                                        <input type="text" class="matriculation-combo-input" value="{{ $student->matriculation ?? '' }}" placeholder="Select or search..." style="width:100%;padding:8px 32px 8px 10px;border-radius:5px;border:1px solid #bbb;font-size:14px;" autocomplete="off" readonly data-student-id="{{ $student->id }}">
+                                        <span class="matriculation-combo-arrow" style="position:absolute;top:8px;right:10px;width:18px;height:18px;pointer-events:auto;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100;background:#fff;">
+                                            <svg width="18" height="18" viewBox="0 0 24 24">
+                                                <path d="M7 10l5 5 5-5" stroke="#555" stroke-width="2" fill="none" />
+                                            </svg>
+                                        </span>
+                                        <div class="matriculation-combo-list" style="display:none;position:absolute;top:40px;left:0;width:100%;background:#fff;border:1px solid #bbb;border-radius:5px;box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:9999;max-height:120px;overflow-y:auto;">
+                                            <div class="matriculation-combo-item" style="padding:8px 12px;cursor:pointer;">50%</div>
+                                            <div class="matriculation-combo-item" style="padding:8px 12px;cursor:pointer;">75%</div>
+                                            <div class="matriculation-combo-item" style="padding:8px 12px;cursor:pointer;">Full</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="student-card-item" style="grid-column: 1 / -1;">
+                                <strong>Designated Office:</strong>
+                                <div class="office-dropdown" style="position:relative; width:100%; overflow: visible; margin-top: 4px;">
+                                    <div style="position:relative;">
+                                        <input type="text" class="office-combo-input" value="{{ $student->designated_office }}" placeholder="Select or search office..." style="width:100%;padding:8px 32px 8px 10px;border-radius:5px;border:1px solid #bbb;font-size:14px;" autocomplete="off" readonly data-student-id="{{ $student->id }}">
+                                        <span class="office-combo-arrow" style="position:absolute;top:8px;right:10px;width:18px;height:18px;pointer-events:auto;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100;background:#fff;">
+                                            <svg width="18" height="18" viewBox="0 0 24 24">
+                                                <path d="M7 10l5 5 5-5" stroke="#555" stroke-width="2" fill="none" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    <div class="office-combo-list" style="display:none;position:absolute;top:40px;left:0;width:100%;background:#fff;border:1px solid #bbb;border-radius:5px;box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:9999;max-height:220px;overflow-y:auto;">
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ACADS</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ALUMNI OFFICE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ARCHIVING</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">ARZATECH</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">CANTEEN</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">CLINIC</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">FINANCE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">GUIDANCE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">HRD</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">KUWAGO</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LCR</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LIBRARY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">LINKAGES</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">MARKETING</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">OPEN LAB</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">PRESIDENTS OFFICE</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">REGISTRAR</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">RESEARCH</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SAS</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SECURITY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">SUPPLY</div>
+                                        <div class="office-combo-item" style="padding:8px 12px;cursor:pointer;">VPAA</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="student-card-actions">
+                            <a href="{{ route('students.show', $student->id) }}" class="btn-view" style="background:#3b82f6;color:#fff;text-decoration:none;padding:8px 12px;border-radius:4px;font-size:0.85rem;display:flex;align-items:center;justify-content:center;flex:1;">View</a>
+                            
+                            @if($student->user_id)
+                                <span class="btn-account-created" style="background:#10b981;color:#fff;padding:8px 12px;border-radius:4px;font-size:0.85rem;display:flex;align-items:center;justify-content:center;flex:1;">Account Created</span>
+                            @else
+                                <form method="POST" action="{{ route('students.createAccount', $student->id) }}" style="flex:1;">
+                                    @csrf
+                                    <button type="submit" onclick="return confirm('Create account for {{ $student->student_name }}?')" class="btn-create-account" style="background:#10b981;color:#fff;border:none;cursor:pointer;padding:8px 12px;border-radius:4px;font-size:0.85rem;width:100%;display:flex;align-items:center;justify-content:center;">Create Account</button>
+                                </form>
+                            @endif
+                            
+                            <form method="POST" action="{{ route('students.delete', $student->id) }}" style="flex:1;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this student?')" class="btn-delete" style="background:#ef4444;color:#fff;border:none;cursor:pointer;padding:8px 12px;border-radius:4px;font-size:0.85rem;width:100%;display:flex;align-items:center;justify-content:center;">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
+            </div>
+            
+            <!-- Pagination at bottom -->
+            <div style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+                <span style="font-size:1rem;color:#374151;padding:6px 18px;border-radius:18px;background:#f3f4f6;display:inline-flex;align-items:center;gap:12px;">
+                    @if ($students->onFirstPage())
+                    <span style="color:#d1d5db;cursor:not-allowed;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+                        </svg>
+                    </span>
+                    @else
+                    <a href="{{ $students->previousPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+                        </svg>
+                    </a>
+                    @endif
+                    <span style="font-size:1rem;color:#374151;">Page {{ $students->currentPage() }} of {{ $students->lastPage() }}</span>
+                    @if ($students->hasMorePages())
+                    <a href="{{ $students->nextPageUrl() }}" style="color:#2563eb;text-decoration:none;display:inline-flex;align-items:center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </a>
+                    @else
+                    <span style="color:#d1d5db;cursor:not-allowed;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </span>
+                    @endif
+                </span>
+            </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -526,18 +1027,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterBtn = document.getElementById('filterDropdownBtn');
     const filterMenu = document.getElementById('filterDropdownMenu');
     
-    filterBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        filterMenu.classList.toggle('show');
-    });
-    
-    // Close filter dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!filterMenu.contains(e.target) && e.target !== filterBtn) {
-            filterMenu.classList.remove('show');
-        }
-    });
-    
     // Cascading submenu logic for filter
     const cascadeLabels = document.querySelectorAll('.cascading-label');
     const cascades = {
@@ -545,6 +1034,24 @@ document.addEventListener('DOMContentLoaded', function() {
         year: document.querySelector('.filter-cascade-year'),
         office: document.querySelector('.filter-cascade-office')
     };
+    
+    filterBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        filterMenu.classList.toggle('show');
+    });
+    
+    // Close filter dropdown when clicking outside
+    function closeFilterDropdown() {
+        filterMenu.classList.remove('show');
+        // Also close any open cascades
+        Object.values(cascades).forEach(c => c.style.display = 'none');
+    }
+    
+    document.addEventListener('click', function(e) {
+        if (!filterMenu.contains(e.target) && e.target !== filterBtn) {
+            closeFilterDropdown();
+        }
+    });
     Object.values(cascades).forEach(c => c.style.display = 'none');
 
     cascadeLabels.forEach(label => {
@@ -560,11 +1067,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Hide submenu when clicking outside filter dropdown
-    document.addEventListener('click', function(e) {
-        if (!filterMenu.contains(e.target) && e.target !== filterBtn) {
-            Object.values(cascades).forEach(c => c.style.display = 'none');
+    // Prevent body scroll when filter is open on mobile
+    function toggleBodyScroll(disable) {
+        if (window.innerWidth <= 768) {
+            document.body.style.overflow = disable ? 'hidden' : '';
         }
+    }
+    
+    // Update the filter button click handler to manage body scroll
+    const originalFilterBtnHandler = filterBtn.onclick;
+    filterBtn.addEventListener('click', function(e) {
+        const willShow = !filterMenu.classList.contains('show');
+        toggleBodyScroll(willShow);
     });
 
     // Filter option selection
@@ -630,6 +1144,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const rect = input.getBoundingClientRect();
                 portalList.style.left = rect.left + 'px';
                 portalList.style.top = (rect.bottom + 2) + 'px';
+                
+                // Mobile adjustments for office dropdown
+                if (window.innerWidth <= 768) {
+                    portalList.style.width = Math.min(dropdownDiv.offsetWidth, window.innerWidth - 20) + 'px';
+                    if (rect.left + dropdownDiv.offsetWidth > window.innerWidth) {
+                        portalList.style.left = (window.innerWidth - dropdownDiv.offsetWidth - 10) + 'px';
+                    }
+                }
                 
                 input.addEventListener('input', function() {
                     Array.from(portalList.children).forEach(function(item) {
@@ -711,6 +1233,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const rect = input.getBoundingClientRect();
                 portalList.style.left = rect.left + 'px';
                 portalList.style.top = (rect.bottom + 2) + 'px';
+                
+                // Mobile adjustments for matriculation dropdown
+                if (window.innerWidth <= 768) {
+                    portalList.style.width = Math.min(dropdownDiv.offsetWidth, window.innerWidth - 20) + 'px';
+                    if (rect.left + dropdownDiv.offsetWidth > window.innerWidth) {
+                        portalList.style.left = (window.innerWidth - dropdownDiv.offsetWidth - 10) + 'px';
+                    }
+                }
 
                 input.addEventListener('input', function() {
                     Array.from(portalList.children).forEach(function(item) {

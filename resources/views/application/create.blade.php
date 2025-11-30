@@ -467,9 +467,23 @@
                     <p style="font-size: 14px; font-family: Times New Roman, Times, serif; margin-bottom: 12px; color: #495057;">
                         <strong>Step 1:</strong> Download the Parent Consent Form below and have your parent/guardian sign it.
                     </p>
-                    <a href="#" download style="display: inline-block; background: #007bff; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-size: 14px; margin-bottom: 12px;">
-                        📄 Download Parent Consent Form
-                    </a>
+                    @if(file_exists(storage_path('app/public/parentconsent/letter.pdf')))
+                        <a href="{{ asset('storage/parentconsent/letter.pdf') }}" download style="display: inline-block; background: #007bff; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-size: 14px; margin-bottom: 12px;">
+                            📄 Download Parent Consent Form
+                        </a>
+                    @elseif(file_exists(storage_path('app/public/parentconsent/letter.docx')))
+                        <a href="{{ asset('storage/parentconsent/letter.docx') }}" download style="display: inline-block; background: #007bff; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-size: 14px; margin-bottom: 12px;">
+                            📄 Download Parent Consent Form
+                        </a>
+                    @elseif(file_exists(storage_path('app/public/parentconsent/letter')))
+                        <a href="{{ asset('storage/parentconsent/letter') }}" download style="display: inline-block; background: #007bff; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-size: 14px; margin-bottom: 12px;">
+                            📄 Download Parent Consent Form
+                        </a>
+                    @else
+                        <p style="color: #dc3545; font-size: 14px; padding: 8px 16px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; margin-bottom: 12px;">
+                            Parent consent form is not yet available. Please contact the administrator.
+                        </p>
+                    @endif
                     <p style="font-size: 14px; font-family: Times New Roman, Times, serif; margin-bottom: 12px; color: #495057;">
                         <strong>Step 2:</strong> Upload the signed consent form here:
                     </p>

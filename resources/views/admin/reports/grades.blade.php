@@ -13,6 +13,96 @@
     .admin-content-wrapper {
         background: #fff !important;
     }
+    
+    /* Hide mobile cards by default */
+    .mobile-grade-cards {
+        display: none;
+    }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        /* Container adjustments */
+        div[style*="padding: 24px"] {
+            padding: 16px !important;
+        }
+        
+        /* Hide table on mobile */
+        .overflow-x-auto table {
+            display: none;
+        }
+        
+        /* Show mobile cards instead */
+        .mobile-grade-cards {
+            display: block !important;
+        }
+        
+        .grade-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .grade-card-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .grade-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 4px 0;
+        }
+        
+        .grade-card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .grade-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .grade-detail-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .grade-detail-value {
+            font-size: 0.9rem;
+            color: #111827;
+            font-weight: 600;
+        }
+        
+        .mobile-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 20px;
+            background: #6366f1;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 8px;
+        }
+        
+        .mobile-action-btn:hover {
+            background: #4f46e5;
+            color: white;
+        }
+    }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
     @if(session('success'))
@@ -88,6 +178,59 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        
+        <!-- Mobile Cards View -->
+        <div class="mobile-grade-cards">
+            @forelse($grades as $grade)
+                <div class="grade-card">
+                    <div class="grade-card-header">
+                        <h3 class="grade-card-title">{{ $grade->student_name }}</h3>
+                    </div>
+                    
+                    <div class="grade-card-details">
+                        <div class="grade-detail-item">
+                            <span class="grade-detail-label">Year Level:</span>
+                            <span class="grade-detail-value">{{ $grade->year_level }}</span>
+                        </div>
+                        
+                        <div class="grade-detail-item">
+                            <span class="grade-detail-label">Semester:</span>
+                            <span class="grade-detail-value">{{ $grade->semester }}</span>
+                        </div>
+                        
+                        <div class="grade-detail-item">
+                            <span class="grade-detail-label">Subjects:</span>
+                            <span class="grade-detail-value">
+                                @php
+                                    $subjects = is_array($grade->subjects) ? $grade->subjects : (is_string($grade->subjects) ? json_decode($grade->subjects, true) : []);
+                                    $subjectCount = is_array($subjects) ? count($subjects) : 0;
+                                @endphp
+                                <span style="display: inline-block; padding: 4px 12px; background: #dbeafe; color: #1e40af; border-radius: 20px; font-size: 13px; font-weight: 600;">
+                                    {{ $subjectCount }} {{ $subjectCount === 1 ? 'Subject' : 'Subjects' }}
+                                </span>
+                            </span>
+                        </div>
+                        
+                        <a href="{{ route('admin.grades.show', $grade->id) }}" class="mobile-action-btn">
+                            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            @empty
+                <div class="grade-card">
+                    <div style="text-align: center; padding: 24px;">
+                        <svg style="width: 48px; height: 48px; margin: 0 auto 16px; opacity: 0.5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p style="font-size: 16px; font-weight: 500; color: #9ca3af; margin: 0;">No grades records found</p>
+                    </div>
+                </div>
+            @endforelse
         </div>
 </div>
 @endsection
