@@ -48,12 +48,16 @@
 
 	@media (max-width: 768px) {
 		.header-bar {
-			flex-wrap: wrap;
-			position: relative;
+			flex-wrap: wrap !important;
+			position: relative !important;
+			padding: 0 16px !important;
+			height: auto !important;
+			min-height: 56px !important;
 		}
 		
 		.logo-text {
 			font-size: 16px !important;
+			line-height: 1.2 !important;
 		}
 		
 		.desktop-nav {
@@ -65,72 +69,227 @@
 		}
 		
 		.mobile-menu.active {
-			display: block;
+			display: block !important;
+		}
+		
+		.banner {
+			height: 200px !important;
+		}
+		
+		.content-card {
+			padding: 24px 16px !important;
+			margin: 12px !important;
+			border-radius: 12px !important;
+		}
+		
+		.intro-text {
+			font-size: 16px !important;
+			margin-bottom: 24px !important;
+			text-align: center !important;
+		}
+		
+		.mission-vision {
+			flex-direction: column !important;
+			gap: 16px !important;
+			margin-bottom: 24px !important;
+		}
+		
+		.mission-vision > div {
+			text-align: center !important;
+		}
+		
+		.mission-vision > div > div:first-child {
+			font-size: 16px !important;
+		}
+		
+		.mission-vision > div > div:last-child {
+			font-size: 14px !important;
 		}
 		
 		.main-content {
 			flex-direction: column !important;
-			gap: 24px !important;
-		}
-		
-		.content-card {
-			padding: 32px 24px !important;
-			margin: 16px !important;
+			gap: 20px !important;
 		}
 		
 		.images-column {
-			flex-direction: row !important;
-			overflow-x: auto !important;
+			flex-direction: column !important;
+			overflow: visible !important;
 			gap: 12px !important;
+			padding-bottom: 8px !important;
+			width: 100% !important;
 		}
 		
 		.images-column img {
-			width: 200px !important;
-			height: 130px !important;
-			flex-shrink: 0;
+			width: 100% !important;
+			max-width: 300px !important;
+			height: 150px !important;
+			flex-shrink: 0 !important;
+			margin: 0 auto !important;
+			display: block !important;
 		}
 		
 		.text-column {
 			max-width: 100% !important;
 		}
 		
-		.mission-vision {
-			flex-direction: column !important;
-			gap: 20px !important;
+		.text-column > div {
+			margin-bottom: 24px !important;
 		}
 		
-		.banner {
-			height: 200px !important;
+		.text-column > div:first-child {
+			font-size: 16px !important;
+		}
+		
+		.text-column > div:first-child > div:first-child {
+			font-size: 16px !important;
+		}
+		
+		.text-column ul {
+			font-size: 15px !important;
+		}
+		
+		.text-column > div:last-child {
+			font-size: 15px !important;
 		}
 	}
 
 	@media (max-width: 480px) {
 		.header-bar {
-			padding: 0 16px !important;
+			padding: 0 12px !important;
 			height: auto !important;
-			min-height: 56px;
+			min-height: 52px !important;
 		}
 		
 		.logo-text {
 			font-size: 14px !important;
-		}
-		
-		.content-card {
-			padding: 24px 16px !important;
-			margin: 8px !important;
-		}
-		
-		.intro-text {
-			font-size: 16px !important;
-		}
-		
-		.images-column img {
-			width: 160px !important;
-			height: 110px !important;
+			line-height: 1.2 !important;
 		}
 		
 		.banner {
 			height: 150px !important;
+		}
+		
+		.content-card {
+			padding: 20px 12px !important;
+			margin: 8px !important;
+			border-radius: 8px !important;
+		}
+		
+		.intro-text {
+			font-size: 14px !important;
+			margin-bottom: 20px !important;
+			line-height: 1.4 !important;
+		}
+		
+		.mission-vision {
+			gap: 12px !important;
+			margin-bottom: 20px !important;
+		}
+		
+		.mission-vision > div > div:first-child {
+			font-size: 15px !important;
+			margin-bottom: 6px !important;
+		}
+		
+		.mission-vision > div > div:last-child {
+			font-size: 13px !important;
+			line-height: 1.4 !important;
+		}
+		
+		.main-content {
+			gap: 16px !important;
+		}
+		
+		.images-column {
+			gap: 8px !important;
+		}
+		
+		.images-column img {
+			width: 100% !important;
+			max-width: 280px !important;
+			height: 120px !important;
+			border-radius: 6px !important;
+		}
+		
+		.text-column > div {
+			margin-bottom: 20px !important;
+		}
+		
+		.text-column > div:first-child {
+			font-size: 14px !important;
+		}
+		
+		.text-column > div:first-child > div:first-child {
+			font-size: 14px !important;
+			margin-bottom: 6px !important;
+		}
+		
+		.text-column > div:nth-child(2) > div:first-child {
+			font-size: 15px !important;
+			margin-bottom: 8px !important;
+		}
+		
+		.text-column ul {
+			font-size: 13px !important;
+			line-height: 1.5 !important;
+			padding-left: 18px !important;
+		}
+		
+		.text-column > div:last-child {
+			font-size: 13px !important;
+		}
+		
+		.text-column > div:last-child > div:first-child {
+			font-size: 13px !important;
+			line-height: 1.5 !important;
+		}
+		
+		.text-column > div:last-child > div:last-child {
+			font-size: 12px !important;
+		}
+		
+		/* Mobile main section adjustments */
+		main {
+			padding: 24px 0 !important;
+			min-height: auto !important;
+		}
+		
+		/* Mobile footer adjustments */
+		footer {
+			padding: 12px 8px !important;
+			font-size: 11px !important;
+			line-height: 1.3 !important;
+		}
+	}
+	
+	/* Additional mobile enhancements */
+	@media (max-width: 320px) {
+		.header-bar {
+			padding: 0 8px !important;
+			min-height: 48px !important;
+		}
+		
+		.logo-text {
+			font-size: 12px !important;
+		}
+		
+		.content-card {
+			padding: 16px 8px !important;
+			margin: 4px !important;
+		}
+		
+		.intro-text {
+			font-size: 13px !important;
+		}
+		
+		.images-column img {
+			width: 100% !important;
+			max-width: 260px !important;
+			height: 100px !important;
+		}
+		
+		.text-column ul {
+			font-size: 12px !important;
 		}
 	}
 </style>
