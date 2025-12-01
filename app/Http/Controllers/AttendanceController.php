@@ -7,6 +7,28 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 
 class AttendanceController extends Controller {
+        // Office attendance report for sidebar dropdown
+        public function officeReport(Request $request)
+        {
+            $user = auth()->user();
+            $date = $request->input('date') ?? now()->toDateString();
+            $allRecords = \App\Models\Attendance::getGroupedRecordsByDate($date);
+            // Filter by office if user is office role
+            if ($user && $user->role === 'offices' && $user->office_name) {
+                $records = collect($allRecords)->filter(function ($record) use ($user) {
+                    return $record['office'] === $user->office_name;
+                })->values()->toArray();
+            } else {
+                $records = $allRecords;
+            }
+            $stats = [
+                'total' => count($records),
+                'clock_ins' => collect($records)->whereNotNull('time_in')->count(),
+                'clock_outs' => collect($records)->whereNotNull('time_out')->count(),
+                'unique_users' => collect($records)->pluck('id_number')->unique()->count(),
+            ];
+            return view('offices.reports.attendance', compact('records', 'stats'));
+        }
     // Helper for preset date ranges
     private function getPresetDates($preset)
     {

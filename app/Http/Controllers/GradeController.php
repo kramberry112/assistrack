@@ -5,8 +5,33 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Grade;
 
-class GradeController extends Controller
-{
+class GradeController extends Controller {
+    // ...existing code...
+    // Office grades report for sidebar dropdown
+    public function officeReport(Request $request)
+    {
+        $user = auth()->user();
+        if ($user && $user->role === 'offices' && $user->office_name) {
+            $studentIds = \App\Models\Student::where('designated_office', $user->office_name)
+                ->pluck('id')->toArray();
+            $grades = \App\Models\Grade::whereIn('student_id', $studentIds)
+                ->with(['student', 'user'])
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            $grades = \App\Models\Grade::with(['student', 'user'])->orderBy('created_at', 'desc')->get();
+        }
+        return view('offices.reports.grades', compact('grades'));
+    }
+
+    // Office grade details fullpage
+    public function officeGradeDetails(Request $request)
+    {
+        $id = $request->input('id');
+        $grade = \App\Models\Grade::findOrFail($id);
+        return view('offices.reports.grade-details-fullpage', compact('grade'));
+    }
+// removed stray curly brace
     // Student submits grades
     public function store(Request $request)
     {

@@ -4,8 +4,72 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Events\StudentTaskVerified;
 
-class TaskController extends Controller
-{
+class TaskController extends Controller {
+    // ...existing code...
+    // Office tasks report for sidebar dropdown
+    public function officeReport(Request $request)
+    {
+        $user = auth()->user();
+        if ($user && $user->role === 'offices' && $user->office_name) {
+            $students = \App\Models\Student::with('user')
+                ->where('designated_office', $user->office_name)
+                ->whereNotNull('user_id')
+                ->get()
+                ->map(function($student) {
+                    return $student->user;
+                })
+                ->filter();
+        } else {
+            $students = \App\Models\Student::with('user')
+                ->whereNotNull('user_id')
+                ->get()
+                ->map(function($student) {
+                    return $student->user;
+                })
+                ->filter();
+        }
+
+        // Attach student_tasks_count to each student user (only completed tasks) and filter out students with no completed tasks
+        $studentsWithTasks = collect();
+        foreach ($students as $studentUser) {
+            $completedTasksCount = \App\Models\StudentTask::where('user_id', $studentUser->id)
+                ->where('status', 'completed')
+                ->count();
+            
+            if ($completedTasksCount > 0) {
+                $studentUser->student_tasks_count = $completedTasksCount;
+                $studentsWithTasks->push($studentUser);
+            }
+        }
+
+        $currentUser = $user;
+        return view('offices.reports.tasks', compact('studentsWithTasks', 'currentUser'));
+    }
+
+    // Get completed tasks for a specific user (for modal view)
+    public function getUserCompletedTasks(Request $request, $userId)
+    {
+        $user = auth()->user();
+        
+        // If office user, only allow viewing tasks from their office
+        if ($user && $user->role === 'offices' && $user->office_name) {
+            $student = \App\Models\Student::where('user_id', $userId)
+                ->where('designated_office', $user->office_name)
+                ->first();
+            
+            if (!$student) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+        }
+        
+        $tasks = \App\Models\StudentTask::where('user_id', $userId)
+            ->where('status', 'completed')
+            ->orderBy('updated_at', 'desc')
+            ->get(['id', 'title', 'description', 'updated_at']);
+        
+        return response()->json(['tasks' => $tasks]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([

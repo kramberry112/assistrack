@@ -250,6 +250,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/reports', 'admin.reports.index')->name('reports.list');
     // AJAX partials for admin reports dropdown
         Route::get('/admin/reports/attendance', [\App\Http\Controllers\AttendanceController::class, 'records'])->name('admin.attendance.report');
+        // Office Reports
+        Route::prefix('offices/reports')->group(function() {
+            Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'officeReport'])->name('offices.reports.attendance');
+            Route::get('/evaluation', [\App\Http\Controllers\EvaluationController::class, 'officeReport'])->name('offices.reports.evaluation');
+            Route::get('/tasks', [\App\Http\Controllers\TaskController::class, 'officeReport'])->name('offices.reports.tasks');
+            Route::get('/tasks/user/{userId}', [\App\Http\Controllers\TaskController::class, 'getUserCompletedTasks'])->name('offices.reports.tasks.user');
+            Route::get('/grades', [\App\Http\Controllers\GradeController::class, 'officeReport'])->name('offices.reports.grades');
+            Route::get('/grade-details-fullpage', [\App\Http\Controllers\GradeController::class, 'officeGradeDetails'])->name('offices.reports.grade-details-fullpage');
+        });
+        
+        // Office evaluation view route
+        Route::get('/offices/evaluations/{evaluation}/view', [\App\Http\Controllers\EvaluationController::class, 'officeView'])->name('offices.evaluations.view');
     Route::get('/admin/reports/evaluation', [\App\Http\Controllers\AdminEvaluationController::class, 'index'])->name('admin.evaluations.index');
     Route::get('/admin/evaluations/{evaluation}/view', [\App\Http\Controllers\AdminEvaluationController::class, 'view'])->name('admin.evaluations.view');
     Route::get('/admin/reports/tasks', function() {
@@ -433,6 +445,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('offices.dashboard.index', compact('user', 'totalTasks', 'totalStudents', 'attendanceCount'));
     })->name('offices.dashboard');
     Route::get('/offices-student-list', [\App\Http\Controllers\OfficeStudentListController::class, 'index'])->name('offices.studentlists.index');
+    Route::get('/offices-student-list/request-sa', [\App\Http\Controllers\OfficeStudentListController::class, 'requestSa'])->name('offices.studentlists.request_sa');
     Route::get('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'show'])->name('evaluation.show');
     Route::post('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'submit'])->name('evaluation.submit');
     Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');

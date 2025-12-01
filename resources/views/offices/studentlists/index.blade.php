@@ -376,28 +376,10 @@
                             <input type="text" name="search" id="officeStudentSearchBar" value="{{ request('search') }}" placeholder="Search students..." style="padding: 7px 12px; border-radius: 6px; border: 1px solid #bbb; font-size: 15px;">
                             <button type="submit" style="padding: 7px 18px; border-radius: 6px; background: #2563eb; color: #fff; border: none; font-size: 15px; cursor: pointer;">Search</button>
                         </form>
+                        <a href="{{ route('offices.studentlists.request_sa') }}" class="btn btn-primary" style="padding: 7px 18px; border-radius: 6px; background: #2563eb; color: #fff; border: none; font-size: 15px; font-weight: 500; cursor: pointer; text-decoration: none;">Request SA</a>
                     </div>
-                    <div class="pagination-controls">
-                        @if ($students->onFirstPage())
-                            <button class="pagination-btn" disabled>
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-                            </button>
-                        @else
-                            <a href="{{ $students->previousPageUrl() }}" class="pagination-btn" style="text-decoration: none;">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-                            </a>
-                        @endif
-                        <span class="pagination-text">Page {{ $students->currentPage() }} of {{ $students->lastPage() }}</span>
-                        @if ($students->hasMorePages())
-                            <a href="{{ $students->nextPageUrl() }}" class="pagination-btn" style="text-decoration: none;">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-                            </a>
-                        @else
-                            <button class="pagination-btn" disabled>
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-                            </button>
-                        @endif
-                    </div>
+                    <!-- ...existing code... -->
+
                 </div>
             </div>
 
@@ -438,6 +420,27 @@
                         @endforelse
                     </tbody>
                 </table>
+                <div class="pagination-controls" style="margin-top: 24px; justify-content: center;">
+                    @if ($students->onFirstPage())
+                        <button class="pagination-btn" disabled>
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                    @else
+                        <a href="{{ $students->previousPageUrl() }}" class="pagination-btn" style="text-decoration: none;">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                        </a>
+                    @endif
+                    <span class="pagination-text">Page {{ $students->currentPage() }} of {{ $students->lastPage() }}</span>
+                    @if ($students->hasMorePages())
+                        <a href="{{ $students->nextPageUrl() }}" class="pagination-btn" style="text-decoration: none;">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                    @else
+                        <button class="pagination-btn" disabled>
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    @endif
+                </div>
             </div>
         </div>
 

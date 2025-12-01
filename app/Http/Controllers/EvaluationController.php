@@ -7,8 +7,42 @@ use App\Models\Evaluation;
 use App\Models\Student;
 use App\Models\User;
 
-class EvaluationController extends Controller
-{
+class EvaluationController extends Controller {
+    // ...existing code...
+    // Office evaluation report for sidebar dropdown
+    public function officeReport(Request $request)
+    {
+        $user = auth()->user();
+        // Get evaluations for students in this office
+        if ($user && $user->role === 'offices' && $user->office_name) {
+            $studentIds = \App\Models\Student::where('designated_office', $user->office_name)
+                ->pluck('id')->toArray();
+            $evaluations = \App\Models\Evaluation::whereIn('student_id', $studentIds)
+                ->with(['student', 'evaluator'])
+                ->orderBy('submitted_at', 'desc')
+                ->get();
+        } else {
+            $evaluations = \App\Models\Evaluation::with(['student', 'evaluator'])->orderBy('submitted_at', 'desc')->get();
+        }
+        return view('offices.reports.evaluation', compact('evaluations'));
+    }
+
+    // Office evaluation view
+    public function officeView($id)
+    {
+        $user = auth()->user();
+        $evaluation = \App\Models\Evaluation::with(['student', 'evaluator'])->findOrFail($id);
+        
+        // Check if office user can view this evaluation
+        if ($user && $user->role === 'offices' && $user->office_name) {
+            if ($evaluation->student->designated_office !== $user->office_name) {
+                abort(403, 'Unauthorized access');
+            }
+        }
+        
+        return view('offices.evaluations.view-fullpage', compact('evaluation'));
+    }
+
     public function show($id)
     {
         $student = Student::findOrFail($id);

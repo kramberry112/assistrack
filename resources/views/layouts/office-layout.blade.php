@@ -79,6 +79,46 @@
         justify-content: center;
     }
 
+    /* Reports dropdown styles */
+    .parent-toggle:hover { 
+        background-color: #F3F4F6; 
+    }
+
+    .parent-toggle.active {
+        background-color: #f9fafb !important;
+        color: #111827 !important;
+        border-left: 3px solid #3b82f6 !important;
+    }
+
+    .nav-treeview .nav-link:hover { 
+        background-color: #F3F4F6; 
+    }
+
+    .nav-treeview .nav-link.active { 
+        background-color: #EFF6FF !important; 
+        color: #2563EB !important; 
+        font-weight: 500 !important; 
+    }
+
+    .nav-item { 
+        list-style: none; 
+    }
+
+    .nav-treeview {
+        list-style: none; 
+        padding: 0; 
+        margin: 0;
+    }
+
+    .nav-treeview .nav-link {
+        display: flex; 
+        align-items: center; 
+        padding: 10px 20px 10px 52px; 
+        color: #6B7280; 
+        text-decoration: none; 
+        transition: background-color 0.2s;
+    }
+
     /* Profile */
     .sidebar .profile {
         display: flex;
@@ -290,6 +330,42 @@
                     </span>
                     Tasks
                 </a>
+                <!-- Reports Dropdown -->
+                <div style="padding:0; margin:0; list-style:none;">
+                    <div class="nav-item">
+                        <a href="#" class="nav-link parent-toggle {{ request()->routeIs('offices.reports.*') ? 'active' : '' }}" style="display: flex; align-items: center; padding: 12px 20px; color: #374151; text-decoration: none; transition: background-color 0.2s;">
+                            <i class="nav-icon bi bi-file-earmark-text" style="margin-right: 12px; font-size: 1.25rem;"></i>
+                            <p class="parent-label" style="margin: 0; font-size: 0.95rem; font-weight: bold; flex: 1;">Reports</p>
+                            <i class="nav-arrow bi bi-chevron-right" style="font-size: 0.75rem; transition: transform 0.3s;"></i>
+                        </a>
+                        <ul class="nav nav-treeview" style="display:none;">
+                            <li class="nav-item">
+                                <a href="{{ route('offices.reports.attendance') }}" class="nav-link report-link {{ request()->routeIs('offices.reports.attendance') ? 'active' : '' }}" data-url="{{ route('offices.reports.attendance') }}" data-name="Attendance">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Attendance</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('offices.reports.evaluation') }}" class="nav-link report-link {{ request()->routeIs('offices.reports.evaluation') ? 'active' : '' }}" data-url="{{ route('offices.reports.evaluation') }}" data-name="Evaluation">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Evaluation</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('offices.reports.tasks') }}" class="nav-link report-link {{ request()->routeIs('offices.reports.tasks') ? 'active' : '' }}" data-url="{{ route('offices.reports.tasks') }}" data-name="Tasks">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Tasks</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('offices.reports.grades') }}" class="nav-link report-link {{ request()->routeIs('offices.reports.grades') ? 'active' : '' }}" data-url="{{ route('offices.reports.grades') }}" data-name="Grades">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Grades</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
         </div>
 
@@ -362,5 +438,65 @@ document.addEventListener('DOMContentLoaded', function() {
             menu.classList.remove('show');
         });
     }
+
+    // Sidebar reports dropdown logic
+    const parentToggle = document.querySelector('.parent-toggle');
+    const parentLabel = document.querySelector('.parent-label');
+    const treeview = document.querySelector('.nav-treeview');
+    const arrow = document.querySelector('.nav-arrow');
+
+    if (parentToggle) {
+        parentToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (treeview) {
+                const currentDisplay = window.getComputedStyle(treeview).display;
+                const isVisible = currentDisplay !== 'none';
+                
+                if (isVisible) {
+                    treeview.style.display = 'none';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    treeview.style.display = 'block';
+                    if (arrow) arrow.style.transform = 'rotate(90deg)';
+                }
+            }
+        });
+    }
+
+    // Auto-open dropdown if we're on a reports page
+    if (window.location.pathname.includes('/offices/reports/')) {
+        if (treeview) {
+            treeview.style.display = 'block';
+            if (arrow) arrow.style.transform = 'rotate(90deg)';
+        }
+        
+        // Highlight active report link
+        document.querySelectorAll('.report-link').forEach(function(link) {
+            if (link.classList.contains('active')) {
+                link.style.backgroundColor = '#EFF6FF';
+                link.style.color = '#2563EB';
+                link.style.fontWeight = '500';
+            }
+        });
+    }
+
+    // Report links functionality
+    document.querySelectorAll('.report-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            // Remove active class from all report links
+            document.querySelectorAll('.report-link').forEach(function(otherLink) {
+                otherLink.classList.remove('active');
+                otherLink.style.backgroundColor = '';
+                otherLink.style.color = '';
+                otherLink.style.fontWeight = '';
+            });
+            
+            // Add active class to clicked link
+            this.classList.add('active');
+            this.style.backgroundColor = '#EFF6FF';
+            this.style.color = '#2563EB';
+            this.style.fontWeight = '500';
+        });
+    });
 });
 </script>
