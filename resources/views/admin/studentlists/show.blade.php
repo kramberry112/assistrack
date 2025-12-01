@@ -3,6 +3,73 @@
 @section('title', 'Student Details')
 
 @section('content')
+
+<style>
+/* Prevent horizontal scroll */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+.container {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+@media (max-width: 640px) {
+    .mobile-header {
+        padding: 1rem !important;
+    }
+    .mobile-title {
+        font-size: 1rem !important;
+        line-height: 1.2 !important;
+    }
+    .mobile-subtitle {
+        font-size: 0.625rem !important;
+        line-height: 1 !important;
+    }
+    .mobile-logo {
+        width: 2rem !important;
+        height: 2rem !important;
+    }
+    
+    /* Prevent overflow on mobile */
+    .container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        max-width: 100vw !important;
+    }
+    
+    .bg-white {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        border-radius: 0.5rem !important;
+    }
+    
+    /* Ensure text doesn't overflow */
+    p, span, h1, h2 {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    /* Make sure grid doesn't overflow */
+    .grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Ensure images don't overflow */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+</style>
+
 <div class="min-h-screen bg-gray-100 font-sans">
 
     <!-- HEADER -->
@@ -45,7 +112,7 @@
                         </div>
                         <div>
                             <p class="text-gray-500 text-sm">Email</p>
-                            <p class="font-medium">{{ $student->email }}</p>
+                            <p class="font-medium break-all">{{ $student->email }}</p>
                         </div>
                         <div>
                             <p class="text-gray-500 text-sm">Telephone</p>

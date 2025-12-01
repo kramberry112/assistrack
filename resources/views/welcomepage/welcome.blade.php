@@ -5,6 +5,20 @@
 @section('content')
 
 <style>
+	/* Reset styles for full mobile coverage */
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+	
+	html, body {
+		margin: 0 !important;
+		padding: 0 !important;
+		width: 100% !important;
+		overflow-x: hidden !important;
+	}
+	
 	.mobile-menu {
 		display: none;
 		position: absolute;
@@ -47,12 +61,21 @@
 	}
 
 	@media (max-width: 768px) {
+		/* Ensure full width on mobile */
+		html, body {
+			width: 100vw !important;
+			max-width: 100vw !important;
+			overflow-x: hidden !important;
+		}
+		
 		.header-bar {
 			flex-wrap: wrap !important;
 			position: relative !important;
-			padding: 0 16px !important;
+			padding: 0 12px !important;
 			height: auto !important;
 			min-height: 56px !important;
+			width: 100% !important;
+			margin: 0 !important;
 		}
 		
 		.logo-text {
@@ -77,9 +100,11 @@
 		}
 		
 		.content-card {
-			padding: 24px 16px !important;
-			margin: 12px !important;
+			padding: 24px 12px !important;
+			margin: 12px 8px !important;
 			border-radius: 12px !important;
+			width: calc(100vw - 16px) !important;
+			max-width: calc(100vw - 16px) !important;
 		}
 		
 		.intro-text {
@@ -155,9 +180,11 @@
 
 	@media (max-width: 480px) {
 		.header-bar {
-			padding: 0 12px !important;
+			padding: 0 8px !important;
 			height: auto !important;
 			min-height: 52px !important;
+			width: 100vw !important;
+			margin: 0 !important;
 		}
 		
 		.logo-text {
@@ -170,9 +197,11 @@
 		}
 		
 		.content-card {
-			padding: 20px 12px !important;
-			margin: 8px !important;
+			padding: 20px 8px !important;
+			margin: 8px 4px !important;
 			border-radius: 8px !important;
+			width: calc(100vw - 8px) !important;
+			max-width: calc(100vw - 8px) !important;
 		}
 		
 		.intro-text {
@@ -265,8 +294,9 @@
 	/* Additional mobile enhancements */
 	@media (max-width: 320px) {
 		.header-bar {
-			padding: 0 8px !important;
+			padding: 0 4px !important;
 			min-height: 48px !important;
+			width: 100vw !important;
 		}
 		
 		.logo-text {
@@ -274,8 +304,10 @@
 		}
 		
 		.content-card {
-			padding: 16px 8px !important;
-			margin: 4px !important;
+			padding: 16px 4px !important;
+			margin: 4px 2px !important;
+			width: calc(100vw - 4px) !important;
+			max-width: calc(100vw - 4px) !important;
 		}
 		
 		.intro-text {
@@ -294,10 +326,10 @@
 	}
 </style>
 
-<div style="background: #f4f7fb; min-height: 100vh; font-family: 'Segoe UI', Arial, sans-serif;">
+<div style="background: #f4f7fb; min-height: 100vh; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; width: 100%; overflow-x: hidden;">
 
 	<!-- Header with Logo and Nav -->
-	<div class="header-bar" style="background: #eaeaea; color: #1a237e; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px;">
+	<div class="header-bar" style="background: #eaeaea; color: #1a237e; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; width: 100%; margin: 0;">
 		<div style="display: flex; align-items: center;">
 			<img src="/images/uddlogo.png" alt="UDD Logo" style="height: 44px; width: 44px; object-fit: contain; margin-right: 12px;">
 			<span class="logo-text" style="font-size: 22px; font-weight: bold; color: #1a237e; letter-spacing: 1px;">UNIVERSIDAD DE DAGUPAN</span>
@@ -335,8 +367,8 @@
 	</section>
 
 	<!-- Main Content -->
-	<main style="background: linear-gradient(135deg, #4a6ba3 0%, #6a8bc7 100%); padding: 48px 0; min-height: 600px; display: flex; justify-content: center; align-items: flex-start;">
-		<div class="content-card" style="max-width: 980px; width: 100%; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.10); padding: 56px 56px 56px 56px;">
+	<main style="background: linear-gradient(135deg, #4a6ba3 0%, #6a8bc7 100%); padding: 48px 0; min-height: 600px; display: flex; justify-content: center; align-items: flex-start; width: 100%; margin: 0; overflow-x: hidden;">
+		<div class="content-card" style="max-width: 980px; width: calc(100% - 32px); background: #fff; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.10); padding: 56px; margin: 0 16px;">
 			
 			<!-- Introduction -->
 			<div class="intro-text" style="font-size: 18px; color: #333; margin-bottom: 32px; line-height: 1.5; font-weight: normal; text-align: center;">

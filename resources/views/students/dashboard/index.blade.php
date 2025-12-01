@@ -42,6 +42,7 @@ window.currentUserId = {{ auth()->id() }};
 
     .stat-item {
         text-align: center;
+        flex: 1;
     }
 
     .stat-item .label {
@@ -492,10 +493,17 @@ window.currentUserId = {{ auth()->id() }};
         background: #16a34a;
     }
 
+    /* Global mobile fixes */
+    * {
+        box-sizing: border-box;
+    }
+
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
         body {
             overflow-x: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .main-content {
@@ -503,6 +511,7 @@ window.currentUserId = {{ auth()->id() }};
             margin: 0 !important;
             width: 100% !important;
             max-width: 100vw !important;
+            box-sizing: border-box !important;
         }
 
         .page-header {
@@ -521,16 +530,20 @@ window.currentUserId = {{ auth()->id() }};
         .controls-section {
             flex-direction: column !important;
             gap: 12px !important;
-            padding: 0 !important;
+            padding: 16px !important;
             margin: 0 0 16px 0 !important;
             width: 100% !important;
             box-sizing: border-box !important;
         }
 
         .controls-right {
-            flex-direction: column !important;
+            flex-direction: row !important;
             gap: 12px !important;
             width: 100% !important;
+        }
+
+        .filter-dropdown {
+            flex: 1 !important;
         }
 
         .search-input {
@@ -542,13 +555,20 @@ window.currentUserId = {{ auth()->id() }};
         }
 
         .filter-btn, .create-btn {
-            width: 100% !important;
-            max-width: 100% !important;
+            flex: 1 !important;
             justify-content: center !important;
-            padding: 12px !important;
+            padding: 12px 16px !important;
             font-size: 0.9rem !important;
             box-sizing: border-box !important;
             margin: 0 !important;
+            white-space: nowrap !important;
+        }
+
+        .filter-options {
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
 
         .tabs-section {
@@ -585,6 +605,8 @@ window.currentUserId = {{ auth()->id() }};
 
         .task-card {
             padding: 16px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
 
         .task-header {
@@ -596,22 +618,29 @@ window.currentUserId = {{ auth()->id() }};
         .task-title {
             font-size: 1rem !important;
             line-height: 1.4 !important;
+            word-wrap: break-word !important;
         }
 
-        .task-priority {
-            align-self: flex-end !important;
+        .status-badge {
+            margin-left: 0 !important;
+            margin-top: 4px !important;
+            align-self: flex-start !important;
         }
 
         .task-meta {
-            flex-direction: column !important;
-            align-items: flex-start !important;
+            grid-template-columns: 1fr !important;
             gap: 8px !important;
         }
 
+        .task-meta > div {
+            text-align: left !important;
+        }
+
         .task-actions {
+            margin-top: 16px !important;
+            display: flex !important;
             flex-direction: column !important;
             gap: 8px !important;
-            margin-top: 16px !important;
         }
 
         .task-action {
@@ -619,22 +648,36 @@ window.currentUserId = {{ auth()->id() }};
             justify-content: center !important;
             padding: 12px !important;
             font-size: 0.9rem !important;
+            box-sizing: border-box !important;
         }
 
         /* Modal Mobile Styles */
+        #createTaskModal {
+            padding: 10px !important;
+        }
+
         .modal-content {
-            width: 95% !important;
+            width: calc(100% - 20px) !important;
             max-width: none !important;
-            margin: 10px !important;
+            margin: 0 !important;
             max-height: 90vh !important;
             overflow-y: auto !important;
+            box-sizing: border-box !important;
+        }
+
+        .modal-title {
+            font-size: 1.3rem !important;
+            margin-bottom: 20px !important;
         }
 
         .form-group input,
         .form-group textarea,
-        .form-group select {
+        .form-group select,
+        .priority-dropdown {
             font-size: 16px !important; /* Prevents iOS zoom */
             padding: 12px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
 
         .form-actions {
@@ -646,12 +689,45 @@ window.currentUserId = {{ auth()->id() }};
             width: 100% !important;
             padding: 12px !important;
             font-size: 0.9rem !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Prevent text overflow */
+        .task-description,
+        .task-title {
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            hyphens: auto !important;
+        }
+
+        /* Fix any potential scrolling issues */
+        .content-area * {
+            max-width: 100% !important;
         }
     }
 
     @media (max-width: 480px) {
         .content-area {
+            padding: 8px !important;
+        }
+
+        .page-header {
+            padding: 12px 16px !important;
+        }
+
+        .controls-section {
             padding: 12px !important;
+        }
+
+        .controls-right {
+            flex-direction: column !important;
+            gap: 8px !important;
+        }
+
+        .filter-btn, .create-btn {
+            width: 100% !important;
+            flex: none !important;
+            font-size: 0.85rem !important;
         }
 
         .task-card {
@@ -659,19 +735,164 @@ window.currentUserId = {{ auth()->id() }};
         }
 
         .task-title {
-            font-size: 0.9rem !important;
+            font-size: 0.95rem !important;
         }
 
         .task-description {
             font-size: 0.85rem !important;
+            line-height: 1.4 !important;
+        }
+
+        .task-meta {
+            font-size: 0.8rem !important;
         }
 
         .task-action {
             padding: 10px !important;
             font-size: 0.85rem !important;
         }
+
+        .status-badge {
+            font-size: 0.75rem !important;
+            padding: 2px 8px !important;
+        }
+
+        .tab {
+            font-size: 0.85rem !important;
+            padding: 6px 12px !important;
+        }
+    }
+
+    /* Notification Styles */
+    .notification {
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        border-width: 1px;
+        border-style: solid;
+        position: relative;
+        animation: slideIn 0.3s ease-out;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .notification.success {
+        background-color: #dcfce7;
+        border-color: #16a34a;
+        color: #15803d;
+    }
+
+    .notification.error {
+        background-color: #fef2f2;
+        border-color: #dc2626;
+        color: #b91c1c;
+    }
+
+    .notification.warning {
+        background-color: #fefce8;
+        border-color: #ca8a04;
+        color: #a16207;
+    }
+
+    .notification.info {
+        background-color: #dbeafe;
+        border-color: #2563eb;
+        color: #1d4ed8;
+    }
+
+    .notification .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: inherit;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        min-width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .notification .close-btn:hover {
+        opacity: 1;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile notification styles */
+    @media (max-width: 768px) {
+        .notification {
+            padding: 12px 40px 12px 16px;
+            font-size: 0.9rem;
+            margin: 0 12px 16px 12px;
+            border-radius: 6px;
+        }
+        
+        .notification .close-btn {
+            top: 8px;
+            right: 12px;
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .notification {
+            padding: 10px 36px 10px 12px;
+            font-size: 0.85rem;
+            margin: 0 8px 12px 8px;
+        }
+        
+        .notification .close-btn {
+            top: 6px;
+            right: 8px;
+            font-size: 1rem;
+        }
     }
 </style>
+
+        <!-- Notifications -->
+        @if(session('success'))
+            <div class="notification success" id="successNotification">
+                <button class="close-btn" onclick="closeNotification('successNotification')">&times;</button>
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="notification error" id="errorNotification">
+                <button class="close-btn" onclick="closeNotification('errorNotification')">&times;</button>
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="notification error" id="validationNotification">
+                <button class="close-btn" onclick="closeNotification('validationNotification')">&times;</button>
+                <strong>Please fix the following errors:</strong>
+                <ul style="margin: 8px 0 0 20px; padding: 0;">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <!-- Content Area -->
         <div class="content-area">
@@ -1359,6 +1580,73 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Notification functions
+function closeNotification(notificationId) {
+    const notification = document.getElementById(notificationId);
+    if (notification) {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }
+}
+
+function showNotification(message, type = 'info') {
+    // Remove existing dynamic notifications
+    const existingNotification = document.getElementById('dynamicNotification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create new notification
+    const notification = document.createElement('div');
+    notification.id = 'dynamicNotification';
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <button class="close-btn" onclick="closeNotification('dynamicNotification')">&times;</button>
+        ${message}
+    `;
+    
+    // Insert at the top of the content area
+    const contentArea = document.querySelector('.content-area');
+    if (contentArea) {
+        contentArea.insertBefore(notification, contentArea.firstChild);
+    }
+    
+    // Auto-hide after 5 seconds for success/info messages
+    if (type === 'success' || type === 'info') {
+        setTimeout(() => {
+            closeNotification('dynamicNotification');
+        }, 5000);
+    }
+}
+
+// Auto-hide success notifications after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const successNotification = document.getElementById('successNotification');
+    if (successNotification) {
+        setTimeout(() => {
+            closeNotification('successNotification');
+        }, 5000);
+    }
+});
+
+// Add slide out animation
+const notificationStyle = document.createElement('style');
+notificationStyle.textContent = `
+    @keyframes slideOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+    }
+`;
+document.head.appendChild(notificationStyle);
 </script>
 @vite(['resources/js/app.js'])
 

@@ -4,6 +4,12 @@
         padding: 0;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         background: #f3f4f6;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    * {
+        box-sizing: border-box;
     }
 
     .dashboard-container {
@@ -247,20 +253,35 @@
 
     .notification-dropdown {
         display: none;
-        position: absolute;
-        top: 100%;
-        right: 0;
+        position: fixed;
+        top: 70px;
+        right: 20px;
         background: #fff;
         border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
         min-width: 380px;
         max-width: 420px;
         max-height: 500px;
         overflow-y: auto;
-        z-index: 100;
+        z-index: 9999;
         padding: 16px;
         border: 1px solid #e5e7eb;
-        margin-top: 8px;
+        animation: slideDown 0.2s ease-out;
+    }
+    
+    .notification-dropdown.show {
+        display: block;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .community-notification:hover {
@@ -273,34 +294,49 @@
         display: none;
         flex-direction: column;
         cursor: pointer;
-        padding: 4px;
+        padding: 8px;
         z-index: 1001;
+        position: relative;
+        background: none;
+        border: none;
+        width: 40px;
+        height: 40px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 6px;
+        transition: background-color 0.2s ease;
+    }
+
+    .mobile-hamburger:hover {
+        background-color: #f3f4f6;
     }
 
     .mobile-hamburger span {
-        width: 25px;
-        height: 3px;
+        width: 24px;
+        height: 2px;
         background-color: #2563eb;
-        margin: 3px 0;
-        transition: 0.3s;
+        margin: 2px 0;
+        transition: all 0.3s ease;
         border-radius: 2px;
+        display: block;
+        transform-origin: center;
     }
 
     .mobile-hamburger.active span:nth-child(1) {
-        transform: rotate(-45deg) translate(-6px, 6px);
+        transform: rotate(45deg) translate(0, 6px);
     }
 
     .mobile-hamburger.active span:nth-child(2) {
         opacity: 0;
+        transform: scale(0);
     }
 
     .mobile-hamburger.active span:nth-child(3) {
-        transform: rotate(45deg) translate(-6px, -6px);
+        transform: rotate(-45deg) translate(0, -6px);
     }
 
     /* Mobile Overlay */
     .mobile-sidebar-overlay {
-        display: none;
         position: fixed;
         top: 0;
         left: 0;
@@ -309,18 +345,26 @@
         background: rgba(0, 0, 0, 0.5);
         z-index: 999;
         opacity: 0;
-        transition: opacity 0.3s ease;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(2px);
     }
 
     .mobile-sidebar-overlay.active {
-        display: block;
         opacity: 1;
+        visibility: visible;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
         body {
             overflow-x: hidden !important;
+        }
+
+        body.sidebar-open {
+            overflow: hidden !important;
+            position: fixed !important;
+            width: 100% !important;
         }
 
         .dashboard-container {
@@ -332,16 +376,23 @@
         .sidebar {
             position: fixed !important;
             top: 0 !important;
-            left: -280px !important;
+            left: -300px !important;
             width: 280px !important;
-            height: 100vh !important;
+            height: calc(100vh - env(safe-area-inset-bottom, 0px)) !important;
+            height: calc(100dvh - env(safe-area-inset-bottom, 0px)) !important;
+            max-height: calc(100vh - env(safe-area-inset-bottom, 0px)) !important;
             z-index: 1000 !important;
-            transition: left 0.3s ease !important;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1) !important;
+            transition: transform 0.3s ease, left 0.3s ease !important;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15) !important;
+            transform: translateX(0) !important;
+            will-change: transform, left !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
         }
 
         .sidebar.active {
             left: 0 !important;
+            transform: translateX(0) !important;
         }
 
         .main-content {
@@ -350,6 +401,7 @@
             overflow-x: hidden !important;
             padding: 0 !important;
             margin: 0 !important;
+            transition: transform 0.3s ease !important;
         }
 
         .mobile-hamburger {
@@ -361,8 +413,12 @@
         }
 
         .notification-dropdown {
-            right: -100px;
-            min-width: 280px;
+            right: 10px !important;
+            left: 10px !important;
+            min-width: auto !important;
+            max-width: calc(100vw - 20px) !important;
+            top: 70px !important;
+            z-index: 9999 !important;
         }
 
         .page-header {
@@ -389,6 +445,80 @@
         }
     }
 
+    /* Mobile specific improvements */
+    @media (max-width: 480px) {
+        .sidebar {
+            width: 260px !important;
+            left: -260px !important;
+            bottom: 20px !important;
+            height: calc(100vh - 40px) !important;
+            height: calc(100dvh - 40px) !important;
+        }
+        
+        .page-header {
+            padding: 8px 12px !important;
+        }
+        
+        .header-title h1 {
+            font-size: 1rem !important;
+        }
+    }
+
+    /* Ensure sidebar doesn't interfere with system UI */
+    @media (max-width: 768px) and (display-mode: browser) {
+        .sidebar {
+            bottom: 10px !important;
+            height: calc(100vh - 20px) !important;
+        }
+    }
+
+    /* For phones with home indicator */
+    @supports (bottom: env(safe-area-inset-bottom)) {
+        @media (max-width: 768px) {
+            .sidebar {
+                height: calc(100vh - env(safe-area-inset-bottom, 0px) - 40px) !important;
+                padding-bottom: 0 !important;
+            }
+            
+            .sidebar .sidebar-bottom {
+                margin-bottom: env(safe-area-inset-bottom, 10px) !important;
+            }
+        }
+    }
+
+    /* Fix for mobile browsers with dynamic viewport */
+    @media (max-width: 768px) {
+        .sidebar {
+            height: calc(100vh - env(safe-area-inset-bottom, 0px) - 20px) !important;
+            height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-bottom, 0px) - 20px) !important;
+            min-height: calc(100vh - env(safe-area-inset-bottom, 0px) - 20px) !important;
+            max-height: calc(100vh - env(safe-area-inset-bottom, 0px) - 20px) !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        .sidebar .nav {
+            flex: 1 !important;
+            padding-bottom: 20px !important;
+            min-height: 0 !important;
+        }
+        
+        .sidebar .sidebar-top {
+            flex-shrink: 0 !important;
+            overflow: visible !important;
+        }
+        
+        .sidebar .sidebar-bottom {
+            flex-shrink: 0 !important;
+            margin-top: auto !important;
+            padding-bottom: 10px !important;
+        }
+        
+        .sidebar .profile {
+            margin-bottom: 10px !important;
+        }
+    }
+
     @media (min-width: 769px) {
         .mobile-hamburger {
             display: none !important;
@@ -396,13 +526,43 @@
         
         .mobile-sidebar-overlay {
             display: none !important;
+            visibility: hidden !important;
         }
         
         .sidebar {
             position: relative !important;
             left: 0 !important;
+            transform: none !important;
             transition: none !important;
         }
+        
+        .sidebar .sidebar-top {
+            flex: 1;
+        }
+        
+        .sidebar .sidebar-bottom {
+            flex-shrink: 0;
+        }
+        
+        body.sidebar-open {
+            overflow: auto !important;
+            position: static !important;
+            width: auto !important;
+        }
+    }
+
+    /* Smooth scrolling and performance improvements */
+    .sidebar {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+    
+    /* Prevent text selection during sidebar animation */
+    .sidebar.active * {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
 
@@ -414,7 +574,7 @@
 <div class="dashboard-container" style="overflow-x:hidden;">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-        <div>
+        <div class="sidebar-top">
             <div class="logo">
                 <img src="/images/assistracklogo.png" alt="Logo">
                 <span>Assistrack Portal</span>
@@ -465,8 +625,9 @@
             </nav>
         </div>
 
-        <!-- Profile -->
-        <div class="profile" id="profileDropdown">
+        <div class="sidebar-bottom">
+            <!-- Profile -->
+            <div class="profile" id="profileDropdown">
             @if(auth()->user()->profile_photo)
                 <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="{{ auth()->user()->name }}" class="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
             @else
@@ -488,14 +649,14 @@
                     </svg>
                 </button>
             </div>
-        </div>
 
-        <div id="logoutMenu">
-            <a href="{{ route('profile.edit') }}">Settings</a>
-            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
-                @csrf
-                <button type="submit">Logout</button>
-            </form>
+            <div id="logoutMenu">
+                <a href="{{ route('profile.edit') }}">Settings</a>
+                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                    @csrf
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
         </div>
     </aside>
 
@@ -537,6 +698,26 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Fix for mobile viewport height (handles address bar and navigation bars on mobile browsers)
+    function setViewportHeight() {
+        // Use the smaller of window.innerHeight and window.screen.height to account for navigation bars
+        const actualHeight = Math.min(window.innerHeight, window.screen.height * 0.9);
+        let vh = actualHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        
+        // Also set a CSS variable for safe bottom margin
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar && window.innerWidth <= 768) {
+            sidebar.style.height = `${actualHeight - 40}px`;
+        }
+    }
+    
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(setViewportHeight, 100);
+    });
+    
     // Notification functionality
     function updateNotificationCount() {
         // Fetch community join requests, task notifications, and community notifications
@@ -818,8 +999,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Close sidebar when overlay is clicked
-        mobileSidebarOverlay.addEventListener('click', function() {
+        mobileSidebarOverlay.addEventListener('click', function(e) {
+            e.stopPropagation();
             closeMobileSidebar();
+        });
+        
+        // Prevent sidebar from closing when clicking inside it
+        sidebar.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
         
         // Close sidebar when window is resized to desktop
@@ -828,6 +1015,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeMobileSidebar();
             }
         });
+        
+        // Add keyboard support (ESC key to close sidebar)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                closeMobileSidebar();
+            }
+        });
+        
+        // Add touch support for better mobile experience
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        document.addEventListener('touchend', function(e) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            // Only process horizontal swipes
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                if (deltaX > 0 && touchStartX < 50 && !sidebar.classList.contains('active')) {
+                    // Swipe right from left edge to open sidebar
+                    openMobileSidebar();
+                } else if (deltaX < -50 && sidebar.classList.contains('active')) {
+                    // Swipe left to close sidebar
+                    closeMobileSidebar();
+                }
+            }
+        }, { passive: true });
         
         function toggleMobileSidebar() {
             const isActive = sidebar.classList.contains('active');
@@ -842,14 +1063,29 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebar.classList.add('active');
             mobileSidebarOverlay.classList.add('active');
             mobileHamburger.classList.add('active');
+            document.body.classList.add('sidebar-open');
+            // Prevent scrolling on body
             document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            
+            // Adjust sidebar height to avoid phone navigation buttons
+            if (window.innerWidth <= 768) {
+                const availableHeight = Math.min(window.innerHeight, window.screen.height * 0.85);
+                sidebar.style.height = `${availableHeight}px`;
+                sidebar.style.maxHeight = `${availableHeight}px`;
+            }
         }
         
         function closeMobileSidebar() {
             sidebar.classList.remove('active');
             mobileSidebarOverlay.classList.remove('active');
             mobileHamburger.classList.remove('active');
+            document.body.classList.remove('sidebar-open');
+            // Restore scrolling
             document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
         }
     }
 });

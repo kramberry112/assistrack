@@ -161,32 +161,45 @@
     #logoutMenu {
         display: none;
         position: absolute;
-        bottom: 60px;
-        left: 20px;
+        bottom: 70px;
+        left: 50%;
+        transform: translateX(-50%);
         background: #fff;
         border: none;
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-        padding: 24px 20px 16px 20px;
-        min-width: 220px;
-        z-index: 100;
+        padding: 16px;
+        min-width: 200px;
+        max-width: 240px;
+        z-index: 1000;
         text-align: center;
+        width: auto;
     }
 
     #logoutMenu a,
     #logoutMenu button {
-        display: block;
-        width: 100%;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-bottom: 8px;
-        padding: 8px 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        border: none;
-        transition: background 0.2s, box-shadow 0.2s;
-        text-align: center;
-        cursor: pointer;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+        border-radius: 6px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        margin: 0 0 12px 0 !important;
+        padding: 10px 16px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+        border: none !important;
+        outline: none !important;
+        transition: background 0.2s, box-shadow 0.2s !important;
+        text-align: center !important;
+        cursor: pointer !important;
+        box-sizing: border-box !important;
+        line-height: 1.5 !important;
+        text-decoration: none !important;
+        font-family: inherit !important;
     }
 
     #logoutMenu a {
@@ -207,6 +220,11 @@
     #logoutMenu button:hover {
         background: linear-gradient(90deg, #b91c1c, #dc2626);
         box-shadow: 0 4px 16px rgba(239,68,68,0.15);
+    }
+
+    #logoutMenu button:last-child,
+    #logoutMenu form:last-child button {
+        margin-bottom: 0 !important;
     }
 
     /* Header - FIXED ALIGNMENT */
@@ -351,16 +369,16 @@
         border-radius: 2px;
     }
 
-    .mobile-hamburger.active span:nth-child(1) {
-        transform: rotate(-45deg) translate(-6px, 6px);
-    }
-
-    .mobile-hamburger.active span:nth-child(2) {
+    /* Hide hamburger when sidebar is active */
+    .sidebar.active ~ .main-content .mobile-hamburger {
         opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-
-    .mobile-hamburger.active span:nth-child(3) {
-        transform: rotate(45deg) translate(-6px, -6px);
+    
+    .mobile-hamburger {
+        transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
     /* Mobile Overlay */
@@ -382,61 +400,166 @@
         opacity: 1;
     }
 
-    /* Responsive */
+    /* Enhanced Mobile Responsive Styles */
     @media (max-width: 768px) {
-        .mobile-hamburger {
-            display: flex !important;
+        body {
+            overflow-x: hidden !important;
         }
+
+        body.sidebar-open {
+            overflow: hidden !important;
+            position: fixed !important;
+            width: 100% !important;
+        }
+
+        .dashboard-container {
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
+        }
+
         .sidebar {
-            position: fixed;
-            left: -260px;
-            top: 0;
-            height: 100vh;
-            z-index: 1050;
-            transition: left 0.3s ease;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed !important;
+            top: 0 !important;
+            left: -300px !important;
+            width: 280px !important;
+            height: calc(100vh - env(safe-area-inset-bottom, 0px)) !important;
+            height: calc(100dvh - env(safe-area-inset-bottom, 0px)) !important;
+            max-height: calc(100vh - env(safe-area-inset-bottom, 0px)) !important;
+            z-index: 1000 !important;
+            transition: transform 0.3s ease, left 0.3s ease !important;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15) !important;
+            transform: translateX(0) !important;
+            will-change: transform, left !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
         }
 
         .sidebar.active {
-            left: 0;
+            left: 0 !important;
+            transform: translateX(0) !important;
         }
 
         .main-content {
-            width: 100%;
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            transition: transform 0.3s ease !important;
         }
 
-        .main-header {
-            padding: 12px 16px;
-        }
-
-        .header-title {
-            font-size: 1.25rem;
-        }
-
-        .header-breadcrumb {
-            font-size: 0.75rem;
-        }
-
-        .content-wrapper {
-            padding: 16px;
+        .mobile-hamburger {
+            display: flex !important;
         }
 
         .mobile-menu-btn {
-            display: block;
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 1001;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
+            display: none !important;
+        }
+
+        .main-header {
+            padding: 12px 16px !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .header-title {
+            font-size: 1.1rem !important;
+            margin: 0 !important;
+        }
+
+        .header-breadcrumb {
+            font-size: 0.75rem !important;
+        }
+
+        .content-wrapper {
+            padding: 16px !important;
         }
 
         .dashboard-stats {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+            gap: 12px !important;
+        }
+    }
+
+    /* Mobile specific improvements */
+    @media (max-width: 480px) {
+        .sidebar {
+            width: 260px !important;
+            left: -260px !important;
+            bottom: 20px !important;
+            height: calc(100vh - 60px) !important;
+            height: calc(100dvh - 60px) !important;
+        }
+        
+        .main-header {
+            padding: 8px 12px !important;
+        }
+        
+        .header-title {
+            font-size: 1rem !important;
+        }
+    }
+
+    /* Ensure sidebar doesn't interfere with system UI */
+    @media (max-width: 768px) and (display-mode: browser) {
+        .sidebar {
+            bottom: 20px !important;
+            height: calc(100vh - 60px) !important;
+        }
+    }
+
+    /* For phones with home indicator */
+    @supports (bottom: env(safe-area-inset-bottom)) {
+        @media (max-width: 768px) {
+            .sidebar {
+                bottom: calc(env(safe-area-inset-bottom, 0px) + 20px) !important;
+                height: calc(100vh - env(safe-area-inset-bottom, 0px) - 60px) !important;
+                padding-bottom: 0 !important;
+            }
+        }
+    }
+
+    /* Fix for mobile browsers with dynamic viewport */
+    @media (max-width: 768px) {
+        .sidebar {
+            bottom: 20px !important;
+            height: calc(100vh - 60px) !important;
+            height: calc(var(--vh, 1vh) * 100 - 60px) !important;
+            min-height: calc(100vh - 60px) !important;
+            max-height: calc(100vh - 60px) !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        .sidebar > div:first-child {
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            min-height: 0 !important;
+        }
+        
+        .sidebar .nav {
+            flex: 1 !important;
+            padding-bottom: 20px !important;
+            min-height: 0 !important;
+            overflow-y: auto !important;
+        }
+        
+        .sidebar .profile {
+            flex-shrink: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: 10px !important;
+            padding-bottom: 10px !important;
+        }
+        
+        #logoutMenu {
+            flex-shrink: 0 !important;
+            margin-bottom: 10px !important;
         }
     }
 
@@ -449,7 +572,8 @@
 
 <div class="dashboard-container" style="overflow-x:hidden;">
     <!-- Mobile Overlay -->
-    <div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebar()"></div>
+    <!-- Mobile Sidebar Overlay -->
+    <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
     
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -569,7 +693,7 @@
 
         <div id="logoutMenu">
             <a href="{{ route('profile.edit') }}">Settings</a>
-            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+            <form method="POST" action="{{ route('logout') }}" style="margin:0;padding:0;display:block;">
                 @csrf
                 <button type="submit">Logout</button>
             </form>
@@ -583,7 +707,7 @@
             <!-- Left side: Hamburger and Title -->
             <div class="header-left">
                 <!-- Mobile Hamburger Menu -->
-                <div class="mobile-hamburger" id="mobileHamburger" onclick="toggleSidebar()">
+                <div class="mobile-hamburger" id="mobileHamburger">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -738,38 +862,137 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Mobile sidebar toggle
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('mobileOverlay');
-    const hamburger = document.getElementById('mobileHamburger');
+// Enhanced mobile sidebar functionality matching student layout
+// Fix for mobile viewport height (handles address bar and navigation bars on mobile browsers)
+function setViewportHeight() {
+    const actualHeight = Math.min(window.innerHeight, window.screen.height * 0.9);
+    let vh = actualHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
     
-    sidebar.classList.toggle('active');
-    overlay.classList.toggle('active');
-    hamburger.classList.toggle('active');
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && window.innerWidth <= 768) {
+        sidebar.style.height = `${actualHeight - 40}px`;
+    }
 }
 
-function closeSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('mobileOverlay');
-    const hamburger = document.getElementById('mobileHamburger');
-    
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-    hamburger.classList.remove('active');
-}
+setViewportHeight();
+window.addEventListener('resize', setViewportHeight);
+window.addEventListener('orientationchange', () => {
+    setTimeout(setViewportHeight, 100);
+});
 
-// Close sidebar when clicking outside on mobile
-document.addEventListener('click', function(e) {
-    const sidebar = document.getElementById('sidebar');
-    const hamburger = document.getElementById('mobileHamburger');
+// Mobile sidebar functionality matching student layout exactly
+const mobileHamburger = document.getElementById('mobileHamburger');
+const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+const sidebar = document.getElementById('sidebar');
+
+if (mobileHamburger && mobileSidebarOverlay && sidebar) {
+    // Toggle sidebar when hamburger is clicked
+    mobileHamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMobileSidebar();
+    });
     
-    if (window.innerWidth <= 768 && sidebar && hamburger) {
-        if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
-            closeSidebar();
+    // Close sidebar when overlay is clicked
+    mobileSidebarOverlay.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeMobileSidebar();
+    });
+    
+    // Prevent sidebar from closing when clicking inside it
+    sidebar.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+    
+    // Close sidebar when window is resized to desktop
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            closeMobileSidebar();
+        }
+    });
+    
+    // Add keyboard support (ESC key to close sidebar)
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+            closeMobileSidebar();
+        }
+    });
+    
+    // Close sidebar when clicking anywhere outside (tap anywhere to close)
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+            // Only close if clicking outside sidebar and hamburger
+            if (!sidebar.contains(e.target) && !mobileHamburger.contains(e.target)) {
+                closeMobileSidebar();
+            }
+        }
+    });
+    
+    // Add touch support for better mobile experience
+    let touchStartX = 0;
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    document.addEventListener('touchend', function(e) {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        
+        // Only process horizontal swipes
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+            if (deltaX > 0 && touchStartX < 50 && !sidebar.classList.contains('active')) {
+                // Swipe right from left edge to open sidebar
+                openMobileSidebar();
+            } else if (deltaX < -50 && sidebar.classList.contains('active')) {
+                // Swipe left to close sidebar
+                closeMobileSidebar();
+            }
+        }
+    }, { passive: true });
+    
+    function toggleMobileSidebar() {
+        const isActive = sidebar.classList.contains('active');
+        if (isActive) {
+            closeMobileSidebar();
+        } else {
+            openMobileSidebar();
         }
     }
-});
+    
+    function openMobileSidebar() {
+        sidebar.classList.add('active');
+        mobileSidebarOverlay.classList.add('active');
+        mobileHamburger.classList.add('active');
+        document.body.classList.add('sidebar-open');
+        // Prevent scrolling on body
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        
+        // Adjust sidebar height to avoid phone navigation buttons
+        if (window.innerWidth <= 768) {
+            const availableHeight = Math.min(window.innerHeight, window.screen.height * 0.85);
+            sidebar.style.height = `${availableHeight}px`;
+            sidebar.style.maxHeight = `${availableHeight}px`;
+        }
+    }
+    
+    function closeMobileSidebar() {
+        sidebar.classList.remove('active');
+        mobileSidebarOverlay.classList.remove('active');
+        mobileHamburger.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+        // Restore scrolling
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+    }
+}
 
 // Close sidebar when navigation links are clicked on mobile
 document.addEventListener('DOMContentLoaded', function() {
@@ -777,8 +1000,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     navLinks.forEach(function(link) {
         link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                closeSidebar();
+            if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains('active')) {
+                closeMobileSidebar();
             }
         });
     });

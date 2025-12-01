@@ -10,19 +10,36 @@
     /* Mobile optimization */
     * {
         -webkit-tap-highlight-color: transparent;
+        box-sizing: border-box;
+    }
+    
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
     }
     
     .content-wrapper {
         background: #fff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
     }
     .admin-content-wrapper {
         background: #fff !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
     }
     .main-content {
         background: #fff !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
     }
     body {
         background: #fff !important;
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
     }
     
     .content-card {
@@ -430,6 +447,9 @@
             width: 100% !important;
             align-items: stretch !important;
             order: 2 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: visible !important;
         }
 
         form input[type="text"] {
@@ -602,6 +622,41 @@
             margin: 4px !important;
             border-radius: 6px !important;
         }
+        
+        .header-container {
+            padding: 0 8px !important;
+        }
+        
+        .table-container {
+            padding: 0 8px 8px 8px !important;
+        }
+        
+        .studentlist-title {
+            font-size: 1rem !important;
+        }
+        
+        .filter-button {
+            font-size: 0.9rem !important;
+            padding: 10px 12px !important;
+            min-height: 44px !important;
+        }
+        
+        form input[type="text"] {
+            font-size: 0.9rem !important;
+            padding: 10px 12px !important;
+            min-height: 44px !important;
+        }
+        
+        form button {
+            font-size: 0.9rem !important;
+            padding: 10px 16px !important;
+            min-height: 44px !important;
+            min-width: 70px !important;
+        }
+        .content-card {
+            margin: 4px !important;
+            border-radius: 6px !important;
+        }
 
         .studentlist-title {
             font-size: 1rem !important;
@@ -665,6 +720,33 @@
     @media (min-width: 769px) {
         .mobile-student-cards {
             display: none !important;
+        }
+    }
+    
+    /* Ensure proper mobile container width */
+    @media (max-width: 768px) {
+        .content-wrapper,
+        .admin-content-wrapper,
+        .main-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        
+        /* Prevent horizontal scroll issues */
+        .content-card,
+        .header-container,
+        .table-container {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Fix any potential text overflow */
+        .student-card-name,
+        .studentlist-title {
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
         }
     }
 </style>

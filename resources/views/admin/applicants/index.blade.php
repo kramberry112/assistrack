@@ -269,6 +269,9 @@
         border-radius: 12px;
         padding: 16px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
     }
 
     .applicant-card-header {
@@ -356,6 +359,21 @@
         background: #dc2626;
     }
 
+    /* Prevent horizontal scroll on all devices */
+    * {
+        box-sizing: border-box;
+    }
+    
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+    
+    .content-card {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
         /* Hide desktop table */
@@ -366,8 +384,14 @@
         /* Show mobile cards */
         .mobile-applicant-cards {
             display: flex !important;
+            padding: 8px !important;
         }
 
+        /* Container adjustments */
+        div[style*="background: #fff"] {
+            padding: 0 !important;
+        }
+        
         /* Header adjustments */
         .applicants-title {
             font-size: 1.1rem !important;
@@ -384,8 +408,8 @@
             flex-direction: column !important;
             align-items: flex-start !important;
             gap: 16px !important;
-            padding: 16px !important;
-            margin-bottom: 8px !important;
+            padding: 16px 8px !important;
+            margin-bottom: 0 !important;
         }
 
         .header-text {
@@ -411,8 +435,8 @@
             right: 0 !important;
             top: calc(100% + 8px) !important;
             width: auto !important;
-            min-width: 250px !important;
-            max-width: calc(100vw - 32px) !important;
+            min-width: 200px !important;
+            max-width: calc(100vw - 16px) !important;
             max-height: 60vh !important;
             overflow-y: auto !important;
             z-index: 99999 !important;
@@ -438,11 +462,19 @@
         }
 
         /* Pagination mobile */
-        .pagination-container {
+        .pagination-container,
+        div[style*="justify-content: center"] {
             font-size: 0.85rem !important;
-            padding: 6px 12px !important;
+            padding: 6px 8px !important;
             flex-wrap: wrap !important;
             justify-content: center !important;
+            margin: 16px 8px !important;
+        }
+        
+        /* Ensure pagination doesn't overflow */
+        span[style*="font-size:1rem"] {
+            font-size: 0.9rem !important;
+            padding: 6px 12px !important;
         }
 
         /* Remove modal overlay - use normal dropdown behavior */
@@ -450,13 +482,33 @@
 
     /* Ultra mobile (small phones) */
     @media (max-width: 480px) {
+        .header-container {
+            padding: 12px 4px !important;
+        }
+        
+        .mobile-applicant-cards {
+            padding: 4px !important;
+        }
+        
+        .applicant-card {
+            padding: 12px !important;
+            margin-bottom: 8px;
+        }
+        
         .applicant-card-actions {
             flex-direction: column !important;
+            gap: 6px !important;
         }
 
         .applicant-card-actions button,
         .applicant-card-actions a {
             width: 100% !important;
+            padding: 10px 16px !important;
+        }
+        
+        .filter-button {
+            padding: 12px 14px !important;
+            font-size: 0.9rem !important;
         }
     }
 

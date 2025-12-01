@@ -17,6 +17,11 @@
 <style>
 
 
+        /* Global mobile fixes */
+        * {
+            box-sizing: border-box;
+        }
+
         .header-title {
             display: flex;
             align-items: center;
@@ -257,86 +262,122 @@
         @media (max-width: 768px) {
             body {
                 overflow-x: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .main-content {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
             }
             
             .calendar-container {
                 margin: 0 !important;
                 border-radius: 0 !important;
+                width: 100% !important;
                 max-width: 100vw !important;
                 box-sizing: border-box !important;
-                width: 100vw !important;
             }
 
             .calendar-header {
-                padding: 16px !important;
+                padding: 12px 16px !important;
                 flex-direction: column !important;
-                gap: 12px !important;
+                gap: 16px !important;
                 width: 100% !important;
                 box-sizing: border-box !important;
             }
 
             .calendar-nav {
-                justify-content: center !important;
+                justify-content: space-between !important;
+                align-items: center !important;
                 width: 100% !important;
             }
             
             .nav-button {
-                width: 40px !important;
-                height: 40px !important;
+                width: 44px !important;
+                height: 44px !important;
+                flex-shrink: 0 !important;
             }
             
             .current-month {
-                font-size: 1.3rem !important;
-                margin: 0 16px !important;
-            }
-
-            .view-toggles {
-                justify-content: center !important;
-                width: 100% !important;
-            }
-            
-            .view-toggle {
-                padding: 8px 16px !important;
-                font-size: 0.9rem !important;
+                font-size: 1.2rem !important;
+                margin: 0 !important;
                 flex: 1 !important;
-                max-width: 100px !important;
                 text-align: center !important;
             }
 
-            .calendar-grid {
-                grid-template-columns: repeat(7, 1fr) !important;
+            .view-toggles {
+                display: flex !important;
                 width: 100% !important;
+                gap: 0 !important;
+                border: 1px solid #d1d5db !important;
+                border-radius: 6px !important;
+                overflow: hidden !important;
+            }
+            
+            .view-toggle {
+                flex: 1 !important;
+                margin: 0 !important;
+                border: none !important;
+                border-radius: 0 !important;
+                padding: 12px !important;
+                font-size: 0.9rem !important;
+                text-align: center !important;
+                border-right: 1px solid #d1d5db !important;
+            }
+
+            .view-toggle:last-child {
+                border-right: none !important;
+            }
+
+            .calendar-grid {
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
 
             .calendar-header-cell {
-                padding: 10px 2px !important;
-                font-size: 0.75rem !important;
+                padding: 8px 4px !important;
+                font-size: 0.8rem !important;
                 text-align: center !important;
             }
 
             .calendar-cell {
-                min-height: 65px !important;
-                padding: 4px 2px !important;
+                min-height: 70px !important;
+                padding: 4px !important;
                 border-right: 1px solid #e5e7eb !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
             }
 
             .calendar-date {
-                font-size: 0.8rem !important;
-                margin-bottom: 3px !important;
+                font-size: 0.85rem !important;
+                margin-bottom: 4px !important;
                 font-weight: 600 !important;
             }
 
+            .calendar-cell.today .calendar-date {
+                width: 20px !important;
+                height: 20px !important;
+                font-size: 0.7rem !important;
+            }
+
             .calendar-events {
-                gap: 0px !important;
-                max-height: calc(100% - 16px) !important;
+                gap: 1px !important;
+                max-height: calc(100% - 24px) !important;
             }
 
             .calendar-event {
-                padding: 0px 2px !important;
-                font-size: 0.65rem !important;
+                padding: 1px 3px !important;
+                font-size: 0.7rem !important;
                 border-radius: 2px !important;
-                line-height: 1.1 !important;
-                margin-bottom: 0px !important;
+                line-height: 1.2 !important;
+                margin-bottom: 1px !important;
+                word-wrap: break-word !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
             }
 
             /* Week view mobile styles */
@@ -363,21 +404,25 @@
 
             /* Add Event Modal */
             .modal-content {
-                width: 95% !important;
+                width: calc(100% - 20px) !important;
                 max-width: none !important;
                 margin: 10px !important;
                 max-height: 90vh !important;
                 overflow-y: auto !important;
+                box-sizing: border-box !important;
             }
 
             .form-group input,
             .form-group textarea,
             .form-group select {
-                font-size: 16px !important; /* Prevents iOS zoom */
+                font-size: 16px !important;
                 padding: 12px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
 
             .form-actions {
+                display: flex !important;
                 flex-direction: column !important;
                 gap: 12px !important;
             }
@@ -385,66 +430,208 @@
             .btn {
                 width: 100% !important;
                 padding: 12px !important;
+                box-sizing: border-box !important;
             }
         }
 
         @media (max-width: 480px) {
-            .calendar-container {
-                margin: 0 !important;
-                border-radius: 0 !important;
-            }
-
             .calendar-header {
-                padding: 12px !important;
+                padding: 8px 12px !important;
+                gap: 12px !important;
             }
             
             .calendar-header-cell {
-                padding: 8px 1px !important;
-                font-size: 0.7rem !important;
+                padding: 6px 2px !important;
+                font-size: 0.75rem !important;
             }
 
             .current-month {
-                font-size: 1.1rem !important;
-                margin: 0 12px !important;
+                font-size: 1rem !important;
             }
             
             .nav-button {
-                width: 36px !important;
-                height: 36px !important;
+                width: 40px !important;
+                height: 40px !important;
             }
 
             .calendar-cell {
-                min-height: 50px !important;
-                padding: 3px 1px !important;
+                min-height: 60px !important;
+                padding: 2px !important;
             }
 
             .calendar-date {
-                font-size: 0.75rem !important;
+                font-size: 0.8rem !important;
                 margin-bottom: 2px !important;
             }
 
+            .calendar-cell.today .calendar-date {
+                width: 18px !important;
+                height: 18px !important;
+                font-size: 0.65rem !important;
+            }
+
             .calendar-event {
-                font-size: 0.6rem !important;
-                padding: 0px 1px !important;
-                line-height: 1 !important;
+                font-size: 0.65rem !important;
+                padding: 1px 2px !important;
+                line-height: 1.1 !important;
             }
 
             .view-toggle {
-                padding: 6px 12px !important;
-                font-size: 0.8rem !important;
+                padding: 10px 8px !important;
+                font-size: 0.85rem !important;
             }
             
             .week-view {
-                margin: 0 !important;
-                padding: 12px !important;
+                padding: 8px !important;
+            }
+            
+            .week-row {
+                min-height: 50px !important;
+                margin-bottom: 4px !important;
             }
             
             .week-day {
-                font-size: 0.8rem !important;
-                padding: 6px !important;
+                font-size: 0.75rem !important;
+                padding: 4px !important;
+            }
+
+            /* Better modal spacing on very small screens */
+            .modal-content {
+                margin: 5px !important;
+                width: calc(100% - 10px) !important;
+                padding: 16px !important;
             }
         }
-    </style>
+        /* Notification Styles */
+    .notification {
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        border-width: 1px;
+        border-style: solid;
+        position: relative;
+        animation: slideIn 0.3s ease-out;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .notification.success {
+        background-color: #dcfce7;
+        border-color: #16a34a;
+        color: #15803d;
+    }
+
+    .notification.error {
+        background-color: #fef2f2;
+        border-color: #dc2626;
+        color: #b91c1c;
+    }
+
+    .notification.warning {
+        background-color: #fefce8;
+        border-color: #ca8a04;
+        color: #a16207;
+    }
+
+    .notification.info {
+        background-color: #dbeafe;
+        border-color: #2563eb;
+        color: #1d4ed8;
+    }
+
+    .notification .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: inherit;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        min-width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .notification .close-btn:hover {
+        opacity: 1;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile notification styles */
+    @media (max-width: 768px) {
+        .notification {
+            padding: 12px 40px 12px 16px;
+            font-size: 0.9rem;
+            margin: 0 12px 16px 12px;
+            border-radius: 6px;
+        }
+        
+        .notification .close-btn {
+            top: 8px;
+            right: 12px;
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .notification {
+            padding: 10px 36px 10px 12px;
+            font-size: 0.85rem;
+            margin: 0 8px 12px 8px;
+        }
+        
+        .notification .close-btn {
+            top: 6px;
+            right: 8px;
+            font-size: 1rem;
+        }
+    }
+</style>
+
+            <!-- Notifications -->
+            @if(session('success'))
+                <div class="notification success" id="successNotification">
+                    <button class="close-btn" onclick="closeNotification('successNotification')">&times;</button>
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="notification error" id="errorNotification">
+                    <button class="close-btn" onclick="closeNotification('errorNotification')">&times;</button>
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="notification error" id="validationNotification">
+                    <button class="close-btn" onclick="closeNotification('validationNotification')">&times;</button>
+                    <strong>Please fix the following errors:</strong>
+                    <ul style="margin: 8px 0 0 20px; padding: 0;">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <!-- Calendar Container -->
             <div class="calendar-container">
@@ -726,6 +913,73 @@
         document.addEventListener('DOMContentLoaded', function() {
             new Calendar();
         });
+
+        // Notification functions
+        function closeNotification(notificationId) {
+            const notification = document.getElementById(notificationId);
+            if (notification) {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            // Remove existing dynamic notifications
+            const existingNotification = document.getElementById('dynamicNotification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create new notification
+            const notification = document.createElement('div');
+            notification.id = 'dynamicNotification';
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <button class="close-btn" onclick="closeNotification('dynamicNotification')">&times;</button>
+                ${message}
+            `;
+            
+            // Insert at the top of calendar container
+            const calendarContainer = document.querySelector('.calendar-container');
+            if (calendarContainer) {
+                calendarContainer.parentNode.insertBefore(notification, calendarContainer);
+            }
+            
+            // Auto-hide after 5 seconds for success/info messages
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    closeNotification('dynamicNotification');
+                }, 5000);
+            }
+        }
+
+        // Auto-hide success notifications after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const successNotification = document.getElementById('successNotification');
+            if (successNotification) {
+                setTimeout(() => {
+                    closeNotification('successNotification');
+                }, 5000);
+            }
+        });
+
+        // Add slide out animation
+        const notificationStyle = document.createElement('style');
+        notificationStyle.textContent = `
+            @keyframes slideOut {
+                from {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+            }
+        `;
+        document.head.appendChild(notificationStyle);
     </script>
 
 @endsection

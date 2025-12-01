@@ -78,12 +78,20 @@
     transition: color 0.2s;
 }
 
-.desktop-nav a:hover {
-    color: #1a237e;
+    .desktop-nav a:hover {
+        color: #1a237e;
+    }
+
+/* Desktop: Hide mobile photo section, show desktop photo section */
+.photo-section-mobile {
+    display: none;
 }
 
-/* Mobile Responsive Styles */
+.photo-section-desktop {
+    display: flex;
+}/* Mobile Responsive Styles */
 @media (max-width: 768px) {
+    /* Header fixes */
     .header-bar {
         flex-wrap: wrap !important;
         position: relative !important;
@@ -111,20 +119,30 @@
     /* Banner adjustments */
     .banner {
         height: 200px !important;
+        overflow: hidden !important;
     }
     
     .banner-content {
-        margin-left: 20px !important;
-        padding: 20px 40px !important;
-        font-size: 32px !important;
+        margin-left: 8px !important;
+        margin-right: 8px !important;
+        padding: 16px 20px !important;
+        font-size: 26px !important;
+        width: calc(100% - 16px) !important;
+        max-width: none !important;
+        box-sizing: border-box !important;
     }
     
-    /* Form adjustments */
+    /* Form container fixes */
     .form-container {
-        padding: 24px 20px !important;
-        margin: 16px !important;
+        padding: 16px 12px !important;
+        margin: 0 !important;
+        max-width: none !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        border-radius: 0 !important;
     }
     
+    /* Form header responsive */
     .form-header {
         flex-direction: column !important;
         align-items: flex-start !important;
@@ -132,13 +150,16 @@
     }
     
     .form-header-left {
-        align-items: flex-start !important;
+        align-items: center !important;
+        width: 100% !important;
+        justify-content: center !important;
     }
     
     .form-header-right {
-        text-align: left !important;
+        text-align: center !important;
         font-size: 13px !important;
         margin-left: 0 !important;
+        width: 100% !important;
     }
     
     .university-logo {
@@ -148,61 +169,179 @@
     
     .university-name {
         font-size: 16px !important;
+        text-align: center !important;
     }
     
-    /* Personal info layout */
+    /* Personal section layout fix */
     .personal-section {
         display: flex !important;
         flex-direction: column !important;
-        gap: 24px !important;
+        gap: 16px !important;
+        grid-template-columns: none !important;
     }
     
-    .photo-section {
-        order: -1 !important;
+    .personal-info-fields {
+        order: 1 !important;
+    }
+    
+    /* Hide desktop photo section on mobile */
+    .photo-section-desktop {
+        display: none !important;
+    }
+    
+    /* Show mobile photo section */
+    .photo-section-mobile {
+        display: block !important;
         width: 100% !important;
-        display: flex !important;
-        justify-content: center !important;
+        text-align: center !important;
+        margin-bottom: 20px !important;
     }
     
     .photo-container {
-        width: 250px !important;
-        height: 200px !important;
+        width: 220px !important;
+        height: 180px !important;
         margin: 0 auto !important;
+        position: relative !important;
     }
     
-    /* Form fields */
+    /* Form grids responsive */
+    .form-grid-3 {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        grid-template-columns: none !important;
+    }
+    
+    .form-field {
+        flex: 1 !important;
+        width: 100% !important;
+    }
+    
+    /* Form inputs responsive */
+    .form-input, .form-select {
+        padding: 12px !important;
+        font-size: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .form-label {
+        font-size: 14px !important;
+        display: block !important;
+        margin-bottom: 4px !important;
+    }
+    
+    /* Form rows responsive */
     .form-row {
         flex-direction: column !important;
         gap: 12px !important;
     }
     
-    .form-grid-3 {
+    .form-row .form-field {
+        width: 100% !important;
+        flex: none !important;
+    }
+    
+    /* Better spacing for mobile form elements */
+    .personal-info-fields > div {
+        margin-bottom: 16px !important;
+    }
+    
+    /* Family background responsive */
+    .family-background .form-grid-3 {
         display: flex !important;
         flex-direction: column !important;
         gap: 12px !important;
     }
     
-    .form-field {
-        flex: 1 !important;
+    /* Parent consent section responsive */
+    .parent-consent-section {
+        padding: 12px !important;
     }
     
-    .form-input, .form-select {
-        padding: 10px 12px !important;
-        font-size: 16px !important;
+    /* Questions section responsive */
+    div[style*="font-size: 16px"] {
+        font-size: 15px !important;
+        line-height: 1.5 !important;
+        margin-bottom: 12px !important;
     }
     
-    .form-label {
+    /* Radio button spacing */
+    input[type="radio"] + label,
+    input[type="checkbox"] + label {
+        margin-right: 15px !important;
         font-size: 14px !important;
     }
     
     .section-title {
         font-size: 20px !important;
+        text-align: center !important;
+        margin-bottom: 16px !important;
+    }
+    
+    /* Radio buttons and checkboxes spacing */
+    input[type="radio"], input[type="checkbox"] {
+        margin-right: 8px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    /* Modal responsive */
+    .modal-confirm-box {
+        margin: 20px !important;
+        padding: 24px 16px !important;
+        width: calc(100% - 40px) !important;
+        max-width: 400px !important;
+    }
+    
+    .modal-confirm-title {
+        font-size: 20px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .modal-confirm-btns {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+    
+    .modal-confirm-btn {
+        font-size: 16px !important;
+        padding: 12px 24px !important;
+        letter-spacing: 2px !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+    
+    /* Cropper modal responsive */
+    #cropperModal > div {
+        margin: 20px !important;
+        padding: 16px !important;
+        width: calc(100% - 40px) !important;
+        max-width: 400px !important;
+    }
+    
+    #modal-image {
+        max-width: 100% !important;
+        max-height: 250px !important;
+    }
+    
+    /* Submit button responsive */
+    .submit-btn {
+        padding: 12px 32px !important;
+        font-size: 16px !important;
+        width: 100% !important;
+        margin-top: 20px !important;
     }
 }
 
 @media (max-width: 480px) {
+    /* Extra small screens */
     .header-bar {
         padding: 0 12px !important;
+    }
+    
+    .header-logo img {
+        height: 36px !important;
+        width: 36px !important;
     }
     
     .logo-text {
@@ -214,24 +353,29 @@
     }
     
     .banner-content {
-        margin-left: 10px !important;
-        padding: 16px 24px !important;
-        font-size: 24px !important;
+        margin-left: 8px !important;
+        margin-right: 8px !important;
+        padding: 12px 16px !important;
+        font-size: 20px !important;
         height: auto !important;
+        width: calc(100% - 16px) !important;
     }
     
     .form-container {
-        padding: 16px 12px !important;
-        margin: 8px !important;
+        padding: 12px 8px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        border-radius: 0 !important;
     }
     
     .photo-container {
-        width: 200px !important;
-        height: 160px !important;
+        width: 180px !important;
+        height: 140px !important;
     }
     
     .form-input, .form-select {
-        font-size: 15px !important;
+        font-size: 16px !important;
+        padding: 10px !important;
     }
     
     .section-title {
@@ -239,8 +383,149 @@
     }
     
     .submit-btn {
-        padding: 10px 24px !important;
+        padding: 12px 20px !important;
         font-size: 16px !important;
+    }
+    
+    .university-logo {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .university-name {
+        font-size: 14px !important;
+    }
+    
+    .form-header-right {
+        font-size: 12px !important;
+    }
+    
+    /* Tighter spacing for small screens */
+    .form-grid-3 {
+        gap: 8px !important;
+    }
+    
+    .personal-section {
+        gap: 16px !important;
+    }
+    
+    /* Camera button responsive */
+    #cameraBtn {
+        width: 36px !important;
+        height: 36px !important;
+        bottom: 8px !important;
+        right: 8px !important;
+    }
+    
+    #cameraBtn svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+}
+
+/* Additional mobile fixes */
+@media (max-width: 768px) {
+    /* Prevent horizontal overflow and remove body margins */
+    body {
+        overflow-x: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Main container mobile fixes */
+    main {
+        padding: 0 !important;
+    }
+    
+    /* Ensure no elements extend beyond viewport */
+    * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Fix banner positioning - keep absolute positioning */
+    .banner > div {
+        position: absolute !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Ensure form doesn't overflow */
+    .form-container * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Fix select dropdowns on mobile */
+    select {
+        -webkit-appearance: listbox !important;
+        appearance: listbox !important;
+    }
+    
+    /* Textarea responsive */
+    textarea {
+        resize: vertical !important;
+        min-height: 80px !important;
+    }
+    
+    /* File input responsive */
+    input[type="file"] {
+        font-size: 14px !important;
+        padding: 8px !important;
+    }
+    
+    /* Footer responsive */
+    footer {
+        font-size: 12px !important;
+        padding: 12px 16px !important;
+    }
+}
+
+/* Very specific mobile fixes for overlapping issues */
+@media (max-width: 768px) {
+    /* Force proper box sizing everywhere */
+    .form-container, 
+    .form-container *, 
+    .personal-section, 
+    .personal-section *,
+    .photo-section,
+    .photo-container {
+        box-sizing: border-box !important;
+    }
+    
+    /* Fix any potential width issues */
+    .form-input,
+    .form-select,
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+    
+    /* Ensure proper stacking */
+    .personal-section {
+        display: block !important;
+    }
+    
+    .personal-info-fields {
+        width: 100% !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .photo-section {
+        width: 100% !important;
+        text-align: center !important;
+    }
+    
+    /* Fix any grid template issues */
+    .form-grid-3[style*="grid-template-columns"] {
+        display: flex !important;
+        flex-direction: column !important;
+        grid-template-columns: none !important;
     }
 }
 </style>
@@ -293,7 +578,7 @@
 
     {{-- FORM --}}
     <main style="display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 48px 0;">
-        <div class="form-container" style="max-width: 980px; width: 100%; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); padding: 38px 38px 24px 38px; margin-top: 32px;">
+        <div class="form-container" style="max-width: 980px; width: 100%; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); padding: 38px 38px 24px 38px; margin-top: 32px; box-sizing: border-box;">
 
         {{-- Header with logo --}}
         <div class="form-header" style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px;">
@@ -317,10 +602,25 @@
     <form method="POST" action="{{ route('application.store') }}" enctype="multipart/form-data" id="applicationForm">
             @csrf
 
+            {{-- PHOTO UPLOAD SECTION (Mobile Only) --}}
+            <div class="photo-section-mobile" style="display: none;">
+                <div class="photo-container" style="width: 220px; height: 180px; position: relative; margin: 0 auto 20px auto; border: 2px solid #222; background: #f6f2f2; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    <img id="profile-preview-mobile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0; display: none; position: absolute; top: 0; left: 0;">
+                    <span id="picturePreviewLabel-mobile" style="font-size: 24px; font-family: 'Segoe UI', Arial, sans-serif; color: #222; letter-spacing: 2px; text-align: center; font-weight: 500; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Upload<br>Photo</span>
+                    <button type="button" id="cameraBtn-mobile" style="position: absolute; bottom: 8px; right: 8px; background: #fff; border-radius: 8px; border: 2px solid #23408e; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.10); cursor: pointer;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#23408e" stroke-width="2">
+                            <rect x="3" y="7" width="18" height="12" rx="3" fill="#eaeaea" stroke="#23408e"/>
+                            <circle cx="12" cy="13" r="4" fill="#fff" stroke="#23408e"/>
+                            <rect x="8" y="3" width="8" height="4" rx="2" fill="#eaeaea" stroke="#23408e"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
             {{-- PERSONAL INFORMATION --}}
+            <h3 class="section-title" style="font-size: 24px; font-family: 'Times New Roman', Times, serif; font-weight: bold; margin-bottom: 8px; margin-top: 18px; text-align: left;">Personal Information</h3>
             <div class="personal-section" style="display: grid; grid-template-columns: 2fr 1fr; gap: 38px; align-items: flex-start; margin-bottom: 0;">
-                <div>
-                    <h3 class="section-title" style="font-size: 24px; font-family: 'Times New Roman', Times, serif; font-weight: bold; margin-bottom: 8px; margin-top: 18px; text-align: left;">Personal Information</h3>
+                <div class="personal-info-fields">
                        <div style="display: flex; gap: 18px; margin-bottom: 8px;">
                            <div style="flex: 2;">
                                <label style="font-size: 16px; font-weight: bold; text-align: left;">Student’s Name:</label>
@@ -362,24 +662,24 @@
                                <input type="text" name="id_number" required pattern="[0-9]{2}-[0-9]{4}-[0-9]{3}" title="Format: 22-0313-407" class="form-input" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
                            </div>
                        </div>
-                       <div style="display: flex; gap: 18px; margin-bottom: 8px;">
-                           <div style="flex: 2;">
-                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Address:</label>
-                               <input type="text" name="address" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
+                       <div class="form-row" style="display: flex; gap: 18px; margin-bottom: 8px;">
+                           <div style="flex: 1; width: 100%;">
+                               <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left; display: block; margin-bottom: 4px;">Address:</label>
+                               <input type="text" name="address" required class="form-input" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff; box-sizing: border-box;">
                            </div>
                        </div>
-                       <div style="display: flex; gap: 18px; margin-bottom: 8px;">
-                           <div style="flex: 1;">
-                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Email Address:</label>
-                               <input type="email" name="email" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
+                       <div class="form-row" style="display: flex; gap: 18px; margin-bottom: 8px;">
+                           <div class="form-field" style="flex: 1;">
+                               <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left; display: block; margin-bottom: 4px;">Email Address:</label>
+                               <input type="email" name="email" required class="form-input" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff; box-sizing: border-box;">
                            </div>
-                           <div style="flex: 1;">
-                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Telephone no./ Cp no.</label>
-                               <input type="text" name="telephone" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
+                           <div class="form-field" style="flex: 1;">
+                               <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left; display: block; margin-bottom: 4px;">Telephone no./ Cp no.</label>
+                               <input type="text" name="telephone" required class="form-input" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff; box-sizing: border-box;">
                            </div>
                        </div>
                 </div>
-                <div class="photo-section" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+                <div class="photo-section-desktop" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
                     <div class="photo-container" style="width: 320px; height: 300px; position: relative; margin-bottom: 0; border: 2px solid #222; background: #f6f2f2; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                         <img id="profile-preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0; display: none; position: absolute; top: 0; left: 0;">
                         <span id="picturePreviewLabel" style="font-size: 38px; font-family: 'Segoe UI', Arial, sans-serif; color: #222; letter-spacing: 4px; text-align: center; font-weight: 500; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Upload<br>Photo</span>
@@ -1229,7 +1529,15 @@
         let cropper;
         const pictureInput = document.getElementById('pictureInput');
         const cameraBtn = document.getElementById('cameraBtn');
+        const cameraBtnMobile = document.getElementById('cameraBtn-mobile');
+        
+        // Desktop camera button
         cameraBtn.addEventListener('click', function() {
+            pictureInput.click();
+        });
+        
+        // Mobile camera button (use same input)
+        cameraBtnMobile.addEventListener('click', function() {
             pictureInput.click();
         });
         const profilePreview = document.getElementById('profile-preview');
@@ -1264,23 +1572,38 @@
                 const canvas = cropper.getCroppedCanvas({ width: 320, height: 300 });
                 const dataUrl = canvas.toDataURL('image/png');
                 document.getElementById('cropped-picture').value = dataUrl;
+                
+                // Update desktop preview
                 const profilePreview = document.getElementById('profile-preview');
                 const picturePreviewLabel = document.getElementById('picturePreviewLabel');
                 profilePreview.src = dataUrl;
                 profilePreview.style.display = 'block';
                 picturePreviewLabel.style.display = 'none';
+                
+                // Update mobile preview
+                const profilePreviewMobile = document.getElementById('profile-preview-mobile');
+                const picturePreviewLabelMobile = document.getElementById('picturePreviewLabel-mobile');
+                profilePreviewMobile.src = dataUrl;
+                profilePreviewMobile.style.display = 'block';
+                picturePreviewLabelMobile.style.display = 'none';
+                
                 cropperModal.style.display = 'none';
                 cropper.destroy();
             }
         }
         function closeModal() {
             cropperModal.style.display = 'none';
-            // Restore label if no image was saved
-            const profilePreview = document.getElementById('profile-preview');
-            const picturePreviewLabel = document.getElementById('picturePreviewLabel');
+            // Restore labels if no image was saved
             if (!document.getElementById('cropped-picture').value) {
+                const profilePreview = document.getElementById('profile-preview');
+                const picturePreviewLabel = document.getElementById('picturePreviewLabel');
+                const profilePreviewMobile = document.getElementById('profile-preview-mobile');
+                const picturePreviewLabelMobile = document.getElementById('picturePreviewLabel-mobile');
+                
                 profilePreview.style.display = 'none';
                 picturePreviewLabel.style.display = 'block';
+                profilePreviewMobile.style.display = 'none';
+                picturePreviewLabelMobile.style.display = 'block';
             }
             if (cropper) cropper.destroy();
         }

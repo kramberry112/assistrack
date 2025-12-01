@@ -303,6 +303,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         return view('admin.reports.tasks', compact('students', 'currentUser'));
     });
+    
+    // Admin route to view individual user's completed tasks
+    Route::get('/admin/tasks/user/{userId}', function($userId) {
+        $user = auth()->user();
+        
+        // Only allow admin to view tasks
+        if ($user->role !== 'admin') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
+        $tasks = \App\Models\StudentTask::where('user_id', $userId)
+            ->where('status', 'completed')
+            ->orderBy('updated_at', 'desc')
+            ->get(['id', 'title', 'description', 'updated_at']);
+        
+        return response()->json(['tasks' => $tasks]);
+    });
+    
     Route::get('/admin/reports/grades', function() {
         $grades = Grade::all();
     return view('admin.reports.grades', compact('grades'));

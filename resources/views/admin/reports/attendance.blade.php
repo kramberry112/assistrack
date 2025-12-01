@@ -7,11 +7,27 @@
 
 @section('content')
 <style>
+    /* Prevent horizontal scroll */
+    * {
+        box-sizing: border-box;
+    }
+    
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+    
     .content-wrapper {
         background: #fff !important;
     }
     .admin-content-wrapper {
         background: #fff !important;
+    }
+    
+    /* Ensure containers don't overflow */
+    .overflow-x-auto {
+        max-width: 100%;
+        overflow: auto;
     }
     
     /* Hide mobile cards by default */
@@ -23,7 +39,9 @@
     @media (max-width: 768px) {
         /* Container adjustments */
         div[style*="padding: 24px"] {
-            padding: 16px !important;
+            padding: 8px !important;
+            max-width: 100vw !important;
+            overflow: hidden !important;
         }
         
         /* Date filter form - mobile friendly */
@@ -31,59 +49,79 @@
             flex-direction: column !important;
             align-items: stretch !important;
             gap: 12px !important;
-            margin-bottom: 20px !important;
+            margin-bottom: 16px !important;
+            padding: 0 !important;
         }
         
         .mb-6 label {
             font-size: 0.9rem !important;
+            margin-bottom: 4px !important;
+            display: block !important;
         }
         
         .mb-6 input[type="date"] {
             width: 100% !important;
-            padding: 12px !important;
+            padding: 12px 8px !important;
             font-size: 1rem !important;
+            border-radius: 8px !important;
+            border: 1px solid #d1d5db !important;
         }
         
         .mb-6 button {
             width: 100% !important;
             padding: 12px !important;
             font-size: 1rem !important;
+            border-radius: 8px !important;
+            margin-top: 8px !important;
+            background: #2563eb !important;
+            color: #fff !important;
+            border: none !important;
+        }
+        
+        .mb-6 button:hover {
+            background: #1d4ed8 !important;
         }
         
         /* Hide table on mobile */
-        .overflow-x-auto table {
-            display: none;
+        .overflow-x-auto {
+            display: none !important;
         }
         
         /* Show mobile cards instead */
         .mobile-attendance-cards {
             display: block !important;
+            padding: 0 !important;
+            margin: 0 !important;
         }
         
         .attendance-card {
             background: #fff;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
         }
         
         .attendance-card-header {
-            margin-bottom: 16px;
-            padding-bottom: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 1px solid #f3f4f6;
         }
         
         .attendance-card-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: #111827;
             margin: 0 0 4px 0;
+            word-wrap: break-word;
         }
         
         .attendance-card-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #6b7280;
             margin: 0;
         }
@@ -91,33 +129,38 @@
         .attendance-card-details {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
         
         .attendance-detail-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 4px 0;
         }
         
         .attendance-detail-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #6b7280;
             font-weight: 500;
+            flex-shrink: 0;
         }
         
         .attendance-detail-value {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #111827;
             font-weight: 600;
+            text-align: right;
+            word-wrap: break-word;
+            max-width: 60%;
         }
         
         .status-badge-mobile {
             display: inline-flex;
             align-items: center;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
             font-weight: 500;
         }
         
@@ -125,6 +168,36 @@
         .status-late { background: #fef3c7; color: #92400e; }
         .status-absent { background: #fee2e2; color: #991b1b; }
         .status-default { background: #f3f4f6; color: #374151; }
+    }
+    
+    /* Ultra mobile (small phones) */
+    @media (max-width: 480px) {
+        div[style*="padding: 24px"] {
+            padding: 4px !important;
+        }
+        
+        .attendance-card {
+            padding: 12px !important;
+            margin-bottom: 8px !important;
+        }
+        
+        .attendance-card-title {
+            font-size: 0.9rem !important;
+        }
+        
+        .attendance-card-subtitle {
+            font-size: 0.75rem !important;
+        }
+        
+        .attendance-detail-label,
+        .attendance-detail-value {
+            font-size: 0.75rem !important;
+        }
+        
+        .mb-6 input[type="date"],
+        .mb-6 button {
+            padding: 10px 6px !important;
+        }
     }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">

@@ -7,6 +7,16 @@
 
 @section('content')
 <style>
+    /* Prevent horizontal scroll */
+    * {
+        box-sizing: border-box;
+    }
+    
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+    
     .content-wrapper {
         background: #fff !important;
     }
@@ -23,48 +33,60 @@
     @media (max-width: 768px) {
         /* Container adjustments */
         div[style*="padding: 24px"] {
-            padding: 16px !important;
+            padding: 8px !important;
+            max-width: 100vw !important;
+            overflow: hidden !important;
         }
         
         .main-content-card {
-            padding: 20px !important;
+            padding: 16px !important;
             margin: 0 !important;
+            border-radius: 8px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
         }
         
         /* Hide table on mobile */
         .reports-table {
-            display: none;
+            display: none !important;
         }
         
         /* Show mobile cards instead */
         .mobile-evaluation-cards {
             display: block !important;
+            padding: 0 !important;
+            margin: 0 !important;
         }
         
         .evaluation-card {
             background: #fff;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
         }
         
         .evaluation-card-header {
-            margin-bottom: 16px;
-            padding-bottom: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 1px solid #f3f4f6;
         }
         
         .evaluation-card-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: #111827;
             margin: 0 0 4px 0;
+            word-wrap: break-word;
         }
         
         .evaluation-card-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #6b7280;
             margin: 0;
         }
@@ -72,25 +94,71 @@
         .evaluation-card-details {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
         
         .evaluation-detail-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 4px 0;
         }
         
         .evaluation-detail-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #6b7280;
             font-weight: 500;
+            flex-shrink: 0;
         }
         
         .evaluation-detail-value {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #111827;
             font-weight: 600;
+            text-align: right;
+            word-wrap: break-word;
+            max-width: 60%;
+        }
+        
+        /* View button mobile adjustments */
+        .evaluation-card a {
+            margin-top: 8px !important;
+            padding: 10px 16px !important;
+            font-size: 0.85rem !important;
+        }
+    }
+    
+    /* Ultra mobile (small phones) */
+    @media (max-width: 480px) {
+        div[style*="padding: 24px"] {
+            padding: 4px !important;
+        }
+        
+        .main-content-card {
+            padding: 12px !important;
+        }
+        
+        .evaluation-card {
+            padding: 12px !important;
+            margin-bottom: 8px !important;
+        }
+        
+        .evaluation-card-title {
+            font-size: 0.9rem !important;
+        }
+        
+        .evaluation-card-subtitle {
+            font-size: 0.75rem !important;
+        }
+        
+        .evaluation-detail-label,
+        .evaluation-detail-value {
+            font-size: 0.75rem !important;
+        }
+        
+        .evaluation-card a {
+            padding: 8px 12px !important;
+            font-size: 0.8rem !important;
         }
     }
 </style>

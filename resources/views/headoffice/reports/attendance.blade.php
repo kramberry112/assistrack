@@ -28,18 +28,30 @@
         
         .mb-6 label {
             font-size: 0.9rem !important;
+            margin-bottom: 4px !important;
         }
         
         .mb-6 input[type="date"] {
             width: 100% !important;
             padding: 12px !important;
             font-size: 1rem !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 8px !important;
         }
         
         .mb-6 button {
             width: 100% !important;
-            padding: 12px !important;
+            padding: 14px 16px !important;
             font-size: 1rem !important;
+            background-color: #2563eb !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+        }
+        
+        .mb-6 button:hover {
+            background-color: #1d4ed8 !important;
         }
         
         /* Hide table on mobile */
@@ -122,19 +134,24 @@
             margin-bottom: 16px;
             opacity: 0.5;
         }
-    }
     
     @media (max-width: 480px) {
-        div[style*="padding: 24px"] {
+        div[style*="padding: 24px"] 
             padding: 12px !important;
         }
         
         .attendance-card {
             padding: 16px !important;
+            margin-bottom: 12px !important;
         }
         
         .attendance-card-title {
             font-size: 1rem !important;
+            line-height: 1.3 !important;
+        }
+        
+        .attendance-card-subtitle {
+            font-size: 0.8rem !important;
         }
         
         .attendance-detail-item {
@@ -146,20 +163,24 @@
         .attendance-detail-value {
             text-align: left !important;
         }
-    }
+        
+        .status-badge {
+            font-size: 0.7rem !important;
+            padding: 3px 8px !important;
+        }
     
     /* Desktop - hide mobile cards */
     .mobile-attendance-cards {
         display: none;
     }
 </style>
-<div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
+<div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px); overflow-x: hidden;">
         <!-- Date Filter Form -->
-        <form method="GET" action="{{ route('head.reports.attendance') }}" class="mb-6 flex items-center gap-3" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <form method="GET" action="{{ route('head.reports.attendance') }}" class="mb-6 flex items-center gap-3" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
             <label for="date" class="text-sm font-medium text-gray-700">Select Date:</label>
             <input type="date" id="date" name="date" value="{{ request('date', now()->format('Y-m-d')) }}" 
                    class="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition">
+            <button type="submit" style="background-color: #2563eb; color: white; padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
                 View Report
             </button>
         </form>

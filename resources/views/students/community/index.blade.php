@@ -20,6 +20,9 @@
 
 <style>
     /* Community Specific Styles */
+    * {
+        box-sizing: border-box;
+    }
 
     .header-title {
         display: flex;
@@ -207,6 +210,8 @@
     @media (max-width: 768px) {
         body {
             overflow-x: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .main-content {
@@ -214,24 +219,27 @@
             margin: 0 !important;
             width: 100% !important;
             max-width: 100vw !important;
+            box-sizing: border-box !important;
         }
 
         .page-header {
             margin: 0 !important;
-            padding: 16px !important;
+            padding: 12px 16px !important;
         }
 
         .content-section {
-            padding: 16px !important;
+            padding: 12px !important;
             margin: 0 !important;
             width: 100% !important;
             max-width: 100vw !important;
             box-sizing: border-box !important;
+            flex-direction: column !important;
+            gap: 16px !important;
         }
 
         .community-list {
-            grid-template-columns: 1fr !important;
-            gap: 16px !important;
+            flex: none !important;
+            order: 2 !important;
             width: 100% !important;
             max-width: 100vw !important;
             box-sizing: border-box !important;
@@ -239,34 +247,36 @@
             padding: 0 !important;
         }
 
-        .community-card {
+        .community-item {
             padding: 16px !important;
             width: 100% !important;
             max-width: 100% !important;
             box-sizing: border-box !important;
             margin: 0 !important;
+            position: relative !important;
         }
 
-        .community-header {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 8px !important;
-        }
-
-        .community-title {
+        .community-name {
             font-size: 1.1rem !important;
+            padding-right: 40px !important;
         }
 
-        .community-info {
+        .community-meta {
             flex-direction: column !important;
             align-items: flex-start !important;
-            gap: 8px !important;
+            gap: 12px !important;
             width: 100% !important;
         }
 
-        .community-actions {
+        .member-count {
+            align-self: flex-start !important;
+        }
+
+        .pending-requests {
+            position: static !important;
             width: 100% !important;
-            justify-content: stretch !important;
+            margin-bottom: 12px !important;
+            min-width: auto !important;
         }
 
         .join-btn, .view-btn, .create-btn {
@@ -276,53 +286,45 @@
             text-align: center !important;
         }
 
-        /* Chat Modal Mobile Styles */
-        .modal-content {
-            width: 95% !important;
-            height: 90vh !important;
-            margin: 5vh auto !important;
+        /* Chat box mobile styles */
+        .chat-box {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
         }
 
-        .chat-container {
-            height: calc(90vh - 120px) !important;
+        .chat-messages {
+            height: 200px !important;
+            padding: 8px !important;
         }
 
-        .messages-area {
-            padding: 12px !important;
+        .chat-input {
+            font-size: 16px !important;
+            padding: 10px 12px !important;
         }
 
-        .message-item {
-            padding: 8px 12px !important;
+        .chat-form {
+            gap: 6px !important;
+        }
+
+        .chat-form button {
+            padding: 10px 16px !important;
             font-size: 0.9rem !important;
-        }
-
-        .message-input {
-            padding: 12px !important;
-            font-size: 16px !important; /* Prevents iOS zoom */
-        }
-
-        .send-btn {
-            padding: 12px 16px !important;
         }
 
         /* Create Community Form Mobile */
         .create-community {
             flex: none !important;
             width: 100% !important;
-            margin: 16px 0 !important;
+            margin: 0 !important;
             padding: 16px !important;
-            order: 1 !important; /* Move above community list */
+            order: 1 !important;
+            box-sizing: border-box !important;
         }
 
-        .content-section {
-            flex-direction: column !important;
-            gap: 16px !important;
-            align-items: stretch !important;
-        }
-
-        .community-list {
-            order: 2 !important;
-            margin-top: 16px !important;
+        .form-title {
+            font-size: 1rem !important;
+            margin-bottom: 16px !important;
         }
 
         /* Create Group Modal */
@@ -357,30 +359,61 @@
             margin: 20px !important;
             min-width: 280px !important;
             max-width: 90% !important;
-            padding: 24px !important;
+            width: calc(100% - 40px) !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+        }
+
+        #joinRequestModal div[style*="display:flex"] {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+
+        #joinRequestModal button {
+            width: 100% !important;
+            padding: 12px !important;
+            font-size: 16px !important;
+        }
+
+        /* Ensure no elements extend beyond viewport */
+        .community-item * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Fix any potential overflow from long text */
+        .community-name, 
+        .community-owner, 
+        .community-description {
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
         }
     }
 
     @media (max-width: 480px) {
         .content-section {
+            padding: 8px !important;
+        }
+
+        .community-item {
             padding: 12px !important;
         }
 
-        .community-card {
-            padding: 12px !important;
-        }
-
-        .community-title {
+        .community-name {
             font-size: 1rem !important;
+            padding-right: 30px !important;
         }
 
         .community-description {
             font-size: 0.85rem !important;
+            line-height: 1.4 !important;
         }
 
         .join-btn, .view-btn, .create-btn {
-            padding: 8px 12px !important;
+            padding: 8px 16px !important;
             font-size: 0.85rem !important;
+            width: 100% !important;
+            margin-top: 8px !important;
         }
 
         .create-community {
@@ -394,8 +427,155 @@
         .form-group {
             margin-bottom: 12px !important;
         }
+
+        .form-input, .form-textarea {
+            padding: 10px 12px !important;
+            font-size: 16px !important;
+        }
+
+        .chat-messages {
+            height: 150px !important;
+        }
+
+        .pending-requests {
+            font-size: 0.85rem !important;
+            padding: 8px 12px !important;
+        }
+
+        .toggle-requests-btn {
+            font-size: 0.9rem !important;
+        }
+    }
+    /* Notification Styles */
+    .notification {
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        border-width: 1px;
+        border-style: solid;
+        position: relative;
+        animation: slideIn 0.3s ease-out;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .notification.success {
+        background-color: #dcfce7;
+        border-color: #16a34a;
+        color: #15803d;
+    }
+
+    .notification.error {
+        background-color: #fef2f2;
+        border-color: #dc2626;
+        color: #b91c1c;
+    }
+
+    .notification.warning {
+        background-color: #fefce8;
+        border-color: #ca8a04;
+        color: #a16207;
+    }
+
+    .notification.info {
+        background-color: #dbeafe;
+        border-color: #2563eb;
+        color: #1d4ed8;
+    }
+
+    .notification .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: inherit;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        min-width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .notification .close-btn:hover {
+        opacity: 1;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile notification styles */
+    @media (max-width: 768px) {
+        .notification {
+            padding: 12px 40px 12px 16px;
+            font-size: 0.9rem;
+            margin: 0 12px 16px 12px;
+            border-radius: 6px;
+        }
+        
+        .notification .close-btn {
+            top: 8px;
+            right: 12px;
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .notification {
+            padding: 10px 36px 10px 12px;
+            font-size: 0.85rem;
+            margin: 0 8px 12px 8px;
+        }
+        
+        .notification .close-btn {
+            top: 6px;
+            right: 8px;
+            font-size: 1rem;
+        }
     }
 </style>
+
+<!-- Notifications -->
+@if(session('success'))
+    <div class="notification success" id="successNotification">
+        <button class="close-btn" onclick="closeNotification('successNotification')">&times;</button>
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="notification error" id="errorNotification">
+        <button class="close-btn" onclick="closeNotification('errorNotification')">&times;</button>
+        {{ session('error') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="notification error" id="validationNotification">
+        <button class="close-btn" onclick="closeNotification('validationNotification')">&times;</button>
+        <strong>Please fix the following errors:</strong>
+        <ul style="margin: 8px 0 0 20px; padding: 0;">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <!-- Content -->
 <div class="content-section">
@@ -730,6 +910,73 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Notification functions
+function closeNotification(notificationId) {
+    const notification = document.getElementById(notificationId);
+    if (notification) {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }
+}
+
+function showNotification(message, type = 'info') {
+    // Remove existing dynamic notifications
+    const existingNotification = document.getElementById('dynamicNotification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create new notification
+    const notification = document.createElement('div');
+    notification.id = 'dynamicNotification';
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <button class="close-btn" onclick="closeNotification('dynamicNotification')">&times;</button>
+        ${message}
+    `;
+    
+    // Insert at the top of content section
+    const contentSection = document.querySelector('.content-section');
+    if (contentSection) {
+        contentSection.insertBefore(notification, contentSection.firstChild);
+    }
+    
+    // Auto-hide after 5 seconds for success/info messages
+    if (type === 'success' || type === 'info') {
+        setTimeout(() => {
+            closeNotification('dynamicNotification');
+        }, 5000);
+    }
+}
+
+// Auto-hide success notifications after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const successNotification = document.getElementById('successNotification');
+    if (successNotification) {
+        setTimeout(() => {
+            closeNotification('successNotification');
+        }, 5000);
+    }
+});
+
+// Add slide out animation
+const notificationStyle = document.createElement('style');
+notificationStyle.textContent = `
+    @keyframes slideOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+    }
+`;
+document.head.appendChild(notificationStyle);
 </script>
 
 @endsection

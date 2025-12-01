@@ -19,6 +19,8 @@
     body, .content-wrapper, .admin-content-wrapper {
         background: #fff !important;
         min-height: 100vh;
+        overflow-x: hidden;
+        max-width: 100vw;
     }
     .welcome-section {
         padding: 36px 24px 24px 24px;
@@ -116,9 +118,7 @@
     @media (max-width: 768px) {
         body {
             -webkit-text-size-adjust: 100%;
-        }
-        body {
-            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
         }
         
         .welcome-section {
@@ -126,6 +126,8 @@
             margin: 12px !important;
             max-width: calc(100% - 24px) !important;
             border-radius: 16px !important;
+            overflow-x: hidden;
+            word-wrap: break-word;
         }
 
         .welcome-message {
@@ -147,10 +149,13 @@
         .stat-card {
             min-width: unset !important;
             max-width: unset !important;
+            width: 100% !important;
             padding: 24px 20px !important;
             min-height: 100px !important;
             border-radius: 14px !important;
             flex-direction: row !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
         }
         
         .stat-card:hover {
