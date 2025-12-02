@@ -238,7 +238,7 @@
     }
 
     .modal {
-        display: none;
+        display: none !important;
         position: fixed;
         z-index: 1000;
         left: 0;
@@ -246,15 +246,39 @@
         width: 100%;
         height: 100%;
         background: rgba(0,0,0,0.5);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .modal.show {
+        display: flex !important;
     }
 
     .modal-content {
         background: white;
-        margin: 10% auto;
-        padding: 20px;
+        padding: 24px;
         border-radius: 10px;
-        width: 90%;
+        width: 100%;
         max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        animation: modalSlideIn 0.3s ease-out;
+        margin: 0;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .modal-header {
@@ -421,6 +445,88 @@
             min-width: 320px;
         }
     }
+
+    /* Styles for multiple student selection */
+    #multipleStudentSelection {
+        margin-top: 4px;
+    }
+
+    #studentCheckboxList {
+        background: #f9fafb;
+    }
+
+    #studentCheckboxList > div {
+        padding: 8px 12px;
+        border-bottom: 1px solid #e5e7eb;
+        transition: background-color 0.2s;
+    }
+
+    #studentCheckboxList > div:hover {
+        background: #f3f4f6;
+    }
+
+    #studentCheckboxList > div:last-child {
+        border-bottom: none;
+    }
+
+    #studentCheckboxList input[type="checkbox"] {
+        accent-color: #2563eb;
+    }
+
+    #studentCheckboxList label {
+        user-select: none;
+        flex: 1;
+    }
+
+    .partial-assignment-info {
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 6px;
+        padding: 8px 12px;
+        margin: 8px 0;
+        font-size: 0.85rem;
+        color: #92400e;
+    }
+
+    /* Modal button styles */
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn-modal {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-width: 100px;
+    }
+
+    .btn-primary {
+        background: #2563eb;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #1d4ed8;
+    }
+
+    .btn-secondary {
+        background: #f3f4f6;
+        color: #374151;
+        border: 1px solid #d1d5db;
+    }
+
+    .btn-secondary:hover {
+        background: #e5e7eb;
+    }
 </style>
 
 <div class="content-card">
@@ -464,30 +570,72 @@
                             </span>
                         </td>
                         <td>
-                            @if($request->assignedStudent)
-                                <div>
-                                    <strong>{{ $request->assignedStudent->student_name }}</strong><br>
-                                    <small>{{ $request->assignedStudent->id_number }}</small>
-                                </div>
+                            @php
+                                $assignedStudents = $request->getAllAssignedStudents();
+                                $assignedCount = $assignedStudents->count();
+                            @endphp
+                            
+                            @if($assignedCount > 0)
+                                @if($assignedCount == 1)
+                                    <div>
+                                        <strong>{{ $assignedStudents->first()->student_name }}</strong><br>
+                                        <small>{{ $assignedStudents->first()->id_number }}</small>
+                                    </div>
+                                @else
+                                    <div>
+                                        <strong>{{ $assignedCount }} students assigned:</strong><br>
+                                        @foreach($assignedStudents->take(2) as $student)
+                                            <small>• {{ $student->student_name }} ({{ $student->id_number }})</small><br>
+                                        @endforeach
+                                        @if($assignedCount > 2)
+                                            <small style="color: #6b7280;">... and {{ $assignedCount - 2 }} more</small>
+                                        @endif
+                                    </div>
+                                @endif
                             @else
-                                <span style="color: #6b7280; font-style: italic;">Not assigned</span>
+                                <span style="color: #6b7280; font-style: italic;">
+                                    Not assigned 
+                                    @if($request->requested_count > 1)
+                                        ({{ $request->requested_count }} needed)
+                                    @endif
+                                </span>
                             @endif
                         </td>
                         <td>{{ $request->created_at->format('M d, Y') }}</td>
                         <td>
                             <div class="action-buttons">
+                                @php
+                                    $assignedCount = $request->getAllAssignedStudents()->count();
+                                    $isFullyAssigned = $assignedCount >= $request->requested_count;
+                                @endphp
+                                
                                 @if($request->status === 'pending')
                                     <button class="action-btn btn-approve" 
                                             onclick="showAssignmentModal({{ $request->id }}, '{{ $request->office }}', {{ $request->requested_count }}, '{{ addslashes($request->description) }}')">
-                                        Assign SA
+                                        Assign SA{{ $request->requested_count > 1 ? 's' : '' }}
                                     </button>
                                     <button class="action-btn btn-reject" 
                                             onclick="showRejectionModal({{ $request->id }}, '{{ $request->office }}', '{{ addslashes($request->description) }}')">
                                         Reject
                                     </button>
+                                @elseif($request->status === 'approved' && !$isFullyAssigned)
+                                    @php
+                                        $remaining = $request->requested_count - $assignedCount;
+                                    @endphp
+                                    <button class="action-btn btn-approve" 
+                                            onclick="showAssignmentModal({{ $request->id }}, '{{ $request->office }}', {{ $remaining }}, '{{ addslashes($request->description) }} - Additional Assignment')">
+                                        Assign {{ $remaining }} More
+                                    </button>
+                                    <small style="display: block; color: #059669; margin-top: 4px;">
+                                        {{ $assignedCount }}/{{ $request->requested_count }} assigned
+                                    </small>
                                 @else
                                     <button class="action-btn btn-disabled" disabled>
-                                        {{ ucfirst($request->status) }}
+                                        @if($isFullyAssigned)
+                                            Fully Assigned
+                                        @else
+                                            {{ ucfirst($request->status) }}
+                                        @endif
                                     </button>
                                     @if($request->reason)
                                         <small style="display: block; color: #6b7280; margin-top: 4px;">
@@ -554,6 +702,9 @@
             <span class="close" onclick="closeModal('assignmentModal')">&times;</span>
         </div>
         <form id="assignmentForm">
+            <div id="partialAssignmentInfo" class="partial-assignment-info" style="display: none;">
+                <!-- This will be populated with current assignment status for partial assignments -->
+            </div>
             <div class="form-group">
                 <label class="form-label">Office:</label>
                 <input type="text" id="assignOffice" class="form-input" readonly>
@@ -567,10 +718,21 @@
                 <textarea id="assignDescription" class="form-textarea" readonly rows="3"></textarea>
             </div>
             <div class="form-group">
-                <label class="form-label">Select Student to Assign:</label>
-                <select id="assignStudentId" class="form-input" required>
+                <label class="form-label" id="studentSelectLabel">Select Student to Assign:</label>
+                <select id="assignStudentId" class="form-input" required style="display: none;">
                     <option value="">Loading students...</option>
                 </select>
+                <!-- Multiple student selection for requests with count > 1 -->
+                <div id="multipleStudentSelection" style="display: none;">
+                    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #d1d5db; border-radius: 6px; padding: 8px;">
+                        <div id="studentCheckboxList">
+                            <!-- Student checkboxes will be populated here -->
+                        </div>
+                    </div>
+                    <small style="color: #6b7280; margin-top: 4px; display: block;" id="selectionHelper">
+                        Select up to <span id="maxSelectionCount">1</span> students for this assignment.
+                    </small>
+                </div>
             </div>
             <div class="form-group">
                 <label class="form-label">Assignment Notes (Optional):</label>
@@ -622,10 +784,39 @@ function showAssignmentModal(requestId, office, requestedCount, description) {
     document.getElementById('assignDescription').value = description;
     document.getElementById('assignReason').value = '';
     
-    // Load available students
-    loadAvailableStudents();
+    // Configure UI based on requested count
+    const singleSelect = document.getElementById('assignStudentId');
+    const multipleSelect = document.getElementById('multipleStudentSelection');
+    const label = document.getElementById('studentSelectLabel');
+    const maxCount = document.getElementById('maxSelectionCount');
+    const partialInfo = document.getElementById('partialAssignmentInfo');
     
-    document.getElementById('assignmentModal').style.display = 'block';
+    // Check if this is a partial assignment (description contains "Additional Assignment")
+    const isPartialAssignment = description.includes('Additional Assignment');
+    
+    if (isPartialAssignment) {
+        partialInfo.style.display = 'block';
+        partialInfo.innerHTML = '<strong>Partial Assignment:</strong> This request already has some students assigned. You are assigning the remaining positions.';
+    } else {
+        partialInfo.style.display = 'none';
+    }
+    
+    if (requestedCount > 1) {
+        // Show multiple selection for requests > 1
+        singleSelect.style.display = 'none';
+        multipleSelect.style.display = 'block';
+        label.textContent = `Select ${requestedCount} Student${requestedCount > 1 ? 's' : ''} to Assign:`;
+        maxCount.textContent = requestedCount;
+        loadAvailableStudentsMultiple(requestedCount);
+    } else {
+        // Show single selection for requests = 1
+        singleSelect.style.display = 'block';
+        multipleSelect.style.display = 'none';
+        label.textContent = 'Select Student to Assign:';
+        loadAvailableStudents();
+    }
+    
+    document.getElementById('assignmentModal').classList.add('show');
 }
 
 function showRejectionModal(requestId, office, description) {
@@ -633,7 +824,7 @@ function showRejectionModal(requestId, office, description) {
     document.getElementById('rejectOffice').value = office;
     document.getElementById('rejectDescription').value = description;
     document.getElementById('rejectReason').value = '';
-    document.getElementById('rejectionModal').style.display = 'block';
+    document.getElementById('rejectionModal').classList.add('show');
 }
 
 function loadAvailableStudents() {
@@ -663,8 +854,63 @@ function loadAvailableStudents() {
     });
 }
 
+function loadAvailableStudentsMultiple(maxCount) {
+    const container = document.getElementById('studentCheckboxList');
+    container.innerHTML = '<div style="text-align: center; padding: 10px;">Loading students...</div>';
+    
+    // Fetch available students (those not currently assigned as SA)
+    fetch('/admin/available-students', {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        container.innerHTML = '';
+        if (data.students.length === 0) {
+            container.innerHTML = '<div style="text-align: center; padding: 10px; color: #6b7280;">No available students found</div>';
+            return;
+        }
+        
+        data.students.forEach(student => {
+            const checkboxWrapper = document.createElement('div');
+            checkboxWrapper.style.cssText = 'margin-bottom: 8px; display: flex; align-items: center; padding: 4px;';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = student.id;
+            checkbox.name = 'selected_students';
+            checkbox.id = `student_${student.id}`;
+            checkbox.style.cssText = 'margin-right: 8px; min-width: 16px; min-height: 16px;';
+            
+            const label = document.createElement('label');
+            label.setAttribute('for', `student_${student.id}`);
+            label.style.cssText = 'cursor: pointer; font-size: 0.9rem; line-height: 1.2;';
+            label.textContent = `${student.student_name} (${student.id_number}) - ${student.course} Year ${student.year_level}`;
+            
+            // Add click handler to limit selection
+            checkbox.addEventListener('change', function() {
+                const checkedBoxes = container.querySelectorAll('input[type="checkbox"]:checked');
+                if (checkedBoxes.length > maxCount) {
+                    this.checked = false;
+                    alert(`You can only select up to ${maxCount} students for this request.`);
+                }
+            });
+            
+            checkboxWrapper.appendChild(checkbox);
+            checkboxWrapper.appendChild(label);
+            container.appendChild(checkboxWrapper);
+        });
+    })
+    .catch(error => {
+        console.error('Error loading students:', error);
+        container.innerHTML = '<div style="text-align: center; padding: 10px; color: #dc2626;">Error loading students</div>';
+    });
+}
+
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+    document.getElementById(modalId).classList.remove('show');
     currentRequestId = null;
 }
 
@@ -684,12 +930,32 @@ window.onclick = function(event) {
 document.getElementById('assignmentForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const studentId = document.getElementById('assignStudentId').value;
+    const requestedCount = parseInt(document.getElementById('assignRequestedCount').value);
     const reason = document.getElementById('assignReason').value;
+    let selectedStudents = [];
     
-    if (!studentId) {
-        alert('Please select a student to assign');
-        return;
+    if (requestedCount > 1) {
+        // Handle multiple selection
+        const checkboxes = document.querySelectorAll('input[name="selected_students"]:checked');
+        selectedStudents = Array.from(checkboxes).map(cb => cb.value);
+        
+        if (selectedStudents.length === 0) {
+            alert('Please select at least one student to assign');
+            return;
+        }
+        
+        if (selectedStudents.length !== requestedCount) {
+            alert(`Please select exactly ${requestedCount} students for this request`);
+            return;
+        }
+    } else {
+        // Handle single selection
+        const studentId = document.getElementById('assignStudentId').value;
+        if (!studentId) {
+            alert('Please select a student to assign');
+            return;
+        }
+        selectedStudents = [studentId];
     }
     
     fetch(`/admin/sa-requests/${currentRequestId}/assign`, {
@@ -699,7 +965,7 @@ document.getElementById('assignmentForm').addEventListener('submit', function(e)
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({ 
-            student_id: studentId,
+            student_ids: selectedStudents,
             reason: reason 
         })
     })

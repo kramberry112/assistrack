@@ -62,4 +62,37 @@ class SaRequest extends Model
     {
         return $this->status === 'approved' && $this->isAssigned();
     }
+
+    // Get all assigned students for this office request (including multi-assignments)
+    public function getAllAssignedStudents()
+    {
+        if ($this->requested_count == 1) {
+            return $this->assignedStudent ? collect([$this->assignedStudent]) : collect([]);
+        }
+
+        // For multi-assignment requests, find all related assignments
+        return \App\Models\Student::whereIn('id', function($query) {
+            $query->select('assigned_student_id')
+                ->from('sa_requests')
+                ->where('office', $this->office)
+                ->where('status', 'approved')
+                ->whereNotNull('assigned_student_id')
+                ->where(function($q) {
+                    $q->where('id', $this->id)
+                      ->orWhere('description', 'like', $this->description . ' (Multi-assignment #%');
+                });
+        })->get();
+    }
+
+    // Get count of assigned students for this request
+    public function getAssignedCount()
+    {
+        return $this->getAllAssignedStudents()->count();
+    }
+
+    // Check if all requested positions are filled
+    public function isFullyAssigned()
+    {
+        return $this->getAssignedCount() >= $this->requested_count;
+    }
 }
