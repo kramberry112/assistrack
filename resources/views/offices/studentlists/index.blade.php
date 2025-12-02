@@ -376,7 +376,7 @@
                             <input type="text" name="search" id="officeStudentSearchBar" value="{{ request('search') }}" placeholder="Search students..." style="padding: 7px 12px; border-radius: 6px; border: 1px solid #bbb; font-size: 15px;">
                             <button type="submit" style="padding: 7px 18px; border-radius: 6px; background: #2563eb; color: #fff; border: none; font-size: 15px; cursor: pointer;">Search</button>
                         </form>
-                        <a href="{{ route('offices.studentlists.request_sa') }}" class="btn btn-primary" style="padding: 7px 18px; border-radius: 6px; background: #2563eb; color: #fff; border: none; font-size: 15px; font-weight: 500; cursor: pointer; text-decoration: none;">Request SA</a>
+                        <button id="requestSaHelpBtn" style="padding: 7px 18px; border-radius: 6px; background: #059669; color: #fff; border: none; font-size: 15px; font-weight: 500; cursor: pointer;">Request SA</button>
                     </div>
                     <!-- ...existing code... -->
 
@@ -537,6 +537,135 @@
         searchBar.addEventListener('input', function() {
             if (searchBar.value.trim() === '') {
                 window.location.href = originalUrl;
+            }
+        });
+    }
+
+    // SA Help Request functionality
+    let currentModal = null;
+    
+    const requestSaHelpBtn = document.getElementById('requestSaHelpBtn');
+    if (requestSaHelpBtn) {
+        requestSaHelpBtn.addEventListener('click', function() {
+            // Show modal for SA help request
+            showSaHelpRequestModal();
+        });
+    }
+
+    window.closeSaHelpModal = function() {
+        if (currentModal) {
+            currentModal.remove();
+            currentModal = null;
+        }
+    };
+
+    function showSaHelpRequestModal() {
+        // Close existing modal if any
+        if (currentModal) {
+            currentModal.remove();
+        }
+        
+        currentModal = document.createElement('div');
+        currentModal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; display: flex;
+            align-items: center; justify-content: center;
+        `;
+        
+        currentModal.innerHTML = `
+            <div style="background: white; padding: 24px; border-radius: 10px; width: 90%; max-width: 500px;">
+                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 1.3rem;">Request Student Assistant Help</h2>
+                <form id="saHelpRequestForm">
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 4px; font-weight: 500; color: #374151;">
+                            Number of SAs needed:
+                        </label>
+                        <input type="number" id="requestedCount" min="1" max="5" value="1" 
+                               style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 4px; font-weight: 500; color: #374151;">
+                            Description of help needed:
+                        </label>
+                        <textarea id="helpDescription" required rows="4" placeholder="Describe what kind of assistance you need..."
+                                  style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; resize: vertical;"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button type="button" onclick="closeSaHelpModal()" 
+                                style="padding: 8px 16px; border: 1px solid #d1d5db; background: #f9fafb; border-radius: 6px; cursor: pointer;">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                style="padding: 8px 16px; background: #059669; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                            Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        `;
+        
+        document.body.appendChild(currentModal);
+        
+        // Handle form submission
+        document.getElementById('saHelpRequestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const requestedCount = document.getElementById('requestedCount').value;
+            const description = document.getElementById('helpDescription').value.trim();
+            
+            if (!description) {
+                alert('Please provide a description of help needed');
+                return;
+            }
+            
+            // Disable submit button
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            fetch("{{ route('offices.studentlists.request_sa') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    requested_count: parseInt(requestedCount),
+                    description: description
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    closeSaHelpModal();
+                    // Optionally refresh to show updated status
+                    // window.location.reload();
+                } else {
+                    alert(data.message || 'Error submitting SA request');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Request';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting SA request');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Request';
+            });
+        });
+        
+        // Close modal when clicking outside
+        currentModal.addEventListener('click', function(e) {
+            if (e.target === currentModal) {
+                closeSaHelpModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && currentModal) {
+                closeSaHelpModal();
             }
         });
     }

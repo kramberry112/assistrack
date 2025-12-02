@@ -64,4 +64,22 @@ class Student extends Model
     {
         return $this->hasOne(Grade::class)->latest();
     }
+
+    // Relationship with SA Requests (where this student is assigned as SA)
+    public function assignedSaRequests()
+    {
+        return $this->hasMany(SaRequest::class, 'assigned_student_id');
+    }
+
+    // Check if student is currently assigned as SA to any office
+    public function isAssignedAsSa()
+    {
+        return $this->assignedSaRequests()->where('status', 'approved')->exists();
+    }
+
+    // Get offices where student is assigned as SA
+    public function getAssignedOffices()
+    {
+        return $this->assignedSaRequests()->where('status', 'approved')->pluck('office');
+    }
 }

@@ -39,11 +39,52 @@ class OfficeStudentListController extends Controller
             });
         }
 
-        $students = $query->paginate(9)->appends($request->except('page'));
+        $students = $query->orderBy('created_at', 'desc')->paginate(9)->appends($request->except('page'));
         
         // Pass the office name to the view for display
         $officeName = $user && $user->office_name ? $user->office_name : 'Unknown Office';
         
         return view('offices.studentlists.index', compact('students', 'officeName'));
+    }
+
+    public function requestSa(Request $request)
+    {
+        $request->validate([
+            'requested_count' => 'required|integer|min:1|max:5',
+            'description' => 'required|string|max:1000'
+        ]);
+
+        $user = auth()->user();
+        
+        // Check if office already has a pending SA request
+        $existingRequest = \App\Models\SaRequest::where('office', $user->office_name)
+            ->where('status', 'pending')
+            ->first();
+            
+        if ($existingRequest) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your office already has a pending SA request. Please wait for admin response.'
+            ], 400);
+        }
+
+        // Create the SA help request
+        $saRequest = \App\Models\SaRequest::create([
+            'office' => $user->office_name,
+            'description' => $request->description,
+            'requested_count' => $request->requested_count,
+            'status' => 'pending'
+        ]);
+
+        // Notify admins about the new SA request
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new \App\Notifications\SaRequestCreated($saRequest));
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'SA help request submitted successfully! Admin will find and assign a student assistant to your office.'
+        ]);
     }
 }

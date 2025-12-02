@@ -264,6 +264,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/offices/evaluations/{evaluation}/view', [\App\Http\Controllers\EvaluationController::class, 'officeView'])->name('offices.evaluations.view');
     Route::get('/admin/reports/evaluation', [\App\Http\Controllers\AdminEvaluationController::class, 'index'])->name('admin.evaluations.index');
     Route::get('/admin/evaluations/{evaluation}/view', [\App\Http\Controllers\AdminEvaluationController::class, 'view'])->name('admin.evaluations.view');
+    
+    // Admin Notification Routes
+    Route::get('/admin/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::post('/admin/notifications/{notificationId}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
+    Route::post('/admin/notifications/mark-all-read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('admin.notifications.markAllAsRead');
+
+    // SA Request Management Routes
+    Route::get('/admin/sa-requests', [\App\Http\Controllers\Admin\SaRequestController::class, 'index'])->name('admin.sa-requests.index');
+    Route::get('/admin/available-students', [\App\Http\Controllers\Admin\SaRequestController::class, 'getAvailableStudents'])->name('admin.available-students');
+    Route::post('/admin/sa-requests/{saRequest}/assign', [\App\Http\Controllers\Admin\SaRequestController::class, 'assign'])->name('admin.sa-requests.assign');
+    Route::post('/admin/sa-requests/{saRequest}/reject', [\App\Http\Controllers\Admin\SaRequestController::class, 'reject'])->name('admin.sa-requests.reject');
     Route::get('/admin/reports/tasks', function() {
         $currentUser = auth()->user();
         
@@ -463,7 +474,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('offices.dashboard.index', compact('user', 'totalTasks', 'totalStudents', 'attendanceCount'));
     })->name('offices.dashboard');
     Route::get('/offices-student-list', [\App\Http\Controllers\OfficeStudentListController::class, 'index'])->name('offices.studentlists.index');
-    Route::get('/offices-student-list/request-sa', [\App\Http\Controllers\OfficeStudentListController::class, 'requestSa'])->name('offices.studentlists.request_sa');
+    Route::post('/offices-student-list/request-sa', [\App\Http\Controllers\OfficeStudentListController::class, 'requestSa'])->name('offices.studentlists.request_sa');
     Route::get('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'show'])->name('evaluation.show');
     Route::post('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'submit'])->name('evaluation.submit');
     Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');

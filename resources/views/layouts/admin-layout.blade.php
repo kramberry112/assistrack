@@ -175,6 +175,11 @@
         text-align: center;
         width: auto;
     }
+    
+    /* Ensure sidebar has position relative for proper absolute positioning */
+    .sidebar {
+        position: relative;
+    }
 
     #logoutMenu a,
     #logoutMenu button {
@@ -626,6 +631,16 @@
                     </span>
                     User Management
                 </a>
+                <a href="{{ route('admin.sa-requests.index') }}" class="{{ request()->routeIs('admin.sa-requests.*') ? 'active' : '' }}">
+                    <span class="icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <polyline points="17,11 19,13 23,9"/>
+                        </svg>
+                    </span>
+                    SA Requests
+                </a>
                 
                 <!-- Reports Dropdown -->
                 <div style="padding:0; margin:0; list-style:none;">
@@ -753,6 +768,24 @@
                     });
             }
 
+            // Mark all notifications as read function
+            window.markAllNotificationsAsRead = function() {
+                fetch('/admin/notifications/mark-all-read', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateAdminNotificationCount();
+                        // Close dropdown
+                        document.getElementById('adminNotificationDropdown').style.display = 'none';
+                    }
+                });
+            };
+
             // Update notification count on page load and every 30 seconds
             updateAdminNotificationCount();
             setInterval(updateAdminNotificationCount, 30000);
@@ -777,12 +810,35 @@
                                 if (data.length === 0) {
                                     content.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
                                 } else {
-                                    content.innerHTML = data.map(n => `
-                                        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">
-                                            <div style="font-weight:600;color:#2563eb;">${n.title}</div>
-                                            <div style="color:#374151;">${n.message}</div>
+                                    content.innerHTML = `
+                                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e5e7eb;">
+                                            <div style="font-weight:600;color:#111827;">Notifications (${data.length})</div>
+                                            <button onclick="markAllNotificationsAsRead()" style="background:#3b82f6;color:white;border:none;padding:4px 8px;border-radius:4px;font-size:0.8rem;cursor:pointer;">
+                                                Mark all as read
+                                            </button>
                                         </div>
-                                    `).join('');
+                                        ${data.map(n => `
+                                            <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">
+                                                <div style="font-weight:600;color:#2563eb;">${n.title}</div>
+                                                <div style="color:#374151;">${n.message}</div>
+                                                <div style="color:#6b7280;font-size:0.8rem;margin-top:4px;">${n.created_at}</div>
+                                            </div>
+                                        `).join('')}
+                                    `;
+                                    
+                                    // Automatically mark all notifications as read after viewing
+                                    setTimeout(() => {
+                                        fetch('/admin/notifications/mark-all-read', {
+                                            method: 'POST',
+                                            headers: {
+                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                                'Content-Type': 'application/json'
+                                            }
+                                        }).then(() => {
+                                            // Update notification count after marking as read
+                                            updateAdminNotificationCount();
+                                        });
+                                    }, 2000); // Mark as read after 2 seconds of viewing
                                 }
                             });
                     }

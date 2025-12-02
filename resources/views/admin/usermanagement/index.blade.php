@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('page-title')
+    <i class="bi bi-people-fill" style="margin-right: 8px;"></i>
     User Management
 @endsection
 
