@@ -217,8 +217,8 @@
     /* Logout dropdown */
     #headLogoutMenu {
         display: none;
-        position: absolute;
-        bottom: 60px;
+        position: fixed;
+        bottom: 70px;
         left: 20px;
         background: #fff;
         border: none;
@@ -226,7 +226,7 @@
         box-shadow: 0 8px 32px rgba(0,0,0,0.12);
         padding: 24px 20px 16px 20px;
         min-width: 220px;
-        z-index: 100;
+        z-index: 1001;
         text-align: center;
     }
 
@@ -237,13 +237,17 @@
         border-radius: 6px;
         font-size: 0.9rem;
         font-weight: 500;
-        margin-bottom: 8px;
-        padding: 8px 12px;
+        margin-bottom: 12px;
+        padding: 12px 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         border: none;
         transition: background 0.2s, box-shadow 0.2s;
         text-align: center;
         cursor: pointer;
+    }
+    
+    #headLogoutMenu button {
+        margin-bottom: 0;
     }
 
     #headLogoutMenu a {

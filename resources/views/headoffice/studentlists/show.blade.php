@@ -76,7 +76,7 @@ html, body {
     <section class="relative bg-gradient-to-r from-indigo-600 to-blue-500 text-white py-12">
         <div class="container mx-auto px-6 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <a href="{{ route('student.list') }}" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);padding:8px 16px;border-radius:6px;color:white;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                <a href="{{ route('head.student.list') }}" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);padding:8px 16px;border-radius:6px;color:white;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M15 18l-6-6 6-6"/>
                     </svg>
@@ -129,6 +129,20 @@ html, body {
                         <div class="md:col-span-2">
                             <p class="text-gray-500 text-sm">Address</p>
                             <p class="font-medium">{{ $student->address }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Designated Office</p>
+                            <p class="font-medium">{{ $student->designated_office ?? 'N/A' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Full Matriculation</p>
+                            <p class="font-medium">
+                                @if($student->matriculation)
+                                    <span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">Yes</span>
+                                @else
+                                    <span style="background: #f3f4f6; color: #6b7280; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">Not Set</span>
+                                @endif
+                            </p>
                         </div>
                     </div>
                 </div>

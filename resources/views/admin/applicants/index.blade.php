@@ -523,15 +523,37 @@
 <div style="background: #fff; min-height: calc(100vh - 76px); padding: 0;">
             <!-- Success/Error Messages -->
             @if(session('success'))
-                <div style="position: fixed; top: 80px; right: 20px; z-index: 1000; padding: 12px 16px; background: #d1fae5; border: 1px solid #10b981; border-radius: 8px; color: #065f46; font-size: 0.95rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); max-width: 300px;">
+                <div id="successMessage" style="position: fixed; top: 80px; right: 20px; z-index: 1000; padding: 12px 16px; background: #d1fae5; border: 1px solid #10b981; border-radius: 8px; color: #065f46; font-size: 0.95rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); max-width: 300px; animation: slideOut 0.3s ease-in-out 3s forwards;">
                     {{ session('success') }}
                 </div>
+                <script>
+                    setTimeout(() => {
+                        const msg = document.getElementById('successMessage');
+                        if (msg) {
+                            msg.style.opacity = '0';
+                            msg.style.transform = 'translateX(400px)';
+                            msg.style.transition = 'all 0.3s ease-in-out';
+                            setTimeout(() => msg.remove(), 300);
+                        }
+                    }, 3000);
+                </script>
             @endif
             
             @if(session('error'))
-                <div style="position: fixed; top: 80px; right: 20px; z-index: 1000; padding: 12px 16px; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; color: #991b1b; font-size: 0.95rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); max-width: 300px;">
+                <div id="errorMessage" style="position: fixed; top: 80px; right: 20px; z-index: 1000; padding: 12px 16px; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; color: #991b1b; font-size: 0.95rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); max-width: 300px;">
                     {{ session('error') }}
                 </div>
+                <script>
+                    setTimeout(() => {
+                        const msg = document.getElementById('errorMessage');
+                        if (msg) {
+                            msg.style.opacity = '0';
+                            msg.style.transform = 'translateX(400px)';
+                            msg.style.transition = 'all 0.3s ease-in-out';
+                            setTimeout(() => msg.remove(), 300);
+                        }
+                    }, 5000);
+                </script>
             @endif
 
             <div class="header-container" style="display: flex; flex-direction: row; align-items: flex-start; padding: 20px 24px 0 24px; margin-bottom: 16px;">
@@ -609,7 +631,7 @@
                                             <button type="submit" onclick="return confirm('Are you sure you want to delete this applicant?')" style="background:#ef4444;color:#fff;">Delete</button>
                                         </form>
                                     </span>
-                                    <form method="POST" action="{{ route('studentlist.add', $applicant->id) }}" style="display:inline;">
+                                    <form method="POST" action="{{ route('studentlist.add', $applicant->id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to add this applicant to the student list?')">
                                         @csrf
                                         <button type="submit">Add to Student List</button>
                                     </form>
@@ -650,7 +672,7 @@
                     <div class="applicant-card-actions">
                         <a href="{{ route('applications.show', $applicant->id) }}" class="btn-view">View</a>
                         
-                        <form method="POST" action="{{ route('studentlist.add', $applicant->id) }}" style="flex: 1;">
+                        <form method="POST" action="{{ route('studentlist.add', $applicant->id) }}" style="flex: 1;" onsubmit="return confirm('Are you sure you want to add this applicant to the student list?')">
                             @csrf
                             <button type="submit" class="btn-add" style="width: 100%;">Add to Student List</button>
                         </form>

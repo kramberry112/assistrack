@@ -468,6 +468,9 @@
         document.querySelectorAll('.btn-verify').forEach(btn => {
             btn.onclick = function() {
                 const taskId = this.getAttribute('data-task-id');
+                if (!confirm('Are you sure you want to verify this task?')) {
+                    return; // User cancelled
+                }
                 fetch(`/tasks/${taskId}/verify`, {
                     method: 'POST',
                     headers: {
@@ -554,6 +557,9 @@
         document.querySelectorAll('.btn-reject').forEach(btn => {
             btn.onclick = function() {
                 const taskId = this.getAttribute('data-task-id');
+                if (!confirm('Are you sure you want to reject this task?')) {
+                    return; // User cancelled
+                }
                 const row = this.closest('tr');
                 fetch(`/tasks/${taskId}/reject`, {
                     method: 'POST',

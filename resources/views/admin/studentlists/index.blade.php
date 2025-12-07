@@ -874,7 +874,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($students as $student)
+                        @forelse($students as $student)
                         <tr>
                             <td>{{ $student->student_name }}</td>
                             <td>{{ $student->course }}</td>
@@ -964,7 +964,13 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px 20px; color: #6b7280;">
+                                <p style="font-size: 0.95rem; margin: 0;">No records found</p>
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
 

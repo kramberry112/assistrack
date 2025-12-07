@@ -636,6 +636,7 @@
                             <th>Full Matriculation</th>
                             <th>Designated Office</th>
                             <th>Account Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -662,7 +663,11 @@
                                         </span>
                                     @endif
                                 </td>
-                            </tr>
+                                <td>
+                                    <a href="{{ route('head.students.show', $student->id) }}" style="display:inline-block;background:#5b9ff3;color:white;padding:6px 16px;border-radius:16px;text-decoration:none;font-size:0.85rem;font-weight:600;transition:background 0.2s;" onmouseover="this.style.background='#3b82f6'" onmouseout="this.style.background='#5b9ff3'">
+                                        View
+                                    </a>
+                                </td>
                         @endforeach
                     </tbody>
                 </table>
@@ -705,6 +710,12 @@
                                     No Account
                                 </span>
                             @endif
+                        </div>
+                        
+                        <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e5e7eb;">
+                            <a href="{{ route('head.students.show', $student->id) }}" style="display:block;background:#5b9ff3;color:white;padding:6px 16px;border-radius:16px;text-decoration:none;font-size:0.85rem;font-weight:600;transition:background 0.2s;text-align:center;" onmouseover="this.style.background='#3b82f6'" onmouseout="this.style.background='#5b9ff3'">
+                                View
+                            </a>
                         </div>
                     </div>
                 @endforeach

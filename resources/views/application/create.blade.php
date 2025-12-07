@@ -599,7 +599,7 @@
 
 
     <hr style="border: 1px solid #222; margin-bottom: 18px;">
-    <form method="POST" action="{{ route('application.store') }}" enctype="multipart/form-data" id="applicationForm">
+    <form method="POST" action="{{ route('application.store') }}" enctype="multipart/form-data" id="applicationForm" novalidate>
             @csrf
 
             {{-- PHOTO UPLOAD SECTION (Mobile Only) --}}
@@ -729,7 +729,7 @@
                     </div>
                     <div>
                         <label class="form-label" style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Occupation:</label>
-                        <input type="text" name="father_occupation" required class="form-input" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <input type="text" name="father_occupation" id="father_occupation" class="form-input" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
                         <div style="margin-top: 6px;">
                             <input type="checkbox" name="father_deceased" value="1" id="father_deceased" style="margin-right: 8px;">
                             <label for="father_deceased" style="font-size: 14px; font-weight: normal;">Deceased</label>
@@ -747,7 +747,7 @@
                     </div>
                     <div>
                         <label class="form-label" style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Occupation:</label>
-                        <input type="text" name="mother_occupation" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
+                        <input type="text" name="mother_occupation" id="mother_occupation" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7;">
                         <div style="margin-top: 6px;">
                             <input type="checkbox" name="mother_deceased" value="1" id="mother_deceased" style="margin-right: 8px;">
                             <label for="mother_deceased" style="font-size: 14px; font-weight: normal;">Deceased</label>
@@ -1208,6 +1208,39 @@
             yesRadio.addEventListener('change', updateToolCheckboxes);
             noRadio.addEventListener('change', updateToolCheckboxes);
             updateToolCheckboxes();
+
+            // Deceased checkbox logic: disable and clear occupation field when deceased is checked
+            const fatherDeceasedCheckbox = document.getElementById('father_deceased');
+            const motherDeceasedCheckbox = document.getElementById('mother_deceased');
+            const fatherOccupationInput = document.getElementById('father_occupation');
+            const motherOccupationInput = document.getElementById('mother_occupation');
+
+            function updateOccupationField(deceasedCheckbox, occupationInput) {
+                if (deceasedCheckbox.checked) {
+                    occupationInput.value = '';
+                    occupationInput.disabled = true;
+                    occupationInput.removeAttribute('required');
+                    occupationInput.style.backgroundColor = '#e0e0e0';
+                    occupationInput.style.color = '#999';
+                } else {
+                    occupationInput.disabled = false;
+                    occupationInput.removeAttribute('required'); // Don't add required attribute
+                    occupationInput.style.backgroundColor = '#f7f7f7';
+                    occupationInput.style.color = '#000';
+                }
+            }
+
+            fatherDeceasedCheckbox.addEventListener('change', function() {
+                updateOccupationField(fatherDeceasedCheckbox, fatherOccupationInput);
+            });
+
+            motherDeceasedCheckbox.addEventListener('change', function() {
+                updateOccupationField(motherDeceasedCheckbox, motherOccupationInput);
+            });
+
+            // Initialize on page load
+            updateOccupationField(fatherDeceasedCheckbox, fatherOccupationInput);
+            updateOccupationField(motherDeceasedCheckbox, motherOccupationInput);
         });
         const form = document.getElementById('applicationForm');
         const modal = document.getElementById('modalConfirm');
@@ -1218,29 +1251,76 @@
         const btnPrintNo = document.getElementById('modalPrintNo');
         let allowSubmit = false;
         let submitted = false;
+        
+        // Prevent browser validation popups from showing
+        form.addEventListener('invalid', function(e) {
+            e.preventDefault();
+        }, true);
+        
         // For photo upload validation
         function isPhotoUploaded() {
             return !!document.getElementById('cropped-picture').value;
         }
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            if (!form.checkValidity()) {
-                alert('Please fill out all required fields before submitting the form.');
-                return;
-            }
+            
+            // Check if photo is uploaded first
             if (!isPhotoUploaded()) {
                 var photoError = document.getElementById('photoError');
                 photoError.style.display = 'block';
                 setTimeout(function() { photoError.style.display = 'none'; }, 3000);
                 return;
             }
+            
+            // Get checkbox and occupation field references
+            const fatherDeceasedCheckbox = document.getElementById('father_deceased');
+            const motherDeceasedCheckbox = document.getElementById('mother_deceased');
+            const fatherOccupation = document.getElementById('father_occupation');
+            const motherOccupation = document.getElementById('mother_occupation');
+            
+            // Manual validation - check all required fields except disabled ones
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            let firstInvalidField = null;
+            
+            requiredFields.forEach(field => {
+                // Skip disabled fields (like deceased parent's occupation)
+                if (!field.disabled && !field.value.trim()) {
+                    isValid = false;
+                    if (!firstInvalidField) {
+                        firstInvalidField = field;
+                    }
+                }
+            });
+            
+            // Additional check: occupation fields must be filled only if deceased is NOT checked
+            if (!fatherDeceasedCheckbox.checked && !fatherOccupation.disabled && !fatherOccupation.value.trim()) {
+                isValid = false;
+                if (!firstInvalidField) firstInvalidField = fatherOccupation;
+            }
+            
+            if (!motherDeceasedCheckbox.checked && !motherOccupation.disabled && !motherOccupation.value.trim()) {
+                isValid = false;
+                if (!firstInvalidField) firstInvalidField = motherOccupation;
+            }
+            
+            if (!isValid) {
+                alert('Please fill out all required fields before submitting the form.');
+                if (firstInvalidField) {
+                    firstInvalidField.focus();
+                }
+                return;
+            }
+            
             if (!allowSubmit) {
                 modal.style.display = 'flex';
             } else {
+                // Ready to submit
                 allowSubmit = false;
                 submitted = true;
-                // Submit via AJAX, but do NOT clear/reset the form
+                // Submit via AJAX
                 const formData = new FormData(form);
+                console.log('Form submission started');
                 fetch(form.action, {
                     method: 'POST',
                     body: formData,
@@ -1249,14 +1329,46 @@
                         'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                     }
                 }).then(function(response) {
-                    if (response.ok) {
-                        // Show print modal, keep form data visible
-                        modalPrint.style.display = 'flex';
-                    } else {
-                        alert('Submission failed. Please try again.');
-                    }
-                }).catch(function() {
-                    alert('Submission failed. Please try again.');
+                    console.log('Response status:', response.status);
+                    return response.json().then(data => {
+                        console.log('Response data:', data);
+                        if (response.ok || response.status === 200) {
+                            console.log('Form submitted successfully');
+                            // Show print modal after successful submission
+                            modalPrint.style.display = 'flex';
+                        } else {
+                            console.error('Response error:', response.status, data);
+                            let errorMessage = 'Submission failed';
+                            if (data.errors) {
+                                // Show first validation error
+                                const firstError = Object.values(data.errors)[0];
+                                if (Array.isArray(firstError)) {
+                                    errorMessage = firstError[0];
+                                } else {
+                                    errorMessage = firstError;
+                                }
+                            } else if (data.message) {
+                                errorMessage = data.message;
+                            }
+                            alert(errorMessage);
+                            submitted = false;
+                            allowSubmit = false;
+                        }
+                    }).catch(err => {
+                        console.error('JSON parse error:', err);
+                        if (response.ok) {
+                            modalPrint.style.display = 'flex';
+                        } else {
+                            alert('Submission failed. Please try again.');
+                            submitted = false;
+                            allowSubmit = false;
+                        }
+                    });
+                }).catch(function(error) {
+                    console.error('Fetch error:', error);
+                    alert('Submission failed: ' + error.message);
+                    submitted = false;
+                    allowSubmit = false;
                 });
             }
         });
@@ -1264,46 +1376,12 @@
         btnYes.addEventListener('click', function() {
             modal.style.display = 'none';
             allowSubmit = true;
-            // Trigger submit event again, but now allowSubmit is true so AJAX will run
+            // Trigger submit event again, now with allowSubmit = true
             form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
         });
+
         btnNo.addEventListener('click', function() {
             modal.style.display = 'none';
-        });
-
-        // Show print modal after successful submission
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.location.hash === '#submitted') {
-                setTimeout(function() {
-                    modalPrint.style.display = 'flex';
-                }, 400);
-            }
-        });
-
-        // Intercept form submission to add hash and show print modal
-        form.addEventListener('submit', function(e) {
-            if (allowSubmit && !submitted) {
-                e.preventDefault();
-                submitted = true;
-                // Actually submit the form via AJAX to avoid page reload
-                fetch(form.action, {
-                    method: 'POST',
-                    body: new FormData(form),
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                    }
-                }).then(function(response) {
-                    if (response.ok) {
-                        window.location.hash = '#submitted';
-                        modalPrint.style.display = 'flex';
-                    } else {
-                        alert('Submission failed. Please try again.');
-                    }
-                }).catch(function() {
-                    alert('Submission failed. Please try again.');
-                });
-            }
         });
 
         btnPrintYes.addEventListener('click', function() {

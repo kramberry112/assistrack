@@ -23,7 +23,8 @@ class NotificationController extends Controller
                     'title' => $this->getNotificationTitle($data['type'] ?? ''),
                     'message' => $data['message'] ?? 'No message',
                     'created_at' => $notification->created_at->diffForHumans(),
-                    'type' => $data['type'] ?? 'unknown'
+                    'type' => $data['type'] ?? 'unknown',
+                    'data' => $data  // Include all data for JavaScript access
                 ];
             });
 
@@ -33,6 +34,8 @@ class NotificationController extends Controller
     private function getNotificationTitle($type)
     {
         switch ($type) {
+            case 'NewApplicationSubmitted':
+                return 'New Application Submitted';
             case 'sa_request_created':
                 return 'New SA Request';
             case 'join_request_accepted':

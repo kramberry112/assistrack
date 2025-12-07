@@ -38,63 +38,120 @@ class ApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'student_name' => 'required|string|max:255',
-            'course' => 'required|string|max:255',
-            'year_level' => 'nullable|string|max:255',
-            'age' => 'nullable|string|max:10',
-            'id_number' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'telephone' => 'nullable|string|max:255',
-            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'father_name' => 'nullable|string|max:255',
-            'father_age' => 'nullable|string|max:10',
-            'father_occupation' => 'nullable|string|max:255',
-            'mother_name' => 'nullable|string|max:255',
-            'mother_age' => 'nullable|string|max:10',
-            'mother_occupation' => 'nullable|string|max:255',
-            'father_deceased' => 'nullable|boolean',
-            'mother_deceased' => 'nullable|boolean',
-            'monthly_income' => 'nullable|string|max:255',
-            'parent_consent' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'is_literate' => 'nullable|boolean',
-            'tools' => 'nullable|array',
-            'can_commit' => 'nullable|boolean',
-            'willing_overtime' => 'nullable|boolean',
-            'comfortable_clerical' => 'nullable|boolean',
-            'strong_communication' => 'nullable|boolean',
-            'willing_training' => 'nullable|boolean',
-            'other_skills' => 'nullable|string',
-        ]);
+        try {
+            // Log the incoming request
+            \Log::info('Application submission received', [
+                'fields' => array_keys($request->all()),
+                'csrf' => $request->has('_token'),
+            ]);
 
-        if ($request->hasFile('picture')) {
-            $data['picture'] = $request->file('picture')->store('pictures', 'public');
+            $data = $request->validate([
+                'student_name' => 'required|string|max:255',
+                'course' => 'required|string|max:255',
+                'year_level' => 'required|string|max:255',
+                'age' => 'required|string|max:10',
+                'id_number' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'telephone' => 'required|string|max:255',
+                'cropped_picture' => 'required|string',
+                'father_name' => 'required|string|max:255',
+                'father_age' => 'required|string|max:10',
+                'father_occupation' => 'required|string|max:255',
+                'mother_name' => 'required|string|max:255',
+                'mother_age' => 'required|string|max:10',
+                'mother_occupation' => 'required|string|max:255',
+                'father_deceased' => 'nullable|boolean',
+                'mother_deceased' => 'nullable|boolean',
+                'monthly_income' => 'required|string|max:255',
+                'parent_consent' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+                'is_literate' => 'required|in:0,1',
+                'tools' => 'nullable|array',
+                'can_commit' => 'required|in:0,1',
+                'willing_overtime' => 'required|in:0,1',
+                'comfortable_clerical' => 'required|in:0,1',
+                'strong_communication' => 'required|in:0,1',
+                'willing_training' => 'required|in:0,1',
+                'other_skills' => 'nullable|string',
+            ]);
+
+            \Log::info('Validation passed');
+
+            // Handle cropped picture (base64)
+            if ($data['cropped_picture']) {
+                $base64Image = $data['cropped_picture'];
+                // Extract base64 data and convert to image file
+                if (strpos($base64Image, 'data:image') === 0) {
+                    $image = substr($base64Image, strpos($base64Image, ',') + 1);
+                    $image = base64_decode($image);
+                    $filename = 'pictures/' . time() . '_' . uniqid() . '.png';
+                    \Storage::disk('public')->put($filename, $image);
+                    $data['picture'] = $filename;
+                    \Log::info('Picture saved to: ' . $filename);
+                }
+            }
+            // Remove the cropped_picture from data as it's not a database column
+            unset($data['cropped_picture']);
+
+            if ($request->hasFile('parent_consent')) {
+                $data['parent_consent'] = $request->file('parent_consent')->store('parent_consents', 'public');
+                \Log::info('Parent consent saved to: ' . $data['parent_consent']);
+            }
+
+            if (isset($data['tools'])) {
+                $data['tools'] = json_encode($data['tools']);
+            }
+
+            // Convert string values to boolean
+            foreach ([
+                'is_literate', 'can_commit', 'willing_overtime',
+                'comfortable_clerical', 'strong_communication', 'willing_training',
+                'father_deceased', 'mother_deceased'
+            ] as $field) {
+                if (isset($data[$field])) {
+                    if (is_string($data[$field])) {
+                        $data[$field] = $data[$field] === '1' ? true : false;
+                    }
+                }
+            }
+
+            \Log::info('Creating application with data', ['student_name' => $data['student_name'] ?? 'N/A']);
+            $application = Application::create($data);
+            \Log::info('Application created successfully', ['id' => $application->id]);
+
+            // Return JSON response for AJAX request
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Application submitted successfully']);
+            }
+
+            // If the user is an admin, redirect to applicants list; otherwise, show thank you page
+            if (auth()->check() && auth()->user()->is_admin) {
+                return redirect()->route('applications.index')->with('success', 'Application submitted successfully.');
+            }
+            return view('application.show', compact('application'));
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error', ['errors' => $e->errors()]);
+            
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            return back()->withErrors($e->errors());
+        } catch (\Exception $e) {
+            \Log::error('Application submission error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'An error occurred: ' . $e->getMessage()
+                ], 422);
+            }
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
-
-        if ($request->hasFile('parent_consent')) {
-            $data['parent_consent'] = $request->file('parent_consent')->store('parent_consents', 'public');
-        }
-
-        if (isset($data['tools'])) {
-            $data['tools'] = json_encode($data['tools']);
-        }
-
-        foreach ([
-            'is_literate', 'can_commit', 'willing_overtime',
-            'comfortable_clerical', 'strong_communication', 'willing_training',
-            'father_deceased', 'mother_deceased'
-        ] as $field) {
-            $data[$field] = isset($data[$field]) ? (bool)$data[$field] : false;
-        }
-
-        $application = Application::create($data);
-
-        // If the user is an admin, redirect to applicants list; otherwise, show thank you page
-        if (auth()->check() && auth()->user()->is_admin) {
-            return redirect()->route('applications.index')->with('success', 'Application submitted successfully.');
-        }
-        return view('application.show', compact('application'));
     }
 
     /**

@@ -8,9 +8,17 @@
     <!-- HEADER -->
     <section class="relative bg-gradient-to-r from-indigo-600 to-blue-500 text-white py-12">
         <div class="container mx-auto px-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-3xl font-bold">Applicant Details</h1>
-                <p class="text-sm opacity-80">Universidad de Dagupan - Student Assistant Program</p>
+            <div class="flex items-center gap-4">
+                <a href="{{ route('applicants.list') }}" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);padding:8px 16px;border-radius:6px;color:white;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                    Back
+                </a>
+                <div>
+                    <h1 class="text-3xl font-bold">Applicant Details</h1>
+                    <p class="text-sm opacity-80">Universidad de Dagupan - Student Assistant Program</p>
+                </div>
             </div>
             <img src="/images/uddlogo.png" class="w-20 h-20 object-contain" alt="UDD Logo">
         </div>

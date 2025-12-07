@@ -818,7 +818,10 @@
                                             </button>
                                         </div>
                                         ${data.map(n => `
-                                            <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">
+                                            <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;cursor:pointer;padding:12px;border-radius:4px;transition:background 0.2s;" 
+                                                 onmouseover="this.style.background='#f3f4f6'" 
+                                                 onmouseout="this.style.background='transparent'"
+                                                 onclick="handleNotificationClick('${n.data?.application_id || ''}', '${n.type || 'NewApplicationSubmitted'}')">
                                                 <div style="font-weight:600;color:#2563eb;">${n.title}</div>
                                                 <div style="color:#374151;">${n.message}</div>
                                                 <div style="color:#6b7280;font-size:0.8rem;margin-top:4px;">${n.created_at}</div>
@@ -850,6 +853,25 @@
                 });
             }
         });
+        </script>
+        
+        <!-- Notification Click Handler -->
+        <script>
+            // Handle notification clicks
+            function handleNotificationClick(applicationId, notificationType) {
+                if (notificationType === 'NewApplicationSubmitted') {
+                    // Navigate to applicants list (correct route without /admin prefix)
+                    window.location.href = '/applicants';
+                } else if (notificationType === 'SaRequestCreated' || notificationType === 'SaRequestApproved' || notificationType === 'SaRequestRejected') {
+                    // Navigate to SA requests page
+                    window.location.href = '/admin/sa-requests';
+                }
+                // Close notification dropdown after clicking
+                const dropdown = document.getElementById('adminNotificationDropdown');
+                if (dropdown) {
+                    dropdown.style.display = 'none';
+                }
+            }
         </script>
         
         <!-- Content Wrapper -->

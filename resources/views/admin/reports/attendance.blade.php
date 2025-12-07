@@ -230,46 +230,46 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($records as $i => $record)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                                 {{ $i + 1 }}
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                                 {{ $record['id_number'] }}
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                                 {{ $record['name'] ?? '-' }}
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-600">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                                 {{ $record['office'] ?? '-' }}
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                                 {{ $record['date'] ?? (isset($record['time_in']) ? \Carbon\Carbon::parse($record['time_in'])->format('M d, Y') : '-') }}
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                                 @if($record['time_in'])
                                     {{ \Carbon\Carbon::parse($record['time_in'])->format('h:i A') }}
                                 @else
-                                    <span class="text-gray-400 font-bold">-</span>
+                                    <span class="text-gray-400">-</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                                 @if($record['time_out'])
                                     {{ \Carbon\Carbon::parse($record['time_out'])->format('h:i A') }}
                                 @else
-                                    <span class="text-gray-400 font-bold">-</span>
+                                    <span class="text-gray-400">-</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                                 @if($record['total_hours'])
                                     {{ number_format($record['total_hours'], 2) }} hrs
                                 @else
-                                    <span class="text-gray-400 font-bold">-</span>
+                                    <span class="text-gray-400">-</span>
                                 @endif
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 @php $status = $record['status'] ?? '-' @endphp
                                 @if($status !== '-')
-                                    <span class="inline-flex px-2 py-1 text-xs font-bold rounded
+                                    <span class="inline-flex px-2 py-1 text-xs rounded
                                         @if(strtolower($status) == 'present') bg-green-100 text-green-800
                                         @elseif(strtolower($status) == 'late') bg-yellow-100 text-yellow-800
                                         @else bg-gray-100 text-gray-800
@@ -277,7 +277,7 @@
                                         {{ $status }}
                                     </span>
                                 @else
-                                    <span class="text-gray-400 font-bold">-</span>
+                                    <span class="text-gray-400">-</span>
                                 @endif
                             </td>
                         </tr>
