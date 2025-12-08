@@ -175,15 +175,96 @@
     }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px); overflow-x: hidden;">
-        <!-- Date Filter Form -->
-        <form method="GET" action="{{ route('head.reports.attendance') }}" class="mb-6 flex items-center gap-3" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
-            <label for="date" class="text-sm font-medium text-gray-700">Select Date:</label>
-            <input type="date" id="date" name="date" value="{{ request('date', now()->format('Y-m-d')) }}" 
-                   class="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <button type="submit" style="background-color: #2563eb; color: white; padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
-                View Report
+        <!-- Top Controls -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <!-- Date Filter Form -->
+            <form method="GET" action="{{ route('head.reports.attendance') }}" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <label for="date" class="text-sm font-medium text-gray-700">Select Date:</label>
+                <input type="date" id="date" name="date" value="{{ request('date', now()->format('Y-m-d')) }}" 
+                       class="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <button type="submit" style="background-color: #2563eb; color: white; padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
+                    View Report
+                </button>
+            </form>
+            
+            <!-- Filter Button -->
+            <button onclick="toggleFilters()" class="filter-btn" style="display: flex; align-items: center; gap: 6px; background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                </svg>
+                Filters
             </button>
-        </form>
+        </div>
+        
+        <!-- Filter Panel -->
+        <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Office</label>
+                    <select id="officeFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                        <option value="">All Offices</option>
+                        <option value="ACADS">ACADS</option>
+                        <option value="ALUMNI OFFICE">ALUMNI OFFICE</option>
+                        <option value="ARCHIVING">ARCHIVING</option>
+                        <option value="ARZATECH">ARZATECH</option>
+                        <option value="CANTEEN">CANTEEN</option>
+                        <option value="CLINIC">CLINIC</option>
+                        <option value="FINANCE">FINANCE</option>
+                        <option value="GUIDANCE">GUIDANCE</option>
+                        <option value="HRD">HRD</option>
+                        <option value="KUWAGO">KUWAGO</option>
+                        <option value="LCR">LCR</option>
+                        <option value="LIBRARY">LIBRARY</option>
+                        <option value="LINKAGES">LINKAGES</option>
+                        <option value="MARKETING">MARKETING</option>
+                        <option value="OPEN LAB">OPEN LAB</option>
+                        <option value="PRESIDENT'S OFFICE">PRESIDENT'S OFFICE</option>
+                        <option value="QUEUING">QUEUING</option>
+                        <option value="QUALITY ASSURANCE">QUALITY ASSURANCE</option>
+                        <option value="REGISTRAR">REGISTRAR</option>
+                        <option value="SAO">SAO</option>
+                        <option value="SBA FACULTY">SBA FACULTY</option>
+                        <option value="SIHM FACULTY">SIHM FACULTY</option>
+                        <option value="SITE FACULTY">SITE FACULTY</option>
+                        <option value="SOE FACULTY">SOE FACULTY</option>
+                        <option value="SOH FACULTY">SOH FACULTY</option>
+                        <option value="SOHS FACULTY">SOHS FACULTY</option>
+                        <option value="SOC FACULTY">SOC FACULTY</option>
+                        <option value="SPORTS AND CULTURE">SPORTS AND CULTURE</option>
+                        <option value="STE DEAN'S OFFICE">STE DEAN'S OFFICE</option>
+                        <option value="STE FACULTY">STE FACULTY</option>
+                        <option value="STEEDS">STEEDS</option>
+                        <option value="XACTO">XACTO</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Status</label>
+                    <select id="statusFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                        <option value="">All Status</option>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Incomplete">Incomplete</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Search</label>
+                    <input type="text" id="searchFilter" oninput="applyFilters()" placeholder="Search by name or ID..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                </div>
+                <div style="display: flex; align-items: flex-end;">
+                    <button onclick="clearFilters()" style="background: #6b7280; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; width: 100%;">
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- No Results Message -->
+        <div id="noResults" style="display: none; text-align: center; padding: 40px; background: #f9fafb; border-radius: 8px; margin-bottom: 20px;">
+            <svg style="width: 48px; height: 48px; margin: 0 auto 16px; color: #9ca3af;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p style="color: #6b7280; font-size: 14px; margin: 0;">No matching records found</p>
+        </div>
 
         <!-- Attendance Table -->
         <div class="overflow-x-auto">
@@ -202,6 +283,14 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                    <tr id="noResults" style="display: none;">
+                        <td colspan="9" style="text-align: center; padding: 40px; background: #f9fafb;">
+                            <svg style="width: 48px; height: 48px; margin: 0 auto 16px; color: #9ca3af;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <p style="color: #6b7280; font-size: 14px; margin: 0;">No matching records found</p>
+                        </td>
+                    </tr>
                     @forelse($records as $i => $record)
                         <tr class="hover:bg-gray-50">
                             <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
@@ -270,4 +359,59 @@
             </table>
         </div>
 </div>
+
+<script>
+function toggleFilters() {
+    const panel = document.getElementById('filterPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function applyFilters() {
+    const officeFilter = document.getElementById('officeFilter').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+    const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+    
+    const tables = document.querySelectorAll('.overflow-x-auto table tbody');
+    let visibleCount = 0;
+    
+    tables.forEach(table => {
+        const rows = table.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length <= 1) return; // Skip empty row
+        
+        const office = cells[3]?.textContent.trim().toLowerCase() || '';
+        const status = cells[8]?.textContent.trim().toLowerCase() || '';
+        const name = cells[2]?.textContent.trim().toLowerCase() || '';
+        const idNumber = cells[1]?.textContent.trim().toLowerCase() || '';
+        
+        const officeMatch = !officeFilter || office.includes(officeFilter);
+        const statusMatch = !statusFilter || status.includes(statusFilter);
+        const searchMatch = !searchFilter || name.includes(searchFilter) || idNumber.includes(searchFilter);
+        
+            if (officeMatch && statusMatch && searchMatch) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+    
+    // Show/hide no results message
+    const noResults = document.getElementById('noResults');
+    if (visibleCount === 0) {
+        noResults.style.display = 'table-row';
+    } else {
+        noResults.style.display = 'none';
+    }
+}
+
+function clearFilters() {
+    document.getElementById('officeFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('searchFilter').value = '';
+    applyFilters();
+}
+</script>
 @endsection

@@ -15,6 +15,79 @@
     }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
+    
+    <!-- Filter Button -->
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <button onclick="toggleFilters()" class="filter-btn" style="display: flex; align-items: center; gap: 6px; background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            Filters
+        </button>
+    </div>
+    
+    <!-- Filter Panel -->
+    <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Office</label>
+                <select id="officeFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All Offices</option>
+                    <option value="ACADS">ACADS</option>
+                    <option value="ALUMNI OFFICE">ALUMNI OFFICE</option>
+                    <option value="ARCHIVING">ARCHIVING</option>
+                    <option value="ARZATECH">ARZATECH</option>
+                    <option value="CANTEEN">CANTEEN</option>
+                    <option value="CLINIC">CLINIC</option>
+                    <option value="FINANCE">FINANCE</option>
+                    <option value="GUIDANCE">GUIDANCE</option>
+                    <option value="HRD">HRD</option>
+                    <option value="KUWAGO">KUWAGO</option>
+                    <option value="LCR">LCR</option>
+                    <option value="LIBRARY">LIBRARY</option>
+                    <option value="LINKAGES">LINKAGES</option>
+                    <option value="MARKETING">MARKETING</option>
+                    <option value="OPEN LAB">OPEN LAB</option>
+                    <option value="PRESIDENT'S OFFICE">PRESIDENT'S OFFICE</option>
+                    <option value="QUEUING">QUEUING</option>
+                    <option value="QUALITY ASSURANCE">QUALITY ASSURANCE</option>
+                    <option value="REGISTRAR">REGISTRAR</option>
+                    <option value="SAO">SAO</option>
+                    <option value="SBA FACULTY">SBA FACULTY</option>
+                    <option value="SIHM FACULTY">SIHM FACULTY</option>
+                    <option value="SITE FACULTY">SITE FACULTY</option>
+                    <option value="SOE FACULTY">SOE FACULTY</option>
+                    <option value="SOH FACULTY">SOH FACULTY</option>
+                    <option value="SOHS FACULTY">SOHS FACULTY</option>
+                    <option value="SOC FACULTY">SOC FACULTY</option>
+                    <option value="SPORTS AND CULTURE">SPORTS AND CULTURE</option>
+                    <option value="STE DEAN'S OFFICE">STE DEAN'S OFFICE</option>
+                    <option value="STE FACULTY">STE FACULTY</option>
+                    <option value="STEEDS">STEEDS</option>
+                    <option value="XACTO">XACTO</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Task Count</label>
+                <select id="taskFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All</option>
+                    <option value="0">0 tasks</option>
+                    <option value="1-5">1-5 tasks</option>
+                    <option value="6-10">6-10 tasks</option>
+                    <option value="10+">10+ tasks</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Search</label>
+                <input type="text" id="searchFilter" oninput="applyFilters()" placeholder="Search by name or ID..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            </div>
+            <div style="display: flex; align-items: flex-end;">
+                <button onclick="clearFilters()" style="background: #6b7280; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; width: 100%;">
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+    </div>
 
 <style>
     .page-header {
@@ -272,6 +345,14 @@
             </tr>
         </thead>
         <tbody>
+            <tr id="noResults" style="display: none;">
+                <td colspan="5" style="text-align: center; padding: 40px; background: #f9fafb;">
+                    <svg style="width: 48px; height: 48px; margin: 0 auto 16px; color: #9ca3af;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <p style="color: #6b7280; font-size: 14px; margin: 0;">No matching records found</p>
+                </td>
+            </tr>
             @forelse($students as $user)
                 <tr>
                     <td>{{ $user->student->id_number ?? 'N/A' }}</td>
@@ -508,6 +589,70 @@ window.onclick = function(event) {
     if (event.target === modal) {
         closeTaskModal();
     }
+}
+
+function toggleFilters() {
+    const panel = document.getElementById('filterPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function applyFilters() {
+    const officeFilter = document.getElementById('officeFilter').value.toLowerCase();
+    const taskFilter = document.getElementById('taskFilter').value;
+    const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+    
+    const table = document.querySelector('.reports-table tbody');
+    const rows = table.querySelectorAll('tr');
+    let visibleCount = 0;
+    
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length <= 1) return; // Skip empty row
+        
+        const idNumber = cells[0]?.textContent.trim().toLowerCase() || '';
+        const name = cells[1]?.textContent.trim().toLowerCase() || '';
+        const office = cells[2]?.textContent.trim().toLowerCase() || '';
+        const taskCountText = cells[3]?.textContent.trim() || '0';
+        const taskCount = parseInt(taskCountText) || 0;
+        
+        const officeMatch = !officeFilter || office.includes(officeFilter);
+        const searchMatch = !searchFilter || name.includes(searchFilter) || idNumber.includes(searchFilter);
+        
+        let taskMatch = true;
+        if (taskFilter) {
+            if (taskFilter === '0') {
+                taskMatch = taskCount === 0;
+            } else if (taskFilter === '1-5') {
+                taskMatch = taskCount >= 1 && taskCount <= 5;
+            } else if (taskFilter === '6-10') {
+                taskMatch = taskCount >= 6 && taskCount <= 10;
+            } else if (taskFilter === '10+') {
+                taskMatch = taskCount > 10;
+            }
+        }
+        
+        if (officeMatch && taskMatch && searchMatch) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Show/hide no results message
+    const noResults = document.getElementById('noResults');
+    if (visibleCount === 0) {
+        noResults.style.display = 'table-row';
+    } else {
+        noResults.style.display = 'none';
+    }
+}
+
+function clearFilters() {
+    document.getElementById('officeFilter').value = '';
+    document.getElementById('taskFilter').value = '';
+    document.getElementById('searchFilter').value = '';
+    applyFilters();
 }
 </script>
 

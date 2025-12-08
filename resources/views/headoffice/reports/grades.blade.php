@@ -130,6 +130,50 @@
         </div>
     @endif
     
+    <!-- Filter Button -->
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <button onclick="toggleFilters()" class="filter-btn" style="display: flex; align-items: center; gap: 6px; background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            Filters
+        </button>
+    </div>
+    
+    <!-- Filter Panel -->
+    <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Year Level</label>
+                <select id="yearFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All Years</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Semester</label>
+                <select id="semesterFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All Semesters</option>
+                    <option value="1st Semester">1st Semester</option>
+                    <option value="2nd Semester">2nd Semester</option>
+                    <option value="Summer">Summer</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Search</label>
+                <input type="text" id="searchFilter" oninput="applyFilters()" placeholder="Search by name..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            </div>
+            <div style="display: flex; align-items: flex-end;">
+                <button onclick="clearFilters()" style="background: #6b7280; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; width: 100%;">
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
                 <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
@@ -152,6 +196,14 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                    <tr id="noResults" style="display: none;">
+                        <td colspan="5" style="text-align: center; padding: 40px; background: #f9fafb;">
+                            <svg style="width: 48px; height: 48px; margin: 0 auto 16px; color: #9ca3af;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <p style="color: #6b7280; font-size: 14px; margin: 0;">No matching records found</p>
+                        </td>
+                    </tr>
                     @forelse($grades as $grade)
                         <tr style="transition: all 0.2s ease;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='#ffffff'">
                             <td style="padding: 16px 20px; color: #111827; font-weight: 500;">
@@ -240,4 +292,58 @@
             @endforelse
         </div>
 </div>
+
+<script>
+function toggleFilters() {
+    const panel = document.getElementById('filterPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function applyFilters() {
+    const yearFilter = document.getElementById('yearFilter').value.toLowerCase();
+    const semesterFilter = document.getElementById('semesterFilter').value.toLowerCase();
+    const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+    
+    const tables = document.querySelectorAll('.min-w-full tbody, .overflow-x-auto table tbody');
+    let visibleCount = 0;
+    
+    tables.forEach(table => {
+        const rows = table.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length <= 1) return; // Skip empty row
+            
+            const nameCell = cells[0]?.textContent.trim().toLowerCase() || '';
+            const yearCell = cells[1]?.textContent.trim().toLowerCase() || '';
+            const semesterCell = cells[2]?.textContent.trim().toLowerCase() || '';
+        
+            const yearMatch = !yearFilter || yearCell.includes(yearFilter);
+            const semesterMatch = !semesterFilter || semesterCell.includes(semesterFilter);
+            const searchMatch = !searchFilter || nameCell.includes(searchFilter);
+            
+            if (yearMatch && semesterMatch && searchMatch) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+    
+    // Show/hide no results message
+    const noResults = document.getElementById('noResults');
+    if (visibleCount === 0) {
+        noResults.style.display = 'table-row';
+    } else {
+        noResults.style.display = 'none';
+    }
+}
+
+function clearFilters() {
+    document.getElementById('yearFilter').value = '';
+    document.getElementById('semesterFilter').value = '';
+    document.getElementById('searchFilter').value = '';
+    applyFilters();
+}
+</script>
 @endsection
