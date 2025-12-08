@@ -380,16 +380,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $currentUser = auth()->user();
         $students = \App\Models\User::whereHas('student')
             ->whereHas('studentTasks', function($q) { 
-                $q->where('status', 'Completed'); 
+                $q->where('status', 'completed'); 
             })
             ->withCount(['studentTasks as student_tasks_count' => function($q) { 
-                $q->where('status', 'Completed'); 
+                $q->where('status', 'completed'); 
             }])
             ->with('student')
             ->orderBy('name')
             ->get();
         return view('headoffice.reports.tasks', compact('students', 'currentUser'));
     })->name('head.reports.tasks');
+    
+    Route::get('/head/tasks/user/{userId}', function($userId) {
+        $user = auth()->user();
+        
+        // Only allow head office to view tasks
+        if ($user->role !== 'head') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
+        $tasks = \App\Models\StudentTask::where('user_id', $userId)
+            ->where('status', 'completed')
+            ->orderBy('updated_at', 'desc')
+            ->get(['id', 'title', 'description', 'updated_at']);
+        
+        return response()->json(['tasks' => $tasks]);
+    });
     
     Route::get('/head/reports/evaluation', [\App\Http\Controllers\AdminEvaluationController::class, 'headOfficeIndex'])->name('head.reports.evaluation');
     
