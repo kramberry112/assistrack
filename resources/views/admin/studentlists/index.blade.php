@@ -749,6 +749,146 @@
             overflow-wrap: break-word !important;
         }
     }
+
+    /* Print Styles */
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        
+        #printArea {
+            display: block !important;
+            visibility: visible;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 10mm 15mm;
+        }
+        
+        #printArea * {
+            visibility: visible;
+        }
+        
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
+        }
+        
+        .filter-dropdown,
+        .filter-section,
+        .content-card,
+        nav,
+        .footer,
+        button,
+        .action-buttons {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        
+        .print-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+        
+        .print-logo {
+            width: 75px;
+            height: 75px;
+        }
+        
+        .print-title-section {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .print-university {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1e40af;
+            margin: 0;
+        }
+        
+        .print-office {
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin: 2px 0;
+        }
+        
+        .print-date {
+            text-align: right;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+        
+        .print-doc-title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 10px 0 3px 0;
+        }
+        
+        .print-doc-subtitle {
+            text-align: center;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        
+        .print-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-bottom: 20px;
+        }
+        
+        .print-table th {
+            background: #f3f4f6;
+            border: 1px solid #000;
+            padding: 6px 5px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        .print-table td {
+            border: 1px solid #000;
+            padding: 5px;
+            font-size: 14px;
+        }
+        
+        .print-footer {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        
+        .print-signature-section {
+            text-align: center;
+        }
+        
+        .print-signature-line {
+            margin-top: 30px;
+            border-top: 1px solid #000;
+            padding-top: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .print-signature-title {
+            font-size: 14px;
+            margin-top: 2px;
+        }
+        
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+    }
 </style>
 
 
@@ -856,6 +996,12 @@
                     <form method="GET" action="" style="display: flex; align-items: center; gap: 8px;">
                         <input type="text" name="keyword" id="studentSearchBar" value="{{ request('keyword') }}" placeholder="Search students..." style="padding: 7px 12px; border-radius: 6px; border: 1px solid #bbb; font-size: 15px;">
                         <button type="submit" style="padding: 7px 18px; border-radius: 6px; background: #2563eb; color: #fff; border: none; font-size: 15px; cursor: pointer;">Search</button>
+                        <button type="button" onclick="printStudentList()" style="padding: 7px 18px; border-radius: 6px; background: #059669; color: #fff; border: none; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                            <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                            </svg>
+                            Print
+                        </button>
                     </form>
                 </div>
             </div>
@@ -1406,6 +1552,137 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000); // Hide after 5 seconds (longer for errors)
     }
 });
+
+// Print Function
+function printStudentList() {
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    
+    // Get current filter values
+    const courseFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="course"].active')).map(el => el.dataset.value);
+    const yearFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="year"].active')).map(el => el.dataset.value);
+    const officeFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="office"].active')).map(el => el.dataset.value);
+    
+    // Get visible table rows
+    const visibleRows = Array.from(document.querySelectorAll('.student-table tbody tr')).filter(row => {
+        return row.style.display !== 'none';
+    });
+    
+    if (visibleRows.length === 0) {
+        alert('No students to print. Please adjust your filters.');
+        return;
+    }
+    
+    // Build filter description
+    let filterDesc = '';
+    if (courseFilter.length > 0 || yearFilter.length > 0 || officeFilter.length > 0) {
+        const filters = [];
+        if (courseFilter.length > 0) filters.push(courseFilter.join(', '));
+        if (yearFilter.length > 0) filters.push(yearFilter.join(', '));
+        if (officeFilter.length > 0) filters.push(officeFilter.join(', '));
+        filterDesc = filters.join(' - ');
+    } else {
+        filterDesc = 'All Students';
+    }
+    
+    // Build table rows
+    let tableRows = '';
+    visibleRows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        tableRows += `
+            <tr>
+                <td>${cells[1]?.textContent || ''}</td>
+                <td>${cells[0]?.textContent || ''}</td>
+                <td>${cells[3]?.textContent || ''}</td>
+            </tr>
+        `;
+    });
+    
+    // Create print content
+    const printContent = `
+        <div id="printArea">
+            <div class="print-header">
+                <img src="/images/uddlogo.png" class="print-logo" alt="CDD Logo" onerror="this.style.display='none'">
+                <div class="print-title-section">
+                    <p class="print-university">UNIVERSIDAD DE DAGUPAN</p>
+                    <p style="margin: 0; font-size: 12px;">(Formerly Colegio de Dagupan)</p>
+                    <p class="print-office">Student Affairs Office</p>
+                </div>
+            </div>
+            
+            <div class="print-date">${formattedDate}</div>
+            
+            <div class="print-doc-title">University Scholarship</div>
+            <div class="print-doc-subtitle">A.Y 2025-2026</div>
+            
+            <table class="print-table">
+                <thead>
+                    <tr>
+                        <th>Program</th>
+                        <th>Name</th>
+                        <th>I.D. Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                </tbody>
+            </table>
+            
+            <div class="print-footer">
+                <div class="print-signature-section">
+                    <div class="print-signature-line">DARYL SERAPION</div>
+                    <div class="print-signature-title">Student Affairs Coordinator and<br>Scholarship Officer</div>
+                    <div style="margin-top: 10px; font-size: 10px;">Recommending Approval:</div>
+                </div>
+                
+                <div class="print-signature-section">
+                    <div class="print-signature-line">MAY JACKLYN RADOC-SAMSON</div>
+                    <div class="print-signature-title">Director, Student Affairs</div>
+                    <div style="margin-top: 10px; font-size: 10px;">Noted by:</div>
+                </div>
+            </div>
+            
+            <div class="print-footer" style="margin-top: 30px;">
+                <div class="print-signature-section">
+                    <div class="print-signature-line">DR. JUSTIN Q. CALLESTO</div>
+                    <div class="print-signature-title">Vice President For Administration and<br>Finance</div>
+                </div>
+                
+                <div class="print-signature-section">
+                    <div class="print-signature-line">MR. JANN ALFRED ARZADON QUINTO</div>
+                    <div class="print-signature-title">Chief Operating Officer</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; font-size: 10px; text-align: center;">
+                Arellano Street, Dagupan City, Philippines 2400<br>
+                (075) 522-2405 | 522-0143<br>
+                cdsao@cdd.edu.ph<br>
+                www.cdd.edu.ph
+            </div>
+        </div>
+    `;
+    
+    // Insert print content into page (hidden by default)
+    let printDiv = document.getElementById('printArea');
+    if (!printDiv) {
+        printDiv = document.createElement('div');
+        printDiv.id = 'printArea';
+        printDiv.style.display = 'none'; // Hide on screen
+        document.body.appendChild(printDiv);
+    }
+    printDiv.innerHTML = printContent;
+    
+    // Trigger print
+    window.print();
+    
+    // Clean up after print dialog closes
+    setTimeout(() => {
+        if (printDiv) {
+            printDiv.remove();
+        }
+    }, 1000);
+}
 </script>
 </div>
 @endsection
