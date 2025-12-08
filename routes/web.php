@@ -491,6 +491,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('offices.dashboard');
     Route::get('/offices-student-list', [\App\Http\Controllers\OfficeStudentListController::class, 'index'])->name('offices.studentlists.index');
     Route::post('/offices-student-list/request-sa', [\App\Http\Controllers\OfficeStudentListController::class, 'requestSa'])->name('offices.studentlists.request_sa');
+    
+    // Notification routes
+    Route::post('/notifications/{id}/read', function ($id) {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+        return response()->json(['success' => true]);
+    })->name('notifications.read');
+    
+    Route::post('/notifications/mark-all-read', function () {
+        auth()->user()->unreadNotifications()->whereIn('type', [
+            'App\\Notifications\\SaAssigned',
+            'App\\Notifications\\SaRequestRejected',
+            'App\\Notifications\\SaRequestApproved'
+        ])->update(['read_at' => now()]);
+        return response()->json(['success' => true]);
+    })->name('notifications.mark-all-read');
+    
     Route::get('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'show'])->name('evaluation.show');
     Route::post('/evaluation/{student}', [\App\Http\Controllers\EvaluationController::class, 'submit'])->name('evaluation.submit');
     Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');

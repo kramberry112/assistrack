@@ -259,6 +259,74 @@
         text-transform: uppercase;
     }
 
+    /* Notification Bell Styles */
+    .notification-bell-container {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .notification-bell {
+        width: 28px;
+        height: 28px;
+        color: #374151;
+        transition: color 0.2s;
+    }
+
+    .notification-bell:hover {
+        color: #2563eb;
+    }
+
+    .notification-count {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #ef4444;
+        color: #fff;
+        border-radius: 50%;
+        padding: 2px 7px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: inline-block;
+        z-index: 10;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .notification-dropdown {
+        display: none;
+        position: fixed;
+        top: 70px;
+        right: 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        min-width: 380px;
+        max-width: 420px;
+        max-height: 500px;
+        overflow-y: auto;
+        z-index: 9999;
+        padding: 16px;
+        border: 1px solid #e5e7eb;
+        animation: slideDown 0.2s ease-out;
+    }
+    
+    .notification-dropdown.show {
+        display: block;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     .page-content {
         flex: 1;
         padding: 20px 30px;
@@ -346,12 +414,6 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('offices.reports.evaluation') }}" class="nav-link report-link {{ request()->routeIs('offices.reports.evaluation') ? 'active' : '' }}" data-url="{{ route('offices.reports.evaluation') }}" data-name="Evaluation">
-                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
-                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Evaluation</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="{{ route('offices.reports.tasks') }}" class="nav-link report-link {{ request()->routeIs('offices.reports.tasks') ? 'active' : '' }}" data-url="{{ route('offices.reports.tasks') }}" data-name="Tasks">
                                     <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
                                     <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Tasks</p>
@@ -408,13 +470,73 @@
         
         <!-- Page Header -->
         <div class="page-header">
-            <div class="header-title" style="display:flex;align-items:center;gap:16px;">
+            <div class="header-title">
                 @yield('page-icon')
                 <h1 style="font-size:1.5rem;font-weight:600;color:#2563eb;letter-spacing:0.5px;margin:0;text-transform:uppercase;">@yield('page-title', 'Office Portal')</h1>
             </div>
             
             <div style="display:flex;align-items:center;gap:16px;">
                 @yield('header-actions')
+                <!-- Notification Bell -->
+                <div class="notification-bell-container" id="officeNotificationBellContainer">
+                    <svg class="notification-bell" id="officeNotificationBell" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    @php
+                        $unreadCount = auth()->user()->unreadNotifications()
+                            ->whereIn('type', ['App\\Notifications\\SaAssigned', 'App\\Notifications\\SaRequestRejected', 'App\\Notifications\\SaRequestApproved'])
+                            ->count();
+                    @endphp
+                    <span class="notification-count" id="officeNotificationCount">{{ $unreadCount }}</span>
+                </div>
+                <div class="notification-dropdown" id="officeNotificationDropdown">
+                        <div style="padding: 16px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #111827;">Notifications</h3>
+                            <button onclick="markAllAsRead()" style="background: none; border: none; color: #6366f1; font-size: 13px; cursor: pointer; padding: 4px 8px;">Mark all as read</button>
+                        </div>
+                        <div id="notificationList" style="max-height: 400px; overflow-y: auto;">
+                            @forelse(auth()->user()->notifications()->whereIn('type', ['App\\Notifications\\SaAssigned', 'App\\Notifications\\SaRequestRejected', 'App\\Notifications\\SaRequestApproved'])->take(10)->get() as $notification)
+                                <div class="notification-item {{ $notification->read_at ? 'read' : 'unread' }}" data-id="{{ $notification->id }}" onclick="handleNotificationClick('{{ $notification->id }}', '{{ $notification->type }}')" style="padding: 16px; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: background 0.2s; background: {{ $notification->read_at ? 'white' : '#eff6ff' }};" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='{{ $notification->read_at ? 'white' : '#eff6ff' }}'">
+                                    <div style="display: flex; gap: 12px;">
+                                        <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center;">
+                                            @if(str_contains($notification->type, 'SaAssigned'))
+                                                <svg style="width: 20px; height: 20px; color: #3b82f6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            @elseif(str_contains($notification->type, 'Rejected'))
+                                                <svg style="width: 20px; height: 20px; color: #ef4444;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            @else
+                                                <svg style="width: 20px; height: 20px; color: #10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            @endif
+                                        </div>
+                                        <div style="flex: 1; min-width: 0;">
+                                            <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: {{ $notification->read_at ? '400' : '600' }}; color: #111827;">
+                                                {{ $notification->data['message'] ?? 'New notification' }}
+                                            </p>
+                                            <p style="margin: 0; font-size: 12px; color: #6b7280;">
+                                                {{ $notification->created_at->diffForHumans() }}
+                                            </p>
+                                        </div>
+                                        @if(!$notification->read_at)
+                                            <div style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; flex-shrink: 0; margin-top: 6px;"></div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @empty
+                                <div style="padding: 40px; text-align: center; color: #9ca3af;">
+                                    <svg style="width: 48px; height: 48px; margin: 0 auto 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                    </svg>
+                                    <p style="margin: 0; font-size: 14px;">No notifications</p>
+                                </div>
+                            @endforelse
+                        </div>
+                </div>
             </div>
         </div>
         
@@ -499,4 +621,90 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Notification dropdown toggle
+const bellContainer = document.getElementById('officeNotificationBellContainer');
+const notificationDropdown = document.getElementById('officeNotificationDropdown');
+
+if (bellContainer && notificationDropdown) {
+    bellContainer.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notificationDropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!bellContainer.contains(e.target) && !notificationDropdown.contains(e.target)) {
+            notificationDropdown.classList.remove('show');
+        }
+    });
+}
+
+// Handle notification click
+function handleNotificationClick(notificationId, notificationType) {
+    // Mark as read
+    fetch(`/notifications/${notificationId}/read`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    }).then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update UI
+            const notificationItem = document.querySelector(`[data-id="${notificationId}"]`);
+            if (notificationItem) {
+                notificationItem.classList.remove('unread');
+                notificationItem.classList.add('read');
+                notificationItem.style.background = 'white';
+                const dot = notificationItem.querySelector('div[style*="border-radius: 50%"][style*="background: #3b82f6"]');
+                if (dot) dot.remove();
+            }
+            
+            // Update badge
+            updateNotificationBadge();
+            
+            // Redirect based on notification type
+            if (notificationType.includes('SaAssigned') || notificationType.includes('SaRequestApproved')) {
+                window.location.href = '{{ route('offices.studentlists.request_sa') }}';
+            } else if (notificationType.includes('SaRequestRejected')) {
+                window.location.href = '{{ route('offices.studentlists.request_sa') }}';
+            }
+        }
+    });
+}
+
+// Mark all as read
+function markAllAsRead() {
+    fetch('/notifications/mark-all-read', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    }).then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update all notification items
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+                item.classList.add('read');
+                item.style.background = 'white';
+                const dot = item.querySelector('div[style*="border-radius: 50%"][style*="background: #3b82f6"]');
+                if (dot) dot.remove();
+            });
+            
+            // Update badge
+            updateNotificationBadge();
+        }
+    });
+}
+
+// Update notification badge
+function updateNotificationBadge() {
+    const badge = document.getElementById('officeNotificationCount');
+    const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+    badge.textContent = unreadCount;
+}
 </script>

@@ -29,6 +29,51 @@
             <p class="font-medium">{{ session('success') }}</p>
         </div>
     @endif
+    
+    <!-- Filter Button -->
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <button onclick="toggleFilters()" class="filter-btn" style="display: flex; align-items: center; gap: 6px; background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            Filters
+        </button>
+    </div>
+    
+    <!-- Filter Panel -->
+    <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Year Level</label>
+                <select id="yearFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white;">
+                    <option value="">All Years</option>
+                    <option value="first year">First Year</option>
+                    <option value="second year">Second Year</option>
+                    <option value="third year">Third Year</option>
+                    <option value="fourth year">Fourth Year</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Semester</label>
+                <select id="semesterFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white;">
+                    <option value="">All Semesters</option>
+                    <option value="1st semester">1st Semester</option>
+                    <option value="2nd semester">2nd Semester</option>
+                    <option value="summer">Summer</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Search</label>
+                <input type="text" id="searchFilter" oninput="applyFilters()" placeholder="Search by name..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            </div>
+            <div style="display: flex; align-items: flex-end;">
+                <button onclick="clearFilters()" style="background: #6b7280; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; width: 100%;">
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <div class="overflow-x-auto">
         <table class="reports-table">
             <thead>
@@ -136,4 +181,75 @@
             @endforelse
         </div>
 </div>
+
+<script>
+// Filter functions
+function toggleFilters() {
+    const panel = document.getElementById('filterPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function applyFilters() {
+    const yearValue = document.getElementById('yearFilter').value.toLowerCase();
+    const semesterValue = document.getElementById('semesterFilter').value.toLowerCase();
+    const searchValue = document.getElementById('searchFilter').value.toLowerCase();
+    const table = document.querySelector('.reports-table tbody');
+    const rows = table.getElementsByTagName('tr');
+    
+    let visibleCount = 0;
+    for (let row of rows) {
+        if (row.querySelector('td[colspan]')) continue;
+        
+        const cells = row.getElementsByTagName('td');
+        const name = cells[0]?.textContent.toLowerCase() || '';
+        const year = cells[1]?.textContent.toLowerCase() || '';
+        const semester = cells[2]?.textContent.toLowerCase() || '';
+        
+        const matchesYear = !yearValue || year.includes(yearValue);
+        const matchesSemester = !semesterValue || semester.includes(semesterValue);
+        const matchesSearch = !searchValue || name.includes(searchValue);
+        
+        if (matchesYear && matchesSemester && matchesSearch) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    }
+    
+    // Show/hide no results message
+    updateNoResultsMessage(table, visibleCount);
+}
+
+function clearFilters() {
+    document.getElementById('yearFilter').value = '';
+    document.getElementById('semesterFilter').value = '';
+    document.getElementById('searchFilter').value = '';
+    applyFilters();
+}
+
+function updateNoResultsMessage(table, visibleCount) {
+    let noResultsRow = table.querySelector('.no-results-row');
+    
+    if (visibleCount === 0) {
+        if (!noResultsRow) {
+            noResultsRow = document.createElement('tr');
+            noResultsRow.className = 'no-results-row';
+            noResultsRow.innerHTML = `
+                <td colspan="5" style="text-align: center; padding: 40px; color: #6b7280;">
+                    <svg style="width: 48px; height: 48px; margin: 0 auto 12px; opacity: 0.5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <div style="font-size: 16px; font-weight: 500;">No matching records found</div>
+                    <div style="font-size: 14px; margin-top: 4px;">Try adjusting your filters</div>
+                </td>
+            `;
+            table.appendChild(noResultsRow);
+        }
+        noResultsRow.style.display = '';
+    } else if (noResultsRow) {
+        noResultsRow.style.display = 'none';
+    }
+}
+</script>
 @endsection

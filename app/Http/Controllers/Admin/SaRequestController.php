@@ -96,6 +96,14 @@ class SaRequestController extends Controller
                 $firstStudent->user->notify(new \App\Notifications\SaAssigned($saRequest));
             }
 
+            // Notify the office user
+            $officeUser = \App\Models\User::where('office_name', $saRequest->office)
+                ->where('role', 'offices')
+                ->first();
+            if ($officeUser) {
+                $officeUser->notify(new \App\Notifications\SaRequestApproved($saRequest));
+            }
+
             $assignedStudents[] = $firstStudent->student_name;
             $newAssignmentCount++;
             $students = $students->skip(1);
@@ -164,7 +172,13 @@ class SaRequestController extends Controller
             'reason' => $request->reason
         ]);
 
-        // Note: No student notification for rejection since it's a department request, not student request
+        // Notify the office user that their SA request was rejected
+        $officeUser = \App\Models\User::where('office_name', $saRequest->office)
+            ->where('role', 'offices')
+            ->first();
+        if ($officeUser) {
+            $officeUser->notify(new \App\Notifications\SaRequestRejected($saRequest));
+        }
 
         return response()->json([
             'success' => true,

@@ -27,13 +27,32 @@
 <style>
     /* ...existing styles for table, cards, badges, etc... */
 </style>
-    @if(isset($currentUser) && $currentUser->role === 'offices')
-        <div style="background: #e0f2fe; border-left: 4px solid #0277bd; padding: 12px 16px; margin-bottom: 20px; border-radius: 4px;">
-            <p style="margin: 0; color: #01579b; font-weight: 600;">
-                📍 Showing tasks for: {{ $currentUser->office_name ?? 'Your Office' }}
-            </p>
+    
+    <!-- Filter Button -->
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <button onclick="toggleFilters()" class="filter-btn" style="display: flex; align-items: center; gap: 6px; background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            Filters
+        </button>
+    </div>
+    
+    <!-- Filter Panel -->
+    <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Search</label>
+                <input type="text" id="searchFilter" oninput="applyFilters()" placeholder="Search by name or ID..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+            </div>
+            <div style="display: flex; align-items: flex-end;">
+                <button onclick="clearFilters()" style="background: #6b7280; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; width: 100%;">
+                    Clear Filters
+                </button>
+            </div>
         </div>
-    @endif
+    </div>
+    
     <table class="reports-table">
         <thead>
             <tr>
@@ -150,6 +169,68 @@ document.getElementById('tasksModal').addEventListener('click', function(e) {
         closeTasksModal();
     }
 });
+
+// Filter functions
+function toggleFilters() {
+    const panel = document.getElementById('filterPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function applyFilters() {
+    const searchValue = document.getElementById('searchFilter').value.toLowerCase();
+    const table = document.querySelector('.reports-table tbody');
+    const rows = table.getElementsByTagName('tr');
+    
+    let visibleCount = 0;
+    for (let row of rows) {
+        if (row.querySelector('.empty-state')) continue;
+        
+        const cells = row.getElementsByTagName('td');
+        const studentId = cells[0]?.textContent.toLowerCase() || '';
+        const name = cells[1]?.textContent.toLowerCase() || '';
+        
+        const matchesSearch = !searchValue || studentId.includes(searchValue) || name.includes(searchValue);
+        
+        if (matchesSearch) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    }
+    
+    // Show/hide no results message
+    updateNoResultsMessage(table, visibleCount);
+}
+
+function clearFilters() {
+    document.getElementById('searchFilter').value = '';
+    applyFilters();
+}
+
+function updateNoResultsMessage(table, visibleCount) {
+    let noResultsRow = table.querySelector('.no-results-row');
+    
+    if (visibleCount === 0) {
+        if (!noResultsRow) {
+            noResultsRow = document.createElement('tr');
+            noResultsRow.className = 'no-results-row';
+            noResultsRow.innerHTML = `
+                <td colspan="4" style="text-align: center; padding: 40px; color: #6b7280;">
+                    <svg style="width: 48px; height: 48px; margin: 0 auto 12px; opacity: 0.5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <div style="font-size: 16px; font-weight: 500;">No matching records found</div>
+                    <div style="font-size: 14px; margin-top: 4px;">Try adjusting your filters</div>
+                </td>
+            `;
+            table.appendChild(noResultsRow);
+        }
+        noResultsRow.style.display = '';
+    } else if (noResultsRow) {
+        noResultsRow.style.display = 'none';
+    }
+}
 </script>
 
 @endsection

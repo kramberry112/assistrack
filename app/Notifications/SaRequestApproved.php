@@ -39,8 +39,10 @@ class SaRequestApproved extends Notification
     {
         return (new MailMessage)
                     ->subject('SA Request Approved')
-                    ->line('Note: This notification is deprecated and should not be used.')
-                    ->line('Office: ' . $this->saRequest->office);
+                    ->line('Your Student Assistant request has been approved!')
+                    ->line('Office: ' . $this->saRequest->office)
+                    ->line('A student has been assigned to your office.')
+                    ->line('Thank you for using the SA Request system!');
     }
 
     /**
@@ -53,7 +55,7 @@ class SaRequestApproved extends Notification
         return [
             'sa_request_id' => $this->saRequest->id,
             'office' => $this->saRequest->office,
-            'message' => 'Deprecated notification',
+            'message' => 'Your SA request for ' . $this->saRequest->office . ' has been approved and a student has been assigned.',
             'type' => 'sa_request_approved'
         ];
     }
@@ -63,7 +65,7 @@ class SaRequestApproved extends Notification
         return [
             'sa_request_id' => $this->saRequest->id,
             'office' => $this->saRequest->office,
-            'message' => 'Deprecated notification',
+            'message' => 'Your SA request for ' . $this->saRequest->office . ' has been approved and a student has been assigned.',
             'type' => 'sa_request_approved'
         ];
     }

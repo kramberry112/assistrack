@@ -71,17 +71,20 @@ class SaRequest extends Model
         }
 
         // For multi-assignment requests, find all related assignments
-        return \App\Models\Student::whereIn('id', function($query) {
+        // Get the base description (remove any multi-assignment suffix)
+        $baseDescription = preg_replace('/ \(Multi-assignment #\d+\)$/', '', $this->description);
+        
+        return \App\Models\Student::whereIn('id', function($query) use ($baseDescription) {
             $query->select('assigned_student_id')
                 ->from('sa_requests')
                 ->where('office', $this->office)
                 ->where('status', 'approved')
                 ->whereNotNull('assigned_student_id')
-                ->where(function($q) {
-                    $q->where('id', $this->id)
-                      ->orWhere('description', 'like', $this->description . ' (Multi-assignment #%');
+                ->where(function($q) use ($baseDescription) {
+                    $q->where('description', $baseDescription)
+                      ->orWhere('description', 'like', $baseDescription . ' (Multi-assignment #%');
                 });
-        })->get();
+        })->distinct()->get();
     }
 
     // Get count of assigned students for this request

@@ -719,7 +719,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label" id="studentSelectLabel">Select Student to Assign:</label>
-                <select id="assignStudentId" class="form-input" required style="display: none;">
+                <select id="assignStudentId" class="form-input" style="display: none;">
                     <option value="">Loading students...</option>
                 </select>
                 <!-- Multiple student selection for requests with count > 1 -->
@@ -992,6 +992,11 @@ document.getElementById('rejectionForm').addEventListener('submit', function(e) 
     
     if (!reason.trim()) {
         alert('Please provide a reason for rejection');
+        return;
+    }
+    
+    // Show confirmation dialog
+    if (!confirm('Are you sure you want to reject this SA request? This action cannot be undone.')) {
         return;
     }
     
