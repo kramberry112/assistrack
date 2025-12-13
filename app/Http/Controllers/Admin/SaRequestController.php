@@ -11,21 +11,33 @@ class SaRequestController extends Controller
 {
     public function index()
     {
+        // Filter out multi-assignment duplicates - only show the parent request
         $saRequests = SaRequest::with(['assignedStudent'])
+            ->where(function($query) {
+                $query->where('description', 'not like', '% (Multi-assignment #%')
+                      ->orWhereNull('description');
+            })
             ->orderBy('created_at', 'desc')
             ->paginate(10);
             
         return view('admin.sa-requests.index', compact('saRequests'));
     }
 
-    public function getAvailableStudents()
+    public function getAvailableStudents(Request $request)
     {
-        // Get students who are not currently assigned as SA
-        $students = \App\Models\Student::whereDoesntHave('assignedSaRequests', function($query) {
-            $query->where('status', 'approved');
-        })->select('id', 'student_name', 'id_number', 'course', 'year_level')
-        ->orderBy('student_name')
-        ->get();
+        $excludeOffice = $request->query('exclude_office');
+        
+        // Get all students from the student list, excluding those from the requesting office
+        $query = \App\Models\Student::select('id', 'student_name', 'id_number', 'course', 'year_level', 'designated_office');
+        
+        if ($excludeOffice) {
+            $query->where(function($q) use ($excludeOffice) {
+                $q->where('designated_office', '!=', $excludeOffice)
+                  ->orWhereNull('designated_office');
+            });
+        }
+        
+        $students = $query->orderBy('student_name')->get();
 
         return response()->json(['students' => $students]);
     }
@@ -61,15 +73,9 @@ class SaRequestController extends Controller
 
         $students = \App\Models\Student::whereIn('id', $studentIds)->get();
 
-        // Check if any student is already assigned as SA elsewhere
-        foreach ($students as $student) {
-            if ($student->isAssignedAsSa()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Student {$student->student_name} is already assigned as SA to another office."
-                ], 400);
-            }
-        }
+        // Note: We allow students to be "borrowed" by multiple offices
+        // A student from CANTEEN can work as SA in ACADS, LIBRARY, etc.
+        // This is the "borrowed students" feature
 
         $assignedStudents = [];
         $newAssignmentCount = 0;
@@ -86,10 +92,8 @@ class SaRequestController extends Controller
                 'reason' => $request->reason
             ]);
 
-            // Update the student's designated office
-            $firstStudent->update([
-                'designated_office' => $saRequest->office
-            ]);
+            // Note: We don't update the student's designated_office
+            // They remain assigned to their original office and appear in "Borrowed Students"
 
             // Notify the student
             if ($firstStudent->user) {
@@ -123,10 +127,8 @@ class SaRequestController extends Controller
                 'reason' => $request->reason
             ]);
 
-            // Update student's designated office
-            $student->update([
-                'designated_office' => $saRequest->office
-            ]);
+            // Note: We don't update the student's designated_office
+            // They remain assigned to their original office and appear in "Borrowed Students"
 
             // Notify the student
             if ($student->user) {

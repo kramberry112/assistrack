@@ -491,6 +491,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('offices.dashboard');
     Route::get('/offices-student-list', [\App\Http\Controllers\OfficeStudentListController::class, 'index'])->name('offices.studentlists.index');
     Route::post('/offices-student-list/request-sa', [\App\Http\Controllers\OfficeStudentListController::class, 'requestSa'])->name('offices.studentlists.request_sa');
+    Route::post('/offices-student-list/{student}/mark-done', [\App\Http\Controllers\OfficeStudentListController::class, 'markAsDone'])->name('offices.studentlists.markAsDone');
     
     // Notification routes
     Route::post('/notifications/{id}/read', function ($id) {

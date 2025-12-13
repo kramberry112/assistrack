@@ -1086,28 +1086,30 @@
                                 </table>
                             </div>
                         </div>
-                        <!-- Right Side - File Upload -->
-                        <div class="form-right">
-                            <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px;">
-                                <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #111827;">📄 Grade Proof</h4>
-                                <div style="margin-bottom: 8px;">
-                                    <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Upload Grade Slip:</label>
-                                    <input type="file" name="proof" id="gradeFileInput" accept=".jpg,.jpeg,.png,.pdf" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7; margin-top: 8px;">
-                                    <small style="font-size: 12px; color: #6c757d; font-family: Times New Roman, Times, serif; display: block; margin-top: 4px;">Accepted formats: JPG, PNG, PDF (Max size: 5MB)</small>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!-- Hidden subjects input -->
                     <input type="hidden" name="subjects" id="subjectsJson">
                     
-                    <!-- Class Schedule Upload Section -->
-                    <div style="margin-bottom: 24px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px;">
-                        <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: #111827;">📅 Class Schedule:</h4>
-                        <div style="margin-bottom: 8px;">
-                            <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Upload Class Schedule:</label>
-                            <input type="file" id="scheduleFileInput" name="scheduleFileInput" accept=".jpg,.jpeg,.png,.pdf" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 10px; font-size: 16px; background: #f7f7f7; box-sizing: border-box; margin-top: 8px;">
-                            <small style="font-size: 12px; color: #6c757d; font-family: Times New Roman, Times, serif; display: block; margin-top: 4px;">Accepted formats: JPG, PNG, PDF (Max size: 5MB)</small>
+                    <!-- Class Schedule and Grade Proof Side by Side -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+                        <!-- Left: Class Schedule -->
+                        <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px;">
+                            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #111827;">📅 Class Schedule</h4>
+                            <div style="margin-bottom: 8px;">
+                                <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Upload Class Schedule:</label>
+                                <input type="file" id="scheduleFileInput" name="scheduleFileInput" accept=".jpg,.jpeg,.png,.pdf" style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7; margin-top: 8px;">
+                                <small style="font-size: 12px; color: #6c757d; font-family: Times New Roman, Times, serif; display: block; margin-top: 4px;">Accepted formats: JPG, PNG, PDF (Max size: 5MB)</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Right: Grade Proof -->
+                        <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px;">
+                            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #111827;">📄 Grade Proof</h4>
+                            <div style="margin-bottom: 8px;">
+                                <label style="font-size: 16px; font-weight: bold; font-family: Times New Roman, Times, serif;">Upload Grade Slip:</label>
+                                <input type="file" name="proof" id="gradeFileInput" accept=".jpg,.jpeg,.png,.pdf" required style="width: 100%; border: 1px solid #b0b8d1; border-radius: 4px; padding: 6px; font-size: 15px; background: #f7f7f7; margin-top: 8px;">
+                                <small style="font-size: 12px; color: #6c757d; font-family: Times New Roman, Times, serif; display: block; margin-top: 4px;">Accepted formats: JPG, PNG, PDF (Max size: 5MB)</small>
+                            </div>
                         </div>
                     </div>
                     

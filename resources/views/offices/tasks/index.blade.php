@@ -219,12 +219,23 @@
                         </div>
                         <div style="margin-bottom:16px;">
                             <label for="modal_student_id" style="font-weight:600;">Student</label>
-                            <select name="student_id" id="modal_student_id" required style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d5db;margin-top:4px;">
-                                <option value="">Select student</option>
+                            <input 
+                                type="text" 
+                                id="modal_student_search" 
+                                list="studentsList" 
+                                placeholder="Search or select student..." 
+                                autocomplete="off"
+                                style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d5db;margin-top:4px;"
+                            />
+                            <datalist id="studentsList">
                                 @foreach($students as $student)
-                                    <option value="{{ $student->id }}">{{ $student->name }} ({{ $student->username }})</option>
+                                    <option value="{{ $student->name }} ({{ $student->username }})" data-id="{{ $student->id }}">
                                 @endforeach
-                            </select>
+                            </datalist>
+                            <input type="hidden" name="student_id" id="modal_student_id" required />
+                            <small style="color: #6b7280; font-size: 0.85rem; display: block; margin-top: 4px;">
+                                Showing {{ count($students) }} student(s) assigned to this office
+                            </small>
                         </div>
                         <div style="margin-bottom:16px;">
                             <label for="modal_priority" style="font-weight:600;">Level of Priority</label>
@@ -247,21 +258,49 @@
                 </div>
             </div>
 <script>
+    // Student search functionality
+    const studentSearchInput = document.getElementById('modal_student_search');
+    const studentIdInput = document.getElementById('modal_student_id');
+    
+    // Create a mapping of student display names to IDs
+    const studentMap = new Map([
+        @foreach($students as $student)
+            ['{{ $student->name }} ({{ $student->username }})', '{{ $student->id }}'],
+        @endforeach
+    ]);
+    
+    // Update hidden input when a student is selected
+    studentSearchInput.addEventListener('input', function() {
+        const selectedValue = this.value;
+        if (studentMap.has(selectedValue)) {
+            studentIdInput.value = studentMap.get(selectedValue);
+        } else {
+            studentIdInput.value = '';
+        }
+    });
+    
     // Modal open/close logic
     const openModalBtn = document.getElementById('openCreateTaskModal');
     const modal = document.getElementById('createTaskModal');
     const cancelBtn = document.getElementById('cancelCreateTask');
     const createTaskForm = document.getElementById('createTaskForm');
+    
     openModalBtn.addEventListener('click', function() {
         modal.style.display = 'flex';
     });
+    
     cancelBtn.addEventListener('click', function() {
         modal.style.display = 'none';
+        studentSearchInput.value = '';
+        studentIdInput.value = '';
     });
+    
     // Close modal when clicking outside the modal content
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             modal.style.display = 'none';
+            studentSearchInput.value = '';
+            studentIdInput.value = '';
         }
     });
 

@@ -724,7 +724,19 @@
                 </select>
                 <!-- Multiple student selection for requests with count > 1 -->
                 <div id="multipleStudentSelection" style="display: none;">
-                    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #d1d5db; border-radius: 6px; padding: 8px;">
+                    <!-- Filter and Search Controls -->
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <div style="flex: 1;">
+                            <input type="text" id="studentSearchBar" placeholder="Search by student name..." style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.9rem;">
+                        </div>
+                        <div style="min-width: 160px;">
+                            <input type="text" list="officeList" id="officeFilterDropdown" placeholder="All Offices" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.9rem; background: white;">
+                            <datalist id="officeList">
+                                <option value="">All Offices</option>
+                            </datalist>
+                        </div>
+                    </div>
+                    <div style="max-height: 250px; overflow-y: auto; border: 1px solid #d1d5db; border-radius: 6px; padding: 8px;">
                         <div id="studentCheckboxList">
                             <!-- Student checkboxes will be populated here -->
                         </div>
@@ -807,13 +819,13 @@ function showAssignmentModal(requestId, office, requestedCount, description) {
         multipleSelect.style.display = 'block';
         label.textContent = `Select ${requestedCount} Student${requestedCount > 1 ? 's' : ''} to Assign:`;
         maxCount.textContent = requestedCount;
-        loadAvailableStudentsMultiple(requestedCount);
+        loadAvailableStudentsMultiple(requestedCount, office);
     } else {
         // Show single selection for requests = 1
         singleSelect.style.display = 'block';
         multipleSelect.style.display = 'none';
         label.textContent = 'Select Student to Assign:';
-        loadAvailableStudents();
+        loadAvailableStudents(office);
     }
     
     document.getElementById('assignmentModal').classList.add('show');
@@ -827,12 +839,13 @@ function showRejectionModal(requestId, office, description) {
     document.getElementById('rejectionModal').classList.add('show');
 }
 
-function loadAvailableStudents() {
+function loadAvailableStudents(office) {
     const select = document.getElementById('assignStudentId');
     select.innerHTML = '<option value="">Loading students...</option>';
     
-    // Fetch available students (those not currently assigned as SA)
-    fetch('/admin/available-students', {
+    // Fetch available students (excluding those from the requesting office)
+    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}`;
+    fetch(url, {
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -844,7 +857,8 @@ function loadAvailableStudents() {
         data.students.forEach(student => {
             const option = document.createElement('option');
             option.value = student.id;
-            option.textContent = `${student.student_name} (${student.id_number}) - ${student.course} Year ${student.year_level}`;
+            const officeText = student.designated_office ? ` - ${student.designated_office}` : '';
+            option.textContent = `${student.student_name} (${student.id_number}) - ${student.course} Year ${student.year_level}${officeText}`;
             select.appendChild(option);
         });
     })
@@ -854,12 +868,13 @@ function loadAvailableStudents() {
     });
 }
 
-function loadAvailableStudentsMultiple(maxCount) {
+function loadAvailableStudentsMultiple(maxCount, office) {
     const container = document.getElementById('studentCheckboxList');
     container.innerHTML = '<div style="text-align: center; padding: 10px;">Loading students...</div>';
     
-    // Fetch available students (those not currently assigned as SA)
-    fetch('/admin/available-students', {
+    // Fetch available students (excluding those from the requesting office)
+    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}`;
+    fetch(url, {
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -873,35 +888,31 @@ function loadAvailableStudentsMultiple(maxCount) {
             return;
         }
         
-        data.students.forEach(student => {
-            const checkboxWrapper = document.createElement('div');
-            checkboxWrapper.style.cssText = 'margin-bottom: 8px; display: flex; align-items: center; padding: 4px;';
-            
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = student.id;
-            checkbox.name = 'selected_students';
-            checkbox.id = `student_${student.id}`;
-            checkbox.style.cssText = 'margin-right: 8px; min-width: 16px; min-height: 16px;';
-            
-            const label = document.createElement('label');
-            label.setAttribute('for', `student_${student.id}`);
-            label.style.cssText = 'cursor: pointer; font-size: 0.9rem; line-height: 1.2;';
-            label.textContent = `${student.student_name} (${student.id_number}) - ${student.course} Year ${student.year_level}`;
-            
-            // Add click handler to limit selection
-            checkbox.addEventListener('change', function() {
-                const checkedBoxes = container.querySelectorAll('input[type="checkbox"]:checked');
-                if (checkedBoxes.length > maxCount) {
-                    this.checked = false;
-                    alert(`You can only select up to ${maxCount} students for this request.`);
-                }
-            });
-            
-            checkboxWrapper.appendChild(checkbox);
-            checkboxWrapper.appendChild(label);
-            container.appendChild(checkboxWrapper);
+        // Store students data globally for filtering
+        window.allStudents = data.students;
+        
+        // Populate office filter datalist with all offices in the system
+        const officeList = document.getElementById('officeList');
+        const allOffices = [
+            'ACADS', 'ALUMNI OFFICE', 'ARCHIVING', 'ARZATECH', 'CANTEEN', 'CLINIC',
+            'FINANCE', 'GUIDANCE', 'HRD', 'KUWAGO', 'LCR', 'LIBRARY', 'LINKAGES',
+            'MARKETING', 'OPEN LAB', 'PRESIDENT\'S OFFICE', 'QUEUING', 'QUALITY ASSURANCE',
+            'REGISTRAR', 'SAO', 'SBA FACULTY', 'SIHM FACULTY', 'SITE FACULTY',
+            'SOE FACULTY', 'SOH FACULTY', 'SOHS FACULTY', 'SOC FACULTY',
+            'SPORTS AND CULTURE', 'STE DEAN\'S OFFICE', 'STE FACULTY', 'STEEDS', 'XACTO'
+        ];
+        officeList.innerHTML = '<option value="">All Offices</option>';
+        allOffices.forEach(office => {
+            const option = document.createElement('option');
+            option.value = office;
+            officeList.appendChild(option);
         });
+        
+        // Render all students initially
+        renderStudentList(data.students, maxCount);
+        
+        // Setup filter and search event listeners
+        setupFiltersAndSearch(maxCount);
     })
     .catch(error => {
         console.error('Error loading students:', error);
@@ -909,9 +920,97 @@ function loadAvailableStudentsMultiple(maxCount) {
     });
 }
 
+function renderStudentList(students, maxCount) {
+    const container = document.getElementById('studentCheckboxList');
+    container.innerHTML = '';
+    
+    if (students.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 10px; color: #6b7280;">No students match your filters</div>';
+        return;
+    }
+    
+    students.forEach(student => {
+        const checkboxWrapper = document.createElement('div');
+        checkboxWrapper.style.cssText = 'margin-bottom: 8px; display: flex; align-items: center; padding: 4px;';
+        checkboxWrapper.className = 'student-item';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = student.id;
+        checkbox.name = 'selected_students';
+        checkbox.id = `student_${student.id}`;
+        checkbox.style.cssText = 'margin-right: 8px; min-width: 16px; min-height: 16px;';
+        
+        const label = document.createElement('label');
+        label.setAttribute('for', `student_${student.id}`);
+        label.style.cssText = 'cursor: pointer; font-size: 0.9rem; line-height: 1.4; flex: 1;';
+        
+        const officeBadge = student.designated_office 
+            ? `<span style="background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px; display: inline-block;">${student.designated_office}</span>`
+            : '';
+        
+        label.innerHTML = `${student.student_name} (${student.id_number}) - ${student.course} Year ${student.year_level}${officeBadge}`;
+        
+        // Add click handler to limit selection
+        checkbox.addEventListener('change', function() {
+            const checkedBoxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            if (checkedBoxes.length > maxCount) {
+                this.checked = false;
+                alert(`You can only select up to ${maxCount} students for this request.`);
+            }
+        });
+        
+        checkboxWrapper.appendChild(checkbox);
+        checkboxWrapper.appendChild(label);
+        container.appendChild(checkboxWrapper);
+    });
+}
+
+function setupFiltersAndSearch(maxCount) {
+    const searchBar = document.getElementById('studentSearchBar');
+    const officeFilter = document.getElementById('officeFilterDropdown');
+    
+    function applyFilters() {
+        const searchTerm = searchBar.value.toLowerCase().trim();
+        const selectedOffice = officeFilter.value.trim();
+        
+        let filteredStudents = window.allStudents;
+        
+        // Apply office filter (allow partial matches for typed input)
+        if (selectedOffice && selectedOffice !== 'All Offices') {
+            filteredStudents = filteredStudents.filter(s => 
+                s.designated_office && s.designated_office.toLowerCase().includes(selectedOffice.toLowerCase())
+            );
+        }
+        
+        // Apply search filter
+        if (searchTerm) {
+            filteredStudents = filteredStudents.filter(s => 
+                s.student_name.toLowerCase().includes(searchTerm) ||
+                s.id_number.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        renderStudentList(filteredStudents, maxCount);
+    }
+    
+    // Add event listeners
+    searchBar.addEventListener('input', applyFilters);
+    officeFilter.addEventListener('input', applyFilters); // Changed from 'change' to 'input' for real-time typing
+    officeFilter.addEventListener('change', applyFilters);
+}
+
 function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('show');
     currentRequestId = null;
+    
+    // Reset filters when closing assignment modal
+    if (modalId === 'assignmentModal') {
+        const searchBar = document.getElementById('studentSearchBar');
+        const officeFilter = document.getElementById('officeFilterDropdown');
+        if (searchBar) searchBar.value = '';
+        if (officeFilter) officeFilter.value = '';
+    }
 }
 
 // Close modal when clicking outside of it

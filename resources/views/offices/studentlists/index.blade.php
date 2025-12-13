@@ -325,7 +325,13 @@
             <div style="display: flex; flex-direction: row; align-items: center; padding: 0 24px; margin-bottom: 12px;">
                 <div style="flex: 1 1 auto;">
                     <div class="studentlist-title" style="margin-bottom:0;">{{ $officeName ?? 'Office' }} Student Assistants</div>
-                    <div class="studentlist-desc" style="margin-bottom:0;">Students assigned to {{ $officeName ?? 'this office' }}</div>
+                    <div class="studentlist-desc" style="margin-bottom:0;">
+                        @if(isset($studentType) && $studentType === 'borrowed')
+                            Students borrowed from other departments
+                        @else
+                            Students assigned to {{ $officeName ?? 'this office' }}
+                        @endif
+                    </div>
                 </div>
                 <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 8px; margin-top: 8px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
@@ -370,13 +376,17 @@
                                 <input type="hidden" name="course" id="filterCourse" value="{{ request('course') }}">
                                 <input type="hidden" name="year_level" id="filterYear" value="{{ request('year_level') }}">
                                 <input type="hidden" name="office" id="filterOffice" value="{{ request('office') }}">
+                                <input type="hidden" name="student_type" value="{{ $studentType ?? 'assigned' }}">
                             </form>
                         </div>
                         <form method="GET" action="{{ route('offices.studentlists.index') }}" style="display: flex; align-items: center; gap: 8px;">
                             <input type="text" name="search" id="officeStudentSearchBar" value="{{ request('search') }}" placeholder="Search students..." style="padding: 7px 12px; border-radius: 6px; border: 1px solid #bbb; font-size: 15px;">
+                            <input type="hidden" name="student_type" value="{{ $studentType ?? 'assigned' }}">
                             <button type="submit" style="padding: 7px 18px; border-radius: 6px; background: #2563eb; color: #fff; border: none; font-size: 15px; cursor: pointer;">Search</button>
                         </form>
-                        <button id="requestSaHelpBtn" style="padding: 7px 18px; border-radius: 6px; background: #059669; color: #fff; border: none; font-size: 15px; font-weight: 500; cursor: pointer;">Request SA</button>
+                        @if(!isset($studentType) || $studentType === 'assigned')
+                            <button id="requestSaHelpBtn" style="padding: 7px 18px; border-radius: 6px; background: #059669; color: #fff; border: none; font-size: 15px; font-weight: 500; cursor: pointer;">Request SA</button>
+                        @endif
                     </div>
                     <!-- ...existing code... -->
 
@@ -404,10 +414,17 @@
                             <td>{{ $student->id_number }}</td>
                             <td>{{ $student->designated_office }}</td>
                             <td class="action-cell" style="text-align: center; vertical-align: middle;">
-                                @if($student->isEvaluated())
-                                    <button class="btn btn-success disabled">Evaluated</button>
+                                @if(isset($studentType) && $studentType === 'borrowed')
+                                    <form method="POST" action="{{ route('offices.studentlists.markAsDone', $student->id) }}" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success" onclick="return confirm('Mark this SA as done? The student will return to their designated office.')">Mark as Done</button>
+                                    </form>
                                 @else
-                                    <a href="{{ route('evaluation.show', $student->id) }}" class="btn btn-primary">Evaluation</a>
+                                    @if($student->isEvaluated())
+                                        <button class="btn btn-success disabled">Evaluated</button>
+                                    @else
+                                        <a href="{{ route('evaluation.show', $student->id) }}" class="btn btn-primary">Evaluation</a>
+                                    @endif
                                 @endif
                             </td>
                         </tr>

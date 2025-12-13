@@ -370,15 +370,35 @@
                     </span>
                     Dashboard
                 </a>
-                <a href="{{ route('offices.studentlists.index') }}" class="{{ request()->routeIs('offices.studentlists.*') ? 'active' : '' }}">
-                    <span class="icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="7" r="4" />
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        </svg>
-                    </span>
-                    Student List
-                </a>
+                <!-- Student List with Dropdown -->
+                <div style="padding:0; margin:0; list-style:none;">
+                    <div class="nav-item">
+                        <a href="#" class="nav-link student-parent-toggle {{ request()->routeIs('offices.studentlists.*') ? 'active' : '' }}" style="display: flex; align-items: center; padding: 12px 20px; color: #374151; text-decoration: none; transition: background-color 0.2s;">
+                            <span class="icon" style="margin-right: 12px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="7" r="4" />
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                </svg>
+                            </span>
+                            <p class="student-label" style="margin: 0; font-size: 0.95rem; font-weight: bold; flex: 1;">Student List</p>
+                            <i class="student-arrow bi bi-chevron-right" style="font-size: 0.75rem; transition: transform 0.3s;"></i>
+                        </a>
+                        <ul class="nav nav-treeview" id="studentListTreeview" style="display:none;">
+                            <li class="nav-item">
+                                <a href="{{ route('offices.studentlists.index', ['student_type' => 'assigned']) }}" class="nav-link student-link {{ request()->get('student_type', 'assigned') === 'assigned' ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Assigned Students</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('offices.studentlists.index', ['student_type' => 'borrowed']) }}" class="nav-link student-link {{ request()->get('student_type') === 'borrowed' ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle" style="margin-right: 12px; font-size: 0.4rem;"></i>
+                                    <p style="margin: 0; font-size: 0.95rem; font-weight: bold;">Borrowed Students</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <a href="{{ route('attendance.index') }}" class="{{ request()->routeIs('attendance.*') ? 'active' : '' }}">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -561,35 +581,52 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Sidebar reports dropdown logic
-    const parentToggle = document.querySelector('.parent-toggle');
-    const parentLabel = document.querySelector('.parent-label');
-    const treeview = document.querySelector('.nav-treeview');
-    const arrow = document.querySelector('.nav-arrow');
+    // Sidebar reports dropdown logic (using specific selector to avoid conflicts)
+    const reportsToggle = document.querySelector('.nav-item .parent-toggle');
+    const reportsTreeview = reportsToggle ? reportsToggle.nextElementSibling : null;
+    const reportsArrow = reportsToggle ? reportsToggle.querySelector('.nav-arrow') : null;
 
-    if (parentToggle) {
-        parentToggle.addEventListener('click', function(e) {
+    if (reportsToggle && reportsTreeview) {
+        reportsToggle.addEventListener('click', function(e) {
             e.preventDefault();
-            if (treeview) {
-                const currentDisplay = window.getComputedStyle(treeview).display;
-                const isVisible = currentDisplay !== 'none';
-                
-                if (isVisible) {
-                    treeview.style.display = 'none';
-                    if (arrow) arrow.style.transform = 'rotate(0deg)';
-                } else {
-                    treeview.style.display = 'block';
-                    if (arrow) arrow.style.transform = 'rotate(90deg)';
-                }
+            const currentDisplay = window.getComputedStyle(reportsTreeview).display;
+            const isVisible = currentDisplay !== 'none';
+            
+            if (isVisible) {
+                reportsTreeview.style.display = 'none';
+                if (reportsArrow) reportsArrow.style.transform = 'rotate(0deg)';
+            } else {
+                reportsTreeview.style.display = 'block';
+                if (reportsArrow) reportsArrow.style.transform = 'rotate(90deg)';
+            }
+        });
+    }
+
+    // Student List dropdown logic
+    const studentListToggle = document.querySelector('.student-parent-toggle');
+    const studentListTreeview = document.getElementById('studentListTreeview');
+    const studentListArrow = studentListToggle ? studentListToggle.querySelector('.student-arrow') : null;
+
+    if (studentListToggle && studentListTreeview) {
+        studentListToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const currentDisplay = window.getComputedStyle(studentListTreeview).display;
+            
+            if (currentDisplay === 'none') {
+                studentListTreeview.style.display = 'block';
+                if (studentListArrow) studentListArrow.style.transform = 'rotate(90deg)';
+            } else {
+                studentListTreeview.style.display = 'none';
+                if (studentListArrow) studentListArrow.style.transform = 'rotate(0deg)';
             }
         });
     }
 
     // Auto-open dropdown if we're on a reports page
     if (window.location.pathname.includes('/offices/reports/')) {
-        if (treeview) {
-            treeview.style.display = 'block';
-            if (arrow) arrow.style.transform = 'rotate(90deg)';
+        if (reportsTreeview) {
+            reportsTreeview.style.display = 'block';
+            if (reportsArrow) reportsArrow.style.transform = 'rotate(90deg)';
         }
         
         // Highlight active report link
@@ -612,7 +649,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 otherLink.style.color = '';
                 otherLink.style.fontWeight = '';
             });
-            
+     
+
+    // Auto-open dropdown if we're on a student lists page
+    if (window.location.pathname.includes('/offices/studentlists')) {
+        if (studentListTreeview) {
+            studentListTreeview.style.display = 'block';
+            if (studentListArrow) studentListArrow.style.transform = 'rotate(90deg)';
+        }
+        
+        // Highlight active student link
+        document.querySelectorAll('.student-link').forEach(function(link) {
+            if (link.classList.contains('active')) {
+                link.style.backgroundColor = '#EFF6FF';
+                link.style.color = '#2563EB';
+                link.style.fontWeight = '500';
+            }
+        });
+    }       
             // Add active class to clicked link
             this.classList.add('active');
             this.style.backgroundColor = '#EFF6FF';
