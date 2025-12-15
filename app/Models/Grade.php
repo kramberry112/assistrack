@@ -12,6 +12,7 @@ class Grade extends Model
         'student_name',
         'year_level',
         'semester',
+        'school_year',
         'subjects',
         'proof_url',
         'schedule_url',

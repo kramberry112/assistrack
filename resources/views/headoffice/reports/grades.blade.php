@@ -6,6 +6,21 @@
 @endsection
 
 @section('content')
+@php
+    // Get filters from session (set by dashboard)
+    $selectedSchoolYear = $schoolYear ?? session('head_school_year');
+    $selectedSemester = $semester ?? session('head_semester');
+    
+    // Get distinct school years from students table
+    $availableSchoolYears = \App\Models\Student::distinct()
+        ->whereNotNull('school_year')
+        ->pluck('school_year')
+        ->sort()
+        ->values();
+    
+    // Available semesters
+    $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+@endphp
 <style>
     .content-wrapper {
         background: #fff !important;
@@ -144,6 +159,24 @@
     <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
             <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">School Year</label>
+                <select id="schoolYearFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All School Years</option>
+                    @foreach($availableSchoolYears as $year)
+                        <option value="{{ $year }}" {{ $selectedSchoolYear == $year ? 'selected' : '' }}>{{ $year }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Semester</label>
+                <select id="semesterFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All Semesters</option>
+                    @foreach($availableSemesters as $sem)
+                        <option value="{{ $sem }}" {{ $selectedSemester == $sem ? 'selected' : '' }}>{{ $sem }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
                 <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Year Level</label>
                 <select id="yearFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
                     <option value="">All Years</option>
@@ -151,15 +184,6 @@
                     <option value="2nd Year">2nd Year</option>
                     <option value="3rd Year">3rd Year</option>
                     <option value="4th Year">4th Year</option>
-                </select>
-            </div>
-            <div>
-                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Semester</label>
-                <select id="semesterFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
-                    <option value="">All Semesters</option>
-                    <option value="1st Semester">1st Semester</option>
-                    <option value="2nd Semester">2nd Semester</option>
-                    <option value="Summer">Summer</option>
                 </select>
             </div>
             <div>
@@ -205,7 +229,11 @@
                         </td>
                     </tr>
                     @forelse($grades as $grade)
-                        <tr style="transition: all 0.2s ease;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='#ffffff'">
+                        <tr style="transition: all 0.2s ease;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='#ffffff'"
+                            data-school-year="{{ $grade->school_year ?? '' }}"
+                            data-semester="{{ $grade->semester ?? '' }}"
+                            data-year-level="{{ $grade->year_level ?? '' }}"
+                            data-student-name="{{ strtolower($grade->student_name) }}">
                             <td style="padding: 16px 20px; color: #111827; font-weight: 500;">
                                 {{ $grade->student_name }}
                             </td>
@@ -254,7 +282,11 @@
         <!-- Mobile Card View -->
         <div class="mobile-grades-cards">
             @forelse($grades as $grade)
-                <div class="grades-card">
+                <div class="grades-card"
+                     data-school-year="{{ $grade->school_year ?? '' }}"
+                     data-semester="{{ $grade->semester ?? '' }}"
+                     data-year-level="{{ $grade->year_level ?? '' }}"
+                     data-student-name="{{ strtolower($grade->student_name) }}">
                     <div class="grades-card-header">
                         <h3 class="grades-card-title">{{ $grade->student_name }}</h3>
                         <p class="grades-card-subtitle">{{ $grade->year_level }} • {{ $grade->semester }}</p>
@@ -300,10 +332,12 @@ function toggleFilters() {
 }
 
 function applyFilters() {
-    const yearFilter = document.getElementById('yearFilter').value.toLowerCase();
+    const schoolYearFilter = document.getElementById('schoolYearFilter').value.toLowerCase();
     const semesterFilter = document.getElementById('semesterFilter').value.toLowerCase();
+    const yearFilter = document.getElementById('yearFilter').value.toLowerCase();
     const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
     
+    // Filter table rows
     const tables = document.querySelectorAll('.min-w-full tbody, .overflow-x-auto table tbody');
     let visibleCount = 0;
     
@@ -313,15 +347,18 @@ function applyFilters() {
             const cells = row.querySelectorAll('td');
             if (cells.length <= 1) return; // Skip empty row
             
-            const nameCell = cells[0]?.textContent.trim().toLowerCase() || '';
-            const yearCell = cells[1]?.textContent.trim().toLowerCase() || '';
-            const semesterCell = cells[2]?.textContent.trim().toLowerCase() || '';
+            // Get data attributes
+            const schoolYear = (row.getAttribute('data-school-year') || '').toLowerCase();
+            const semester = (row.getAttribute('data-semester') || '').toLowerCase();
+            const yearLevel = (row.getAttribute('data-year-level') || '').toLowerCase();
+            const studentName = (row.getAttribute('data-student-name') || '').toLowerCase();
         
-            const yearMatch = !yearFilter || yearCell.includes(yearFilter);
-            const semesterMatch = !semesterFilter || semesterCell.includes(semesterFilter);
-            const searchMatch = !searchFilter || nameCell.includes(searchFilter);
+            const schoolYearMatch = !schoolYearFilter || schoolYear.includes(schoolYearFilter);
+            const semesterMatch = !semesterFilter || semester.includes(semesterFilter);
+            const yearMatch = !yearFilter || yearLevel.includes(yearFilter);
+            const searchMatch = !searchFilter || studentName.includes(searchFilter);
             
-            if (yearMatch && semesterMatch && searchMatch) {
+            if (schoolYearMatch && semesterMatch && yearMatch && searchMatch) {
                 row.style.display = '';
                 visibleCount++;
             } else {
@@ -330,18 +367,42 @@ function applyFilters() {
         });
     });
     
+    // Filter mobile cards
+    const cards = document.querySelectorAll('.grades-card');
+    let visibleCardsCount = 0;
+    
+    cards.forEach(card => {
+        const schoolYear = (card.getAttribute('data-school-year') || '').toLowerCase();
+        const semester = (card.getAttribute('data-semester') || '').toLowerCase();
+        const yearLevel = (card.getAttribute('data-year-level') || '').toLowerCase();
+        const studentName = (card.getAttribute('data-student-name') || '').toLowerCase();
+        
+        const schoolYearMatch = !schoolYearFilter || schoolYear.includes(schoolYearFilter);
+        const semesterMatch = !semesterFilter || semester.includes(semesterFilter);
+        const yearMatch = !yearFilter || yearLevel.includes(yearFilter);
+        const searchMatch = !searchFilter || studentName.includes(searchFilter);
+        
+        if (schoolYearMatch && semesterMatch && yearMatch && searchMatch) {
+            card.style.display = '';
+            visibleCardsCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
     // Show/hide no results message
     const noResults = document.getElementById('noResults');
-    if (visibleCount === 0) {
-        noResults.style.display = 'table-row';
+    if (visibleCount === 0 && visibleCardsCount === 0) {
+        if (noResults) noResults.style.display = 'table-row';
     } else {
-        noResults.style.display = 'none';
+        if (noResults) noResults.style.display = 'none';
     }
 }
 
 function clearFilters() {
-    document.getElementById('yearFilter').value = '';
+    document.getElementById('schoolYearFilter').value = '';
     document.getElementById('semesterFilter').value = '';
+    document.getElementById('yearFilter').value = '';
     document.getElementById('searchFilter').value = '';
     applyFilters();
 }

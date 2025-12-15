@@ -11,6 +11,8 @@ class Evaluation extends Model
         'student_id',
         'evaluator_id',
         'department',
+        'semester',
+        'school_year',
         'problem_solving',
         'writing_skills',
         'oral_communication',

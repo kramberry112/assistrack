@@ -6,6 +6,21 @@
 @endsection
 
 @section('content')
+@php
+    // Get distinct school years from students table
+    $availableSchoolYears = \App\Models\Student::distinct()
+        ->whereNotNull('school_year')
+        ->pluck('school_year')
+        ->sort()
+        ->values();
+    
+    // Available semesters
+    $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+    
+    // Use session filters from dashboard (already passed from controller)
+    $selectedSchoolYear = $schoolYear ?? session('head_school_year');
+    $selectedSemester = $semester ?? session('head_semester');
+@endphp
 <style>
     .content-wrapper {
         background: #fff !important;
@@ -548,6 +563,28 @@
                                 Filter
                             </button>
                             <div class="filter-dropdown" id="filterDropdownMenu">
+                                <div class="filter-label cascading-label" data-cascade="schoolyear">
+                                    <span>School Year</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                                <div class="filter-cascade filter-cascade-schoolyear">
+                                    <div class="filter-option {{ !$selectedSchoolYear ? 'selected' : '' }}" data-filter="school_year" data-value="">All School Years</div>
+                                    @foreach($availableSchoolYears as $year)
+                                        <div class="filter-option {{ $selectedSchoolYear == $year ? 'selected' : '' }}" data-filter="school_year" data-value="{{ $year }}">{{ $year }}</div>
+                                    @endforeach
+                                </div>
+                                
+                                <div class="filter-label cascading-label" data-cascade="semester">
+                                    <span>Semester</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                                <div class="filter-cascade filter-cascade-semester">
+                                    <div class="filter-option {{ !$selectedSemester ? 'selected' : '' }}" data-filter="semester" data-value="">All Semesters</div>
+                                    @foreach($availableSemesters as $sem)
+                                        <div class="filter-option {{ $selectedSemester == $sem ? 'selected' : '' }}" data-filter="semester" data-value="{{ $sem }}">{{ $sem }}</div>
+                                    @endforeach
+                                </div>
+                                
                                 <div class="filter-label cascading-label" data-cascade="course">
                                     <span>Course</span>
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -750,6 +787,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cascading submenu logic for filter
     const cascadeLabels = document.querySelectorAll('.cascading-label');
     const cascades = {
+        schoolyear: document.querySelector('.filter-cascade-schoolyear'),
+        semester: document.querySelector('.filter-cascade-semester'),
         course: document.querySelector('.filter-cascade-course'),
         year: document.querySelector('.filter-cascade-year'),
         office: document.querySelector('.filter-cascade-office')

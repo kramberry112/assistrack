@@ -365,30 +365,64 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Head Office Reports (same functionality as admin)
     Route::get('/head/reports/attendance', function(Request $request) {
+        // Get filters from session
+        $schoolYear = session('head_school_year');
+        $semester = session('head_semester');
+        
         $date = $request->input('date') ?? now()->toDateString();
-        $records = \App\Models\Attendance::getGroupedRecordsByDate($date);
+        
+        // Apply filters to attendance query
+        $query = \App\Models\Attendance::whereDate('created_at', $date);
+        if ($schoolYear || $semester) {
+            $query->whereHas('student', function($q) use ($schoolYear, $semester) {
+                if ($schoolYear) {
+                    $q->where('school_year', $schoolYear);
+                }
+                if ($semester) {
+                    $q->where('semester', $semester);
+                }
+            });
+        }
+        
+        $records = $query->with('student')->get();
         $stats = [
             'total' => count($records),
             'clock_ins' => collect($records)->whereNotNull('time_in')->count(),
             'clock_outs' => collect($records)->whereNotNull('time_out')->count(),
             'unique_users' => collect($records)->pluck('id_number')->unique()->count(),
         ];
-        return view('headoffice.reports.attendance', compact('records', 'stats'));
+        return view('headoffice.reports.attendance', compact('records', 'stats', 'schoolYear', 'semester'));
     })->name('head.reports.attendance');
     
     Route::get('/head/reports/tasks', function() {
+        // Get filters from session
+        $schoolYear = session('head_school_year');
+        $semester = session('head_semester');
+        
         $currentUser = auth()->user();
-        $students = \App\Models\User::whereHas('student')
+        $query = \App\Models\User::whereHas('student')
             ->whereHas('studentTasks', function($q) { 
                 $q->where('status', 'completed'); 
             })
             ->withCount(['studentTasks as student_tasks_count' => function($q) { 
                 $q->where('status', 'completed'); 
             }])
-            ->with('student')
-            ->orderBy('name')
-            ->get();
-        return view('headoffice.reports.tasks', compact('students', 'currentUser'));
+            ->with('student');
+            
+        // Apply filters if set
+        if ($schoolYear || $semester) {
+            $query->whereHas('student', function($q) use ($schoolYear, $semester) {
+                if ($schoolYear) {
+                    $q->where('school_year', $schoolYear);
+                }
+                if ($semester) {
+                    $q->where('semester', $semester);
+                }
+            });
+        }
+        
+        $students = $query->orderBy('name')->get();
+        return view('headoffice.reports.tasks', compact('students', 'currentUser', 'schoolYear', 'semester'));
     })->name('head.reports.tasks');
     
     Route::get('/head/tasks/user/{userId}', function($userId) {
@@ -410,8 +444,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/head/reports/evaluation', [\App\Http\Controllers\AdminEvaluationController::class, 'headOfficeIndex'])->name('head.reports.evaluation');
     
     Route::get('/head/reports/grades', function() {
-        $grades = \App\Models\Grade::all();
-        return view('headoffice.reports.grades', compact('grades'));
+        // Get filters from session
+        $schoolYear = session('head_school_year');
+        $semester = session('head_semester');
+        
+        $query = \App\Models\Grade::query();
+        
+        // Apply filters if set
+        if ($schoolYear || $semester) {
+            $query->whereHas('student', function($q) use ($schoolYear, $semester) {
+                if ($schoolYear) {
+                    $q->where('school_year', $schoolYear);
+                }
+                if ($semester) {
+                    $q->where('semester', $semester);
+                }
+            });
+        }
+        
+        $grades = $query->get();
+        return view('headoffice.reports.grades', compact('grades', 'schoolYear', 'semester'));
     })->name('head.reports.grades');
     
     // Head office detail view routes
