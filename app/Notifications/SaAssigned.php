@@ -57,7 +57,7 @@ class SaAssigned extends Notification
             'sa_request_id' => $this->saRequest->id,
             'office' => $this->saRequest->office,
             'description' => $this->saRequest->description,
-            'message' => 'You have been assigned as Student Assistant for ' . $this->saRequest->office,
+            'message' => 'You have been temporarily assigned as Student Assistant for ' . $this->saRequest->office,
             'type' => 'sa_assigned'
         ];
     }

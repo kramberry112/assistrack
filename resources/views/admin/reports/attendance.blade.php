@@ -234,6 +234,231 @@
             padding: 10px 6px !important;
         }
     }
+    
+    /* Print Styles */
+    @media print {
+        /* Page setup */
+        @page {
+            size: landscape;
+            margin: 1.5cm 1cm;
+        }
+        
+        /* Hide unnecessary elements */
+        .filter-btn,
+        .print-btn,
+        #filterPanel,
+        form[method="GET"],
+        nav,
+        .navbar,
+        .sidebar,
+        header,
+        .header,
+        .page-header,
+        .admin-header,
+        .content-header,
+        button,
+        #noResultsMessage,
+        .print-summary,
+        .overflow-x-auto > *::-webkit-scrollbar {
+            display: none !important;
+        }
+        
+        /* Hide all scrollbars */
+        * {
+            overflow: visible !important;
+            -ms-overflow-style: none !important;
+            scrollbar-width: none !important;
+        }
+        
+        *::-webkit-scrollbar {
+            display: none !important;
+        }
+        
+        /* Reset page styling for print */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            background: white !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        div[style*="padding: 24px"] {
+            padding: 0 !important;
+            min-height: auto !important;
+        }
+        
+        /* Show table on all devices when printing */
+        .overflow-x-auto {
+            display: block !important;
+            overflow: visible !important;
+        }
+        
+        /* Hide mobile cards when printing */
+        .mobile-attendance-cards {
+            display: none !important;
+        }
+        
+        /* Professional header styling */
+        .print-header {
+            display: block !important;
+            margin-bottom: 25px;
+            padding: 15px 0;
+            border-bottom: 3px solid #2563eb;
+        }
+        
+        .print-header h1 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .print-header .report-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .print-header .report-info p {
+            margin: 0;
+            font-size: 11px;
+            color: #475569;
+            font-weight: 500;
+        }
+        
+        .print-header .report-info .info-label {
+            font-weight: 600;
+            color: #334155;
+        }
+        
+        /* Professional table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            page-break-inside: auto;
+            font-size: 9px;
+            margin-bottom: 15px;
+        }
+        
+        thead {
+            display: table-header-group;
+        }
+        
+        thead tr th {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+            color: white !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 10px 6px;
+            font-size: 9px;
+            border: 1px solid #1e40af !important;
+            text-align: left;
+        }
+        
+        tbody tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f8fafc !important;
+        }
+        
+        tbody tr:nth-child(odd) {
+            background-color: #ffffff !important;
+        }
+        
+        tbody tr td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 6px;
+            font-size: 9px;
+            color: #334155;
+        }
+        
+        tbody tr td:first-child {
+            font-weight: 600;
+            color: #64748b;
+            text-align: center;
+        }
+        
+        tbody tr td:nth-child(2) {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        tbody tr td:nth-child(3) {
+            font-weight: 500;
+            color: #1e293b;
+        }
+        
+        /* Preserve and enhance status badge colors */
+        .bg-green-100 {
+            background-color: #d1fae5 !important;
+            color: #065f46 !important;
+            padding: 4px 8px !important;
+            border-radius: 3px !important;
+            font-weight: 600 !important;
+            font-size: 8px !important;
+        }
+        
+        .bg-yellow-100 {
+            background-color: #fef3c7 !important;
+            color: #92400e !important;
+            padding: 4px 8px !important;
+            border-radius: 3px !important;
+            font-weight: 600 !important;
+            font-size: 8px !important;
+        }
+        
+        .bg-gray-100 {
+            background-color: #e2e8f0 !important;
+            color: #334155 !important;
+            padding: 4px 8px !important;
+            border-radius: 3px !important;
+            font-weight: 600 !important;
+            font-size: 8px !important;
+        }
+        
+        .bg-red-100 {
+            background-color: #fee2e2 !important;
+            color: #991b1b !important;
+            padding: 4px 8px !important;
+            border-radius: 3px !important;
+            font-weight: 600 !important;
+            font-size: 8px !important;
+        }
+        
+        /* Footer */
+        .print-footer {
+            display: block !important;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 2px solid #cbd5e1;
+            text-align: center;
+            font-size: 9px;
+            color: #64748b;
+        }
+        
+        .print-footer p {
+            margin: 4px 0;
+        }
+        
+        /* Enhance hours display */
+        .text-indigo-700 {
+            color: #2563eb !important;
+            font-weight: 700 !important;
+        }
+    }
 </style>
 <div style="padding: 24px; background: #fff; min-height: calc(100vh - 76px);">
         <!-- Filter Bar -->
@@ -248,13 +473,23 @@
                 </button>
             </form>
             
-            <!-- Filter Button -->
-            <button onclick="toggleFilters()" class="filter-btn" style="display: flex; align-items: center; gap: 6px; background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
-                <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
-                </svg>
-                Filters
-            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <!-- Print Button -->
+                <button onclick="window.print()" class="print-btn" style="display: flex; align-items: center; gap: 6px; background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                    <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                    </svg>
+                    Print
+                </button>
+                
+                <!-- Filter Button -->
+                <button onclick="toggleFilters()" class="filter-btn" style="display: flex; align-items: center; gap: 6px; background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                    <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                    </svg>
+                    Filters
+                </button>
+            </div>
         </div>
         
         <!-- Filter Panel -->
@@ -334,6 +569,47 @@
                         Clear Filters
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Print Header (only visible when printing) -->
+        <div class="print-header" style="display: none;">
+            <h1>Student Assistant Attendance Report</h1>
+            <div class="report-info">
+                <p><span class="info-label">Report Date:</span> {{ request('date') ? \Carbon\Carbon::parse(request('date'))->format('F d, Y') : now()->format('F d, Y') }}</p>
+                <p><span class="info-label">Generated:</span> {{ now()->format('F d, Y - h:i A') }}</p>
+                <p><span class="info-label">School Year:</span> {{ $defaultSchoolYear }}</p>
+                <p><span class="info-label">Semester:</span> {{ $defaultSemester }}</p>
+            </div>
+        </div>
+        
+        <!-- Print Summary (only visible when printing) -->
+        <div class="print-summary" style="display: none;">
+            @php
+                $totalRecords = count($records);
+                $presentCount = collect($records)->filter(fn($r) => strtolower($r['status'] ?? '') == 'present')->count();
+                $absentCount = collect($records)->filter(fn($r) => strtolower($r['status'] ?? '') == 'absent')->count();
+                $totalHours = collect($records)->sum('accumulated_hours');
+            @endphp
+            <div class="stat-item">
+                <div class="stat-label">Total Students</div>
+                <div class="stat-value">{{ $totalRecords }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Present</div>
+                <div class="stat-value" style="color: #059669;">{{ $presentCount }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Absent</div>
+                <div class="stat-value" style="color: #dc2626;">{{ $absentCount }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Total Hours</div>
+                <div class="stat-value" style="color: #2563eb;">{{ number_format($totalHours, 2) }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Avg Hours/Student</div>
+                <div class="stat-value" style="color: #7c3aed;">{{ $totalRecords > 0 ? number_format($totalHours / $totalRecords, 2) : '0.00' }}</div>
             </div>
         </div>
 
@@ -517,6 +793,13 @@
                     </div>
                 </div>
             @endforelse
+        </div>
+        
+        <!-- Print Footer (only visible when printing) -->
+        <div class="print-footer" style="display: none;">
+            <p><strong>AssisTrack</strong> - Student Assistant Attendance Management System</p>
+            <p>This is an official attendance report generated electronically.</p>
+            <p>© {{ now()->year }} - All Rights Reserved</p>
         </div>
 </div>
 

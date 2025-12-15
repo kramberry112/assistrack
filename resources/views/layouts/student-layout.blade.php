@@ -720,23 +720,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Notification functionality
     function updateNotificationCount() {
-        // Fetch community join requests, task notifications, and community notifications
+        // Fetch community join requests, task notifications, community notifications, and SA assignment notifications
         Promise.all([
             fetch('/community/join-requests').then(response => response.json()).catch(() => []),
             fetch('/student/task-notifications').then(response => response.json()).catch(() => []),
-            fetch('/student/community-notifications').then(response => response.json()).catch(() => [])
+            fetch('/student/community-notifications').then(response => response.json()).catch(() => []),
+            fetch('/student/sa-notifications').then(response => response.json()).catch(() => [])
         ])
-        .then(([communityRequests, taskNotifications, communityNotifications]) => {
+        .then(([communityRequests, taskNotifications, communityNotifications, saNotifications]) => {
             console.log('Notification fetch results:', {
                 communityRequests: communityRequests.length,
                 taskNotifications: taskNotifications.length,
                 communityNotifications: communityNotifications.length,
-                communityNotificationsData: communityNotifications
+                saNotifications: saNotifications.length,
+                saNotificationsData: saNotifications
             });
             
-            // Count only unread community notifications
+            // Count only unread community notifications and SA notifications
             const unreadCommunityNotifications = communityNotifications.filter(n => !n.read_at);
-            const totalCount = communityRequests.length + taskNotifications.length + unreadCommunityNotifications.length;
+            const unreadSaNotifications = saNotifications.filter(n => !n.read_at);
+            const totalCount = communityRequests.length + taskNotifications.length + unreadCommunityNotifications.length + unreadSaNotifications.length;
             const countSpan = document.getElementById('notificationCount');
             if (totalCount > 0) {
                 countSpan.textContent = totalCount;
@@ -808,14 +811,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 notificationDropdown.style.display = 'block';
                 notificationContent.innerHTML = 'Loading...';
                 
-                // Fetch community requests, task notifications, and community join notifications
+                // Fetch community requests, task notifications, community join notifications, and SA assignment notifications
                 Promise.all([
                     fetch('/community/join-requests').then(response => response.json()).catch(() => []),
                     fetch('/student/task-notifications').then(response => response.json()).catch(() => []),
-                    fetch('/student/community-notifications').then(response => response.json()).catch(() => [])
+                    fetch('/student/community-notifications').then(response => response.json()).catch(() => []),
+                    fetch('/student/sa-notifications').then(response => response.json()).catch(() => [])
                 ])
-                .then(([communityRequests, taskNotifications, communityNotifications]) => {
-                    if (communityRequests.length === 0 && taskNotifications.length === 0 && communityNotifications.length === 0) {
+                .then(([communityRequests, taskNotifications, communityNotifications, saNotifications]) => {
+                    if (communityRequests.length === 0 && taskNotifications.length === 0 && communityNotifications.length === 0 && saNotifications.length === 0) {
                         notificationContent.innerHTML = '<div style="color:#374151;font-weight:500;">No notifications.</div>';
                     } else {
                         let notificationHTML = '';
@@ -874,9 +878,37 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
                         }
                         
+                        // Add SA assignment notifications
+                        if (saNotifications.length > 0) {
+                            if (taskNotifications.length > 0 || communityNotifications.length > 0) {
+                                notificationHTML += '<div style="font-weight:700;color:#2563eb;margin:16px 0 12px 0;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">SA Assignments</div>';
+                            } else {
+                                notificationHTML += '<div style="font-weight:700;color:#2563eb;margin-bottom:12px;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">SA Assignments</div>';
+                            }
+                            
+                            saNotifications.forEach(notification => {
+                                const isUnread = !notification.read_at;
+                                const unreadStyle = isUnread ? 'box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15); border: 1px solid #dbeafe;' : '';
+                                
+                                notificationHTML += `
+                                    <div class="community-notification" data-notification-id="${notification.id}" style="margin-bottom:12px;padding:12px;background:#f0fdf4;border-radius:8px;border-left:4px solid #22c55e;cursor:pointer;transition:all 0.2s;${unreadStyle}" onclick="markNotificationAsRead('${notification.id}')">
+                                        <div style="font-weight:600;color:#111827;display:flex;align-items:center;gap:8px;">
+                                            <span>🎉</span>
+                                            <span>Assigned as Student Assistant!</span>
+                                            ${isUnread ? '<span style="background:#3b82f6;color:#fff;border-radius:50%;width:8px;height:8px;display:inline-block;margin-left:auto;"></span>' : ''}
+                                        </div>
+                                        <div style="color:#6b7280;font-size:0.9rem;margin-top:4px;"><strong>Office:</strong> ${notification.office}</div>
+                                        <div style="color:#6b7280;font-size:0.85rem;margin-top:2px;">${notification.message}</div>
+                                        <div style="color:#9ca3af;font-size:0.8rem;margin-top:4px;">${new Date(notification.created_at).toLocaleDateString()} ${new Date(notification.created_at).toLocaleTimeString()}</div>
+                                        ${isUnread ? '<div style="color:#3b82f6;font-size:0.8rem;margin-top:4px;font-weight:600;">• New</div>' : ''}
+                                    </div>
+                                `;
+                            });
+                        }
+                        
                         // Add community requests (for group owners)
                         if (communityRequests.length > 0) {
-                            if (taskNotifications.length > 0 || communityNotifications.length > 0) {
+                            if (taskNotifications.length > 0 || communityNotifications.length > 0 || saNotifications.length > 0) {
                                 notificationHTML += '<div style="font-weight:700;color:#2563eb;margin:16px 0 12px 0;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">Pending Requests</div>';
                             } else {
                                 notificationHTML += '<div style="font-weight:700;color:#2563eb;margin-bottom:12px;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">Pending Requests</div>';

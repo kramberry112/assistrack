@@ -6,6 +6,26 @@
 @endsection
 
 @section('content')
+@php
+    // Auto-detect current school year and semester
+    $currentMonth = (int) date('n'); // 1-12
+    $currentYear = (int) date('Y');
+    
+    // Determine semester and school year based on month
+    if ($currentMonth >= 8 && $currentMonth <= 12) {
+        // August to December = 1st Semester
+        $currentSemester = '1st Semester';
+        $currentSchoolYear = $currentYear . '-' . ($currentYear + 1);
+    } elseif ($currentMonth >= 1 && $currentMonth <= 5) {
+        // January to May = 2nd Semester
+        $currentSemester = '2nd Semester';
+        $currentSchoolYear = ($currentYear - 1) . '-' . $currentYear;
+    } else {
+        // June to July = Summer
+        $currentSemester = 'Summer';
+        $currentSchoolYear = ($currentYear - 1) . '-' . $currentYear;
+    }
+@endphp
 <style>
     /* Mobile optimization */
     * {
@@ -843,8 +863,8 @@ function loadAvailableStudents(office) {
     const select = document.getElementById('assignStudentId');
     select.innerHTML = '<option value="">Loading students...</option>';
     
-    // Fetch available students (excluding those from the requesting office)
-    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}`;
+    // Fetch available students for current school year and semester (excluding those from the requesting office)
+    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}&school_year={{ $currentSchoolYear }}&semester={{ urlencode($currentSemester) }}`;
     fetch(url, {
         method: 'GET',
         headers: {
@@ -872,8 +892,8 @@ function loadAvailableStudentsMultiple(maxCount, office) {
     const container = document.getElementById('studentCheckboxList');
     container.innerHTML = '<div style="text-align: center; padding: 10px;">Loading students...</div>';
     
-    // Fetch available students (excluding those from the requesting office)
-    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}`;
+    // Fetch available students for current school year and semester (excluding those from the requesting office)
+    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}&school_year={{ $currentSchoolYear }}&semester={{ urlencode($currentSemester) }}`;
     fetch(url, {
         method: 'GET',
         headers: {

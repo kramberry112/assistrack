@@ -25,16 +25,19 @@ class SaRequestController extends Controller
 
     public function getAvailableStudents(Request $request)
     {
-        $excludeOffice = $request->query('exclude_office');
+        $schoolYear = $request->query('school_year');
+        $semester = $request->query('semester');
         
-        // Get all students from the student list, excluding those from the requesting office
+        // Get all students from the student list, filtered by school year and semester only
         $query = \App\Models\Student::select('id', 'student_name', 'id_number', 'course', 'year_level', 'designated_office');
         
-        if ($excludeOffice) {
-            $query->where(function($q) use ($excludeOffice) {
-                $q->where('designated_office', '!=', $excludeOffice)
-                  ->orWhereNull('designated_office');
-            });
+        // Filter by school year and semester (matching what's shown in admin student list)
+        if ($schoolYear) {
+            $query->where('school_year', $schoolYear);
+        }
+        
+        if ($semester) {
+            $query->where('semester', $semester);
         }
         
         $students = $query->orderBy('student_name')->get();

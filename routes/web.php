@@ -494,6 +494,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Community join request notifications
     Route::get('/student/community-notifications', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'getUserNotifications'])->name('student.community_notifications');
     
+    // SA assignment notifications for students
+    Route::get('/student/sa-notifications', function() {
+        $notifications = auth()->user()->notifications()
+            ->where('type', 'App\\Notifications\\SaAssigned')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function($notification) {
+                return [
+                    'id' => $notification->id,
+                    'office' => $notification->data['office'] ?? '',
+                    'description' => $notification->data['description'] ?? '',
+                    'message' => $notification->data['message'] ?? '',
+                    'created_at' => $notification->created_at->toIso8601String(),
+                    'read_at' => $notification->read_at ? $notification->read_at->toIso8601String() : null
+                ];
+            });
+        return response()->json($notifications);
+    })->name('student.sa_notifications');
+    
     // Mark notification as read
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\CommunityGroupJoinRequestController::class, 'markAsRead'])->name('notifications.read');
     // Add more student routes here as needed
@@ -561,18 +580,41 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
 
         // Total students in this office (filtered by school year and semester)
-        $totalStudents = $officeName
+        // This includes both permanently designated students AND borrowed students from SA Requests
+        $permanentStudents = $officeName
             ? \App\Models\Student::where('designated_office', $officeName)
                 ->where('school_year', $selectedSchoolYear)
                 ->where('semester', $selectedSemester)
-                ->count()
-            : 0;
+                ->pluck('id')
+                ->toArray()
+            : [];
+        
+        // Get borrowed students assigned through SA Requests for this office
+        $borrowedStudentIds = $officeName
+            ? \App\Models\SaRequest::where('office', $officeName)
+                ->where('status', 'approved')
+                ->whereNotNull('assigned_student_id')
+                ->pluck('assigned_student_id')
+                ->unique()
+                ->toArray()
+            : [];
+        
+        // Get student records for borrowed students (filter by school year and semester)
+        $borrowedStudents = !empty($borrowedStudentIds)
+            ? \App\Models\Student::whereIn('id', $borrowedStudentIds)
+                ->where('school_year', $selectedSchoolYear)
+                ->where('semester', $selectedSemester)
+                ->pluck('id')
+                ->toArray()
+            : [];
+        
+        // Combine permanent and borrowed students (remove duplicates)
+        $allStudentIds = array_unique(array_merge($permanentStudents, $borrowedStudents));
+        $totalStudents = count($allStudentIds);
 
-        // Get student IDs assigned to this office (filtered by school year and semester)
-        $assignedStudentIds = $officeName
-            ? \App\Models\Student::where('designated_office', $officeName)
-                ->where('school_year', $selectedSchoolYear)
-                ->where('semester', $selectedSemester)
+        // Get user IDs for all students assigned to this office (permanent + borrowed)
+        $assignedStudentIds = !empty($allStudentIds)
+            ? \App\Models\Student::whereIn('id', $allStudentIds)
                 ->whereNotNull('user_id')
                 ->pluck('user_id')
                 ->toArray()

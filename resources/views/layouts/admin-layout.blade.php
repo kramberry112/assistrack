@@ -818,30 +818,25 @@
                                             </button>
                                         </div>
                                         ${data.map(n => `
-                                            <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;cursor:pointer;padding:12px;border-radius:4px;transition:background 0.2s;" 
+                                            <div class="notification-item" data-notification-id="${n.id}" data-notification-type="${n.data?.type || n.type || ''}" data-application-id="${n.data?.application_id || ''}" style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb;cursor:pointer;padding:12px;border-radius:4px;transition:background 0.2s;" 
                                                  onmouseover="this.style.background='#f3f4f6'" 
-                                                 onmouseout="this.style.background='transparent'"
-                                                 onclick="handleNotificationClick('${n.data?.application_id || ''}', '${n.type || 'NewApplicationSubmitted'}')">
-                                                <div style="font-weight:600;color:#2563eb;">${n.title}</div>
-                                                <div style="color:#374151;">${n.message}</div>
-                                                <div style="color:#6b7280;font-size:0.8rem;margin-top:4px;">${n.created_at}</div>
+                                                 onmouseout="this.style.background='transparent'">
+                                                <div style="font-weight:600;color:#2563eb;">${n.title || 'Notification'}</div>
+                                                <div style="color:#374151;">${n.message || ''}</div>
+                                                <div style="color:#6b7280;font-size:0.8rem;margin-top:4px;">${n.created_at || ''}</div>
                                             </div>
                                         `).join('')}
                                     `;
                                     
-                                    // Automatically mark all notifications as read after viewing
-                                    setTimeout(() => {
-                                        fetch('/admin/notifications/mark-all-read', {
-                                            method: 'POST',
-                                            headers: {
-                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                                'Content-Type': 'application/json'
-                                            }
-                                        }).then(() => {
-                                            // Update notification count after marking as read
-                                            updateAdminNotificationCount();
+                                    // Add click event listeners to notification items
+                                    document.querySelectorAll('.notification-item').forEach(function(item) {
+                                        item.addEventListener('click', function() {
+                                            const notificationId = this.getAttribute('data-notification-id');
+                                            const notificationType = this.getAttribute('data-notification-type');
+                                            const applicationId = this.getAttribute('data-application-id');
+                                            handleNotificationClick(notificationId, applicationId, notificationType);
                                         });
-                                    }, 2000); // Mark as read after 2 seconds of viewing
+                                    });
                                 }
                             });
                     }
@@ -858,18 +853,46 @@
         <!-- Notification Click Handler -->
         <script>
             // Handle notification clicks
-            function handleNotificationClick(applicationId, notificationType) {
-                if (notificationType === 'NewApplicationSubmitted') {
-                    // Navigate to applicants list (correct route without /admin prefix)
-                    window.location.href = '/applicants';
-                } else if (notificationType === 'SaRequestCreated' || notificationType === 'SaRequestApproved' || notificationType === 'SaRequestRejected') {
-                    // Navigate to SA requests page
-                    window.location.href = '/admin/sa-requests';
-                }
-                // Close notification dropdown after clicking
+            function handleNotificationClick(notificationId, applicationId, notificationType) {
+                console.log('Notification clicked:', { notificationId, applicationId, notificationType });
+                
+                // Mark notification as read and decrease count
+                fetch(`/admin/notifications/${notificationId}/read`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update notification count
+                        const countSpan = document.getElementById('adminNotificationCount');
+                        const currentCount = parseInt(countSpan.textContent) || 0;
+                        const newCount = Math.max(0, currentCount - 1);
+                        countSpan.textContent = newCount;
+                        if (newCount === 0) {
+                            countSpan.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // Close notification dropdown
                 const dropdown = document.getElementById('adminNotificationDropdown');
                 if (dropdown) {
                     dropdown.style.display = 'none';
+                }
+                
+                // Navigate to appropriate page based on notification type
+                if (notificationType && notificationType.toLowerCase().includes('application')) {
+                    console.log('Navigating to applicants page');
+                    window.location.href = '/applicants';
+                } else if (notificationType && notificationType.toLowerCase().includes('sa_request')) {
+                    console.log('Navigating to SA requests page');
+                    window.location.href = '/admin/sa-requests';
+                } else {
+                    console.log('Notification type not matched, staying on current page');
+                    console.warn('Unknown notification type:', notificationType);
                 }
             }
         </script>
