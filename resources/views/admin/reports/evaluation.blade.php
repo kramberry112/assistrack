@@ -6,6 +6,41 @@
 @endsection
 
 @section('content')
+@php
+    // Auto-detect current school year and semester
+    $currentMonth = (int) date('n'); // 1-12
+    $currentYear = (int) date('Y');
+    
+    // Determine semester and school year based on month
+    if ($currentMonth >= 8 && $currentMonth <= 12) {
+        // August to December = 1st Semester
+        $defaultSemester = '1st Semester';
+        $defaultSchoolYear = $currentYear . '-' . ($currentYear + 1);
+    } elseif ($currentMonth >= 1 && $currentMonth <= 5) {
+        // January to May = 2nd Semester
+        $defaultSemester = '2nd Semester';
+        $defaultSchoolYear = ($currentYear - 1) . '-' . $currentYear;
+    } else {
+        // June to July = Summer
+        $defaultSemester = 'Summer';
+        $defaultSchoolYear = ($currentYear - 1) . '-' . $currentYear;
+    }
+    
+    // Get distinct school years from students table
+    $availableSchoolYears = \App\Models\Student::distinct()
+        ->whereNotNull('school_year')
+        ->pluck('school_year')
+        ->sort()
+        ->values();
+    
+    // If no school years found, provide defaults
+    if ($availableSchoolYears->isEmpty()) {
+        $availableSchoolYears = collect(['2024-2025', '2025-2026', '2026-2027']);
+    }
+    
+    // Available semesters
+    $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+@endphp
 <style>
     /* Prevent horizontal scroll */
     * {
@@ -312,6 +347,24 @@
     <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
             <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">School Year</label>
+                <select id="schoolYearFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All School Years</option>
+                    @foreach($availableSchoolYears as $schoolYear)
+                        <option value="{{ $schoolYear }}">{{ $schoolYear }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Semester</label>
+                <select id="semesterFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All Semesters</option>
+                    @foreach($availableSemesters as $semester)
+                        <option value="{{ $semester }}">{{ $semester }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
                 <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Office</label>
                 <select id="officeFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
                     <option value="">All Offices</option>
@@ -371,7 +424,8 @@
         </thead>
         <tbody>
             @forelse($evaluations as $evaluation)
-                <tr>
+                <tr data-school-year="{{ $evaluation->student->school_year ?? '' }}" 
+                    data-semester="{{ $evaluation->student->semester ?? '' }}">
                     <td>
                         <div class="text-sm font-medium text-gray-900">
                             {{ $evaluation->student->student_name ?? 'N/A' }}
@@ -422,7 +476,9 @@
     <!-- Mobile Cards View -->
     <div class="mobile-evaluation-cards">
         @forelse($evaluations as $evaluation)
-            <div class="evaluation-card">
+            <div class="evaluation-card" 
+                 data-school-year="{{ $evaluation->student->school_year ?? '' }}" 
+                 data-semester="{{ $evaluation->student->semester ?? '' }}">
                 <div class="evaluation-card-header">
                     <h3 class="evaluation-card-title">{{ $evaluation->student->student_name ?? 'N/A' }}</h3>
                     <p class="evaluation-card-subtitle">Student ID: {{ $evaluation->student->id_number ?? 'N/A' }}</p>
@@ -470,53 +526,101 @@
 </div>
 
 <script>
+// Apply global filters from dashboard on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const globalSchoolYear = sessionStorage.getItem('globalSchoolYear');
+    const globalSemester = sessionStorage.getItem('globalSemester');
+    
+    if (globalSchoolYear) {
+        const schoolYearSelect = document.getElementById('schoolYearFilter');
+        if (schoolYearSelect) {
+            schoolYearSelect.value = globalSchoolYear;
+        }
+    }
+    
+    if (globalSemester) {
+        const semesterSelect = document.getElementById('semesterFilter');
+        if (semesterSelect) {
+            semesterSelect.value = globalSemester;
+        }
+    }
+    
+    // Apply filters if any were set from dashboard
+    if (globalSchoolYear || globalSemester) {
+        applyFilters();
+    }
+});
+
 function toggleFilters() {
     const panel = document.getElementById('filterPanel');
     panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 }
 
 function applyFilters() {
+    const schoolYearFilter = document.getElementById('schoolYearFilter').value.toLowerCase();
+    const semesterFilter = document.getElementById('semesterFilter').value.toLowerCase();
     const officeFilter = document.getElementById('officeFilter').value.toLowerCase();
     const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
     
     // Filter desktop table rows
     const tableRows = document.querySelectorAll('.reports-table tbody tr');
+    let visibleCount = 0;
+    let hasEmptyState = false;
+    
     tableRows.forEach(row => {
+        // Check if this is the empty state row (has colspan)
+        if (row.querySelector('td[colspan]')) {
+            hasEmptyState = true;
+            row.style.display = ''; // Always show empty state if it exists
+            return;
+        }
+        
+        const schoolYear = (row.dataset.schoolYear || '').toLowerCase();
+        const semester = (row.dataset.semester || '').toLowerCase();
         const office = row.cells[1]?.textContent.toLowerCase() || '';
         const name = row.cells[0]?.textContent.toLowerCase() || '';
         
+        const schoolYearMatch = !schoolYearFilter || schoolYear === schoolYearFilter;
+        const semesterMatch = !semesterFilter || semester === semesterFilter;
         const officeMatch = !officeFilter || office.includes(officeFilter);
         const searchMatch = !searchFilter || name.includes(searchFilter);
         
-        row.style.display = (officeMatch && searchMatch) ? '' : 'none';
+        if (schoolYearMatch && semesterMatch && officeMatch && searchMatch) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
     });
     
-    // Check if any rows are visible
-    const visibleRows = Array.from(tableRows).filter(row => row.style.display !== 'none');
+    // Show "no matching records" message only if there are records but all are filtered out
     const noResultsMsg = document.getElementById('noResultsMessage');
-    const table = document.querySelector('.reports-table');
-    if (visibleRows.length === 0 && tableRows.length > 0) {
+    if (!hasEmptyState && visibleCount === 0 && tableRows.length > 0) {
         if (noResultsMsg) noResultsMsg.style.display = 'block';
-        if (table) table.style.display = 'none';
     } else {
         if (noResultsMsg) noResultsMsg.style.display = 'none';
-        if (table) table.style.display = 'table';
     }
     
     // Filter mobile cards
     const mobileCards = document.querySelectorAll('.mobile-evaluation-cards .evaluation-card');
     mobileCards.forEach(card => {
+        const schoolYear = (card.dataset.schoolYear || '').toLowerCase();
+        const semester = (card.dataset.semester || '').toLowerCase();
         const office = card.querySelector('.evaluation-detail-value:nth-of-type(1)')?.textContent.toLowerCase() || '';
         const name = card.querySelector('.evaluation-card-title')?.textContent.toLowerCase() || '';
         
+        const schoolYearMatch = !schoolYearFilter || schoolYear === schoolYearFilter;
+        const semesterMatch = !semesterFilter || semester === semesterFilter;
         const officeMatch = !officeFilter || office.includes(officeFilter);
         const searchMatch = !searchFilter || name.includes(searchFilter);
         
-        card.style.display = (officeMatch && searchMatch) ? '' : 'none';
+        card.style.display = (schoolYearMatch && semesterMatch && officeMatch && searchMatch) ? '' : 'none';
     });
 }
 
 function clearFilters() {
+    document.getElementById('schoolYearFilter').value = '';
+    document.getElementById('semesterFilter').value = '';
     document.getElementById('officeFilter').value = '';
     document.getElementById('searchFilter').value = '';
     applyFilters();

@@ -6,6 +6,36 @@
 @endsection
 
 @section('content')
+@php
+    // Auto-detect current school year and semester
+    $currentMonth = (int) date('n'); // 1-12
+    $currentYear = (int) date('Y');
+    
+    // Determine semester and school year based on month
+    if ($currentMonth >= 8 && $currentMonth <= 12) {
+        // August to December = 1st Semester
+        $defaultSemester = '1st Semester';
+        $defaultSchoolYear = $currentYear . '-' . ($currentYear + 1);
+    } elseif ($currentMonth >= 1 && $currentMonth <= 5) {
+        // January to May = 2nd Semester
+        $defaultSemester = '2nd Semester';
+        $defaultSchoolYear = ($currentYear - 1) . '-' . $currentYear;
+    } else {
+        // June to July = Summer
+        $defaultSemester = 'Summer';
+        $defaultSchoolYear = ($currentYear - 1) . '-' . $currentYear;
+    }
+    
+    // Get distinct school years from students table
+    $availableSchoolYears = \App\Models\Student::distinct()
+        ->whereNotNull('school_year')
+        ->pluck('school_year')
+        ->sort()
+        ->values();
+    
+    // Available semesters
+    $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+@endphp
 <style>
     /* Mobile optimization */
     * {
@@ -919,6 +949,28 @@
                         </button>
                         
                         <div class="filter-dropdown" id="filterDropdownMenu">
+                            <div class="filter-label cascading-label" data-cascade="schoolyear">
+                                <span>School Year</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                            <div class="filter-cascade filter-cascade-schoolyear">
+                                <div class="filter-option {{ !request('school_year') ? 'selected' : '' }}" data-filter="school_year" data-value="">All School Years</div>
+                                @foreach($availableSchoolYears as $schoolYear)
+                                    <div class="filter-option {{ request('school_year') == $schoolYear ? 'selected' : '' }}" data-filter="school_year" data-value="{{ $schoolYear }}">{{ $schoolYear }}</div>
+                                @endforeach
+                            </div>
+                            
+                            <div class="filter-label cascading-label" data-cascade="semester">
+                                <span>Semester</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                            <div class="filter-cascade filter-cascade-semester">
+                                <div class="filter-option {{ !request('semester') ? 'selected' : '' }}" data-filter="semester" data-value="">All Semesters</div>
+                                @foreach($availableSemesters as $semester)
+                                    <div class="filter-option {{ request('semester') == $semester ? 'selected' : '' }}" data-filter="semester" data-value="{{ $semester }}">{{ $semester }}</div>
+                                @endforeach
+                            </div>
+                            
                             <div class="filter-label cascading-label" data-cascade="course">
                                 <span>Course</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1257,6 +1309,30 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
+    // Apply global filters from dashboard if available
+    const globalSchoolYear = sessionStorage.getItem('globalSchoolYear');
+    const globalSemester = sessionStorage.getItem('globalSemester');
+    
+    if (globalSchoolYear || globalSemester) {
+        const url = new URL(window.location.href);
+        let needsReload = false;
+        
+        if (globalSchoolYear && url.searchParams.get('school_year') !== globalSchoolYear) {
+            url.searchParams.set('school_year', globalSchoolYear);
+            needsReload = true;
+        }
+        
+        if (globalSemester && url.searchParams.get('semester') !== globalSemester) {
+            url.searchParams.set('semester', globalSemester);
+            needsReload = true;
+        }
+        
+        if (needsReload) {
+            window.location.href = url.toString();
+            return;
+        }
+    }
+
     // Filter dropdown functionality
     const filterBtn = document.getElementById('filterDropdownBtn');
     const filterMenu = document.getElementById('filterDropdownMenu');
@@ -1264,6 +1340,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cascading submenu logic for filter
     const cascadeLabels = document.querySelectorAll('.cascading-label');
     const cascades = {
+        schoolyear: document.querySelector('.filter-cascade-schoolyear'),
+        semester: document.querySelector('.filter-cascade-semester'),
         course: document.querySelector('.filter-cascade-course'),
         year: document.querySelector('.filter-cascade-year'),
         office: document.querySelector('.filter-cascade-office')
@@ -1559,9 +1637,11 @@ function printStudentList() {
     const formattedDate = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     
     // Get current filter values
-    const courseFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="course"].active')).map(el => el.dataset.value);
-    const yearFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="year"].active')).map(el => el.dataset.value);
-    const officeFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="office"].active')).map(el => el.dataset.value);
+    const semesterFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="semester"].selected')).map(el => el.dataset.value);
+    const schoolYearFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="school_year"].selected')).map(el => el.dataset.value);
+    const courseFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="course"].selected')).map(el => el.dataset.value);
+    const yearFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="year_level"].selected')).map(el => el.dataset.value);
+    const officeFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="office"].selected')).map(el => el.dataset.value);
     
     // Get visible table rows
     const visibleRows = Array.from(document.querySelectorAll('.student-table tbody tr')).filter(row => {
@@ -1575,8 +1655,10 @@ function printStudentList() {
     
     // Build filter description
     let filterDesc = '';
-    if (courseFilter.length > 0 || yearFilter.length > 0 || officeFilter.length > 0) {
+    if (semesterFilter.length > 0 || schoolYearFilter.length > 0 || courseFilter.length > 0 || yearFilter.length > 0 || officeFilter.length > 0) {
         const filters = [];
+        if (semesterFilter.length > 0) filters.push(semesterFilter.join(', '));
+        if (schoolYearFilter.length > 0) filters.push(schoolYearFilter.join(', '));
         if (courseFilter.length > 0) filters.push(courseFilter.join(', '));
         if (yearFilter.length > 0) filters.push(yearFilter.join(', '));
         if (officeFilter.length > 0) filters.push(officeFilter.join(', '));

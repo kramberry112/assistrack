@@ -79,7 +79,9 @@ class Attendance extends Model {
                 'time_in' => $in_time,
                 'time_out' => $out_time,
                 'total_hours' => $total_hours,
-                'status' => $status
+                'status' => $status,
+                'school_year' => isset($students[$id_number]) ? $students[$id_number]->school_year : null,
+                'semester' => isset($students[$id_number]) ? $students[$id_number]->semester : null
             ];
         }
         return $result;

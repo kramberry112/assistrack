@@ -23,6 +23,27 @@ class StudentListController extends Controller
     public function add($id)
     {
         $application = Application::findOrFail($id);
+        
+        // Determine current semester based on month
+        $currentMonth = date('n'); // 1-12
+        if ($currentMonth >= 8 && $currentMonth <= 12) {
+            $semester = '1st Semester';
+        } elseif ($currentMonth >= 1 && $currentMonth <= 5) {
+            $semester = '2nd Semester';
+        } else {
+            $semester = 'Summer';
+        }
+        
+        // Determine school year
+        $currentYear = date('Y');
+        if ($currentMonth >= 8) {
+            // August onwards, school year is current-next year
+            $schoolYear = $currentYear . '-' . ($currentYear + 1);
+        } else {
+            // January to July, school year is previous-current year
+            $schoolYear = ($currentYear - 1) . '-' . $currentYear;
+        }
+        
         $student = Student::create([
             'student_name' => $application->student_name,
             'course' => $application->course,
@@ -33,6 +54,8 @@ class StudentListController extends Controller
             'email' => $application->email,
             'telephone' => $application->telephone,
             'picture' => $application->picture,
+            'semester' => $semester,
+            'school_year' => $schoolYear,
             // Family background
             'father_name' => $application->father_name,
             'father_age' => $application->father_age,
@@ -85,6 +108,12 @@ class StudentListController extends Controller
         }
         if (request('office')) {
             $query->where('designated_office', request('office'));
+        }
+        if (request('semester')) {
+            $query->where('semester', request('semester'));
+        }
+        if (request('school_year')) {
+            $query->where('school_year', request('school_year'));
         }
         $students = $query->paginate(9)->appends(request()->except('page'));
         return view('admin.studentlists.index', compact('students'));

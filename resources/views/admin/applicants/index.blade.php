@@ -728,6 +728,30 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     
+    // Apply global filters from dashboard if available (URL-based filtering for applicants)
+    const globalSchoolYear = sessionStorage.getItem('globalSchoolYear');
+    const globalSemester = sessionStorage.getItem('globalSemester');
+    
+    if (globalSchoolYear || globalSemester) {
+        const url = new URL(window.location.href);
+        let needsReload = false;
+        
+        if (globalSchoolYear && url.searchParams.get('school_year') !== globalSchoolYear) {
+            url.searchParams.set('school_year', globalSchoolYear);
+            needsReload = true;
+        }
+        
+        if (globalSemester && url.searchParams.get('semester') !== globalSemester) {
+            url.searchParams.set('semester', globalSemester);
+            needsReload = true;
+        }
+        
+        if (needsReload) {
+            window.location.href = url.toString();
+            return;
+        }
+    }
+    
     // Cascading submenu logic for filter
     const filterButton = document.getElementById('filterButton');
     const filterDropdown = document.getElementById('filterDropdown');

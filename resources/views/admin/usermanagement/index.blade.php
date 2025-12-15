@@ -10,6 +10,41 @@
 
 
 @section('content')
+@php
+    // Auto-detect current school year and semester
+    $currentMonth = (int) date('n'); // 1-12
+    $currentYear = (int) date('Y');
+    
+    // Determine semester and school year based on month
+    if ($currentMonth >= 8 && $currentMonth <= 12) {
+        // August to December = 1st Semester
+        $defaultSemester = '1st Semester';
+        $defaultSchoolYear = $currentYear . '-' . ($currentYear + 1);
+    } elseif ($currentMonth >= 1 && $currentMonth <= 5) {
+        // January to May = 2nd Semester
+        $defaultSemester = '2nd Semester';
+        $defaultSchoolYear = ($currentYear - 1) . '-' . $currentYear;
+    } else {
+        // June to July = Summer
+        $defaultSemester = 'Summer';
+        $defaultSchoolYear = ($currentYear - 1) . '-' . $currentYear;
+    }
+    
+    // Get distinct school years from students table
+    $availableSchoolYears = \App\Models\Student::distinct()
+        ->whereNotNull('school_year')
+        ->pluck('school_year')
+        ->sort()
+        ->values();
+    
+    // If no school years found, provide defaults
+    if ($availableSchoolYears->isEmpty()) {
+        $availableSchoolYears = collect(['2024-2025', '2025-2026', '2026-2027']);
+    }
+    
+    // Available semesters
+    $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+@endphp
 <style>
     .content-wrapper {
         background: #fff !important;
@@ -661,6 +696,28 @@
             </div>
             
             <div class="filter-select-wrapper">
+                <select id="schoolYearFilter" 
+                        class="form-control"
+                        onchange="filterUsers()">
+                    <option value="">All School Years</option>
+                    @foreach($availableSchoolYears as $schoolYear)
+                        <option value="{{ $schoolYear }}">{{ $schoolYear }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="filter-select-wrapper">
+                <select id="semesterFilter" 
+                        class="form-control"
+                        onchange="filterUsers()">
+                    <option value="">All Semesters</option>
+                    @foreach($availableSemesters as $semester)
+                        <option value="{{ $semester }}">{{ $semester }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="filter-select-wrapper">
                 <select id="roleFilter" 
                         class="form-control"
                         onchange="filterUsers()">
@@ -704,7 +761,9 @@
                         data-name="{{ strtolower($user->name) }}" 
                         data-username="{{ strtolower($user->username) }}" 
                         data-email="{{ strtolower($user->email) }}" 
-                        data-role="{{ $user->role }}">
+                        data-role="{{ $user->role }}"
+                        data-school-year="{{ $user->student->school_year ?? '' }}"
+                        data-semester="{{ $user->student->semester ?? '' }}">
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
@@ -1056,12 +1115,37 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 500);
         }, 3000);
     }
+    
+    // Apply global filters from dashboard if available
+    const globalSchoolYear = sessionStorage.getItem('globalSchoolYear');
+    const globalSemester = sessionStorage.getItem('globalSemester');
+    
+    if (globalSchoolYear) {
+        const schoolYearSelect = document.getElementById('schoolYearFilter');
+        if (schoolYearSelect) {
+            schoolYearSelect.value = globalSchoolYear;
+        }
+    }
+    
+    if (globalSemester) {
+        const semesterSelect = document.getElementById('semesterFilter');
+        if (semesterSelect) {
+            semesterSelect.value = globalSemester;
+        }
+    }
+    
+    // Apply filters if any were set from dashboard
+    if (globalSchoolYear || globalSemester) {
+        filterUsers();
+    }
 });
 
 // Search and Filter Functions
 function filterUsers() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
     const roleFilter = document.getElementById('roleFilter').value;
+    const schoolYearFilter = document.getElementById('schoolYearFilter').value;
+    const semesterFilter = document.getElementById('semesterFilter').value;
     const rows = document.querySelectorAll('.user-row');
     
     let visibleCount = 0;
@@ -1071,6 +1155,8 @@ function filterUsers() {
         const username = row.dataset.username;
         const email = row.dataset.email;
         const role = row.dataset.role;
+        const schoolYear = row.dataset.schoolYear || '';
+        const semester = row.dataset.semester || '';
         
         const matchesSearch = !searchInput || 
             name.includes(searchInput) || 
@@ -1079,7 +1165,16 @@ function filterUsers() {
         
         const matchesRole = !roleFilter || role === roleFilter;
         
-        if (matchesSearch && matchesRole) {
+        // School year and semester filters only apply to students
+        let matchesSchoolYear = true;
+        let matchesSemester = true;
+        
+        if (role === 'student') {
+            matchesSchoolYear = !schoolYearFilter || schoolYear === schoolYearFilter;
+            matchesSemester = !semesterFilter || semester === semesterFilter;
+        }
+        
+        if (matchesSearch && matchesRole && matchesSchoolYear && matchesSemester) {
             row.style.display = '';
             visibleCount++;
         } else {
@@ -1093,6 +1188,8 @@ function filterUsers() {
 function clearFilters() {
     document.getElementById('searchInput').value = '';
     document.getElementById('roleFilter').value = '';
+    document.getElementById('schoolYearFilter').value = '';
+    document.getElementById('semesterFilter').value = '';
     filterUsers();
 }
 

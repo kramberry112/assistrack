@@ -13,7 +13,7 @@ class Student extends Model
     protected $fillable = [
         'student_name', 'course', 'year_level', 'id_number', 'age',
         'address', 'email', 'telephone', 'picture', 'designated_office',
-        'matriculation', // <-- add this line
+        'matriculation', 'semester', 'school_year',
         // Family Background
         'father_name', 'father_age', 'father_occupation', 'father_deceased',
         'mother_name', 'mother_age', 'mother_occupation', 'mother_deceased', 
