@@ -388,10 +388,10 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                @if($record['total_hours'])
-                                    {{ number_format($record['total_hours'], 2) }} hrs
+                                @if(isset($record['accumulated_hours']) && $record['accumulated_hours'] > 0)
+                                    <span class="font-semibold text-indigo-700">{{ number_format($record['accumulated_hours'], 2) }} hrs</span>
                                 @else
-                                    <span class="text-gray-400">-</span>
+                                    <span class="text-gray-400">0.00 hrs</span>
                                 @endif
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm">
@@ -478,10 +478,10 @@
                         <div class="attendance-detail-item">
                             <span class="attendance-detail-label">Total Hours:</span>
                             <span class="attendance-detail-value">
-                                @if($record['total_hours'])
-                                    {{ number_format($record['total_hours'], 2) }} hrs
+                                @if(isset($record['accumulated_hours']) && $record['accumulated_hours'] > 0)
+                                    <span class="font-semibold text-indigo-700">{{ number_format($record['accumulated_hours'], 2) }} hrs</span>
                                 @else
-                                    -
+                                    <span class="text-gray-400">0.00 hrs</span>
                                 @endif
                             </span>
                         </div>

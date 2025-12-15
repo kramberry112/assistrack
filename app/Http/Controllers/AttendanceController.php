@@ -13,6 +13,11 @@ class AttendanceController extends Controller {
             $user = auth()->user();
             $date = $request->input('date') ?? now()->toDateString();
             $allRecords = \App\Models\Attendance::getGroupedRecordsByDate($date);
+            
+            // Get session values for school year and semester
+            $selectedSchoolYear = session('head_school_year', '');
+            $selectedSemester = session('head_semester', '');
+            
             // Filter by office if user is office role
             if ($user && $user->role === 'offices' && $user->office_name) {
                 $records = collect($allRecords)->filter(function ($record) use ($user) {
@@ -21,13 +26,34 @@ class AttendanceController extends Controller {
             } else {
                 $records = $allRecords;
             }
+            
             $stats = [
                 'total' => count($records),
                 'clock_ins' => collect($records)->whereNotNull('time_in')->count(),
                 'clock_outs' => collect($records)->whereNotNull('time_out')->count(),
                 'unique_users' => collect($records)->pluck('id_number')->unique()->count(),
             ];
-            return view('offices.reports.attendance', compact('records', 'stats'));
+            
+            // Get distinct school years from students table
+            $availableSchoolYears = \App\Models\Student::distinct()
+                ->whereNotNull('school_year')
+                ->where('school_year', '!=', '')
+                ->pluck('school_year')
+                ->sort()
+                ->values();
+            
+            // Available semesters
+            $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+            
+            // Get all distinct offices
+            $availableOffices = \App\Models\Student::distinct()
+                ->whereNotNull('designated_office')
+                ->where('designated_office', '!=', '')
+                ->pluck('designated_office')
+                ->sort()
+                ->values();
+            
+            return view('offices.reports.attendance', compact('records', 'stats', 'availableSchoolYears', 'availableSemesters', 'availableOffices', 'selectedSchoolYear', 'selectedSemester'));
         }
     // Helper for preset date ranges
     private function getPresetDates($preset)

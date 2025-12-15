@@ -721,9 +721,9 @@ function handleNotificationClick(notificationId, notificationType) {
             
             // Redirect based on notification type
             if (notificationType.includes('SaAssigned') || notificationType.includes('SaRequestApproved')) {
-                window.location.href = '{{ route('offices.studentlists.request_sa') }}';
+                window.location.href = '{{ route('offices.studentlists.index') }}';
             } else if (notificationType.includes('SaRequestRejected')) {
-                window.location.href = '{{ route('offices.studentlists.request_sa') }}';
+                window.location.href = '{{ route('offices.studentlists.index') }}';
             }
         }
     });

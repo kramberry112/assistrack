@@ -48,6 +48,62 @@
     <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
             <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">School Year</label>
+                <select id="schoolYearFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All School Years</option>
+                    @foreach($availableSchoolYears as $year)
+                        <option value="{{ $year }}" {{ $selectedSchoolYear == $year ? 'selected' : '' }}>{{ $year }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Semester</label>
+                <select id="semesterFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All Semesters</option>
+                    @foreach($availableSemesters as $semester)
+                        <option value="{{ $semester }}" {{ $selectedSemester == $semester ? 'selected' : '' }}>{{ $semester }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Office</label>
+                <select id="officeFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All Offices</option>
+                    <option value="ACADS">ACADS</option>
+                    <option value="ALUMNI OFFICE">ALUMNI OFFICE</option>
+                    <option value="ARCHIVING">ARCHIVING</option>
+                    <option value="ARZATECH">ARZATECH</option>
+                    <option value="CANTEEN">CANTEEN</option>
+                    <option value="CLINIC">CLINIC</option>
+                    <option value="FINANCE">FINANCE</option>
+                    <option value="GUIDANCE">GUIDANCE</option>
+                    <option value="HRD">HRD</option>
+                    <option value="KUWAGO">KUWAGO</option>
+                    <option value="LCR">LCR</option>
+                    <option value="LIBRARY">LIBRARY</option>
+                    <option value="LINKAGES">LINKAGES</option>
+                    <option value="MARKETING">MARKETING</option>
+                    <option value="OPEN LAB">OPEN LAB</option>
+                    <option value="PRESIDENT'S OFFICE">PRESIDENT'S OFFICE</option>
+                    <option value="QUEUING">QUEUING</option>
+                    <option value="QUALITY ASSURANCE">QUALITY ASSURANCE</option>
+                    <option value="REGISTRAR">REGISTRAR</option>
+                    <option value="SAO">SAO</option>
+                    <option value="SBA FACULTY">SBA FACULTY</option>
+                    <option value="SIHM FACULTY">SIHM FACULTY</option>
+                    <option value="SITE FACULTY">SITE FACULTY</option>
+                    <option value="SOE FACULTY">SOE FACULTY</option>
+                    <option value="SOH FACULTY">SOH FACULTY</option>
+                    <option value="SOHS FACULTY">SOHS FACULTY</option>
+                    <option value="SOC FACULTY">SOC FACULTY</option>
+                    <option value="SPORTS AND CULTURE">SPORTS AND CULTURE</option>
+                    <option value="STE DEAN'S OFFICE">STE DEAN'S OFFICE</option>
+                    <option value="STE FACULTY">STE FACULTY</option>
+                    <option value="STEEDS">STEEDS</option>
+                    <option value="XACTO">XACTO</option>
+                </select>
+            </div>
+            <div>
                 <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Status</label>
                 <select id="statusFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
                     <option value="">All Status</option>
@@ -85,7 +141,7 @@
         </thead>
         <tbody>
             @forelse($records as $i => $record)
-                <tr>
+                <tr data-school-year="{{ $record['school_year'] ?? '' }}" data-semester="{{ $record['semester'] ?? '' }}" data-office="{{ $record['office'] ?? '' }}">
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $record['id_number'] }}</td>
                     <td>{{ $record['name'] ?? '-' }}</td>
@@ -150,6 +206,9 @@ function toggleFilters() {
 }
 
 function applyFilters() {
+    const schoolYearValue = document.getElementById('schoolYearFilter').value.toLowerCase();
+    const semesterValue = document.getElementById('semesterFilter').value.toLowerCase();
+    const officeValue = document.getElementById('officeFilter').value.toLowerCase();
     const statusValue = document.getElementById('statusFilter').value.toLowerCase();
     const searchValue = document.getElementById('searchFilter').value.toLowerCase();
     const table = document.querySelector('.reports-table tbody');
@@ -160,15 +219,21 @@ function applyFilters() {
         if (row.querySelector('.empty-state')) continue;
         
         const cells = row.getElementsByTagName('td');
+        const schoolYear = (row.getAttribute('data-school-year') || '').toLowerCase();
+        const semester = (row.getAttribute('data-semester') || '').toLowerCase();
+        const office = (row.getAttribute('data-office') || '').toLowerCase();
         const idNumber = cells[1]?.textContent.toLowerCase() || '';
         const name = cells[2]?.textContent.toLowerCase() || '';
         const statusCell = cells[8];
         const status = statusCell?.textContent.trim().toLowerCase() || '';
         
+        const matchesSchoolYear = !schoolYearValue || schoolYear.includes(schoolYearValue);
+        const matchesSemester = !semesterValue || semester.includes(semesterValue);
+        const matchesOffice = !officeValue || office.includes(officeValue);
         const matchesStatus = !statusValue || status.includes(statusValue);
         const matchesSearch = !searchValue || idNumber.includes(searchValue) || name.includes(searchValue);
         
-        if (matchesStatus && matchesSearch) {
+        if (matchesSchoolYear && matchesSemester && matchesOffice && matchesStatus && matchesSearch) {
             row.style.display = '';
             visibleCount++;
         } else {
@@ -181,6 +246,9 @@ function applyFilters() {
 }
 
 function clearFilters() {
+    document.getElementById('schoolYearFilter').value = '';
+    document.getElementById('semesterFilter').value = '';
+    document.getElementById('officeFilter').value = '';
     document.getElementById('statusFilter').value = '';
     document.getElementById('searchFilter').value = '';
     applyFilters();
@@ -209,5 +277,16 @@ function updateNoResultsMessage(table, visibleCount) {
         noResultsRow.style.display = 'none';
     }
 }
+</script>
+<script>
+// Auto-apply filters on page load if session values exist
+document.addEventListener('DOMContentLoaded', function() {
+    const schoolYear = '{{ $selectedSchoolYear }}';
+    const semester = '{{ $selectedSemester }}';
+    
+    if (schoolYear || semester) {
+        applyFilters();
+    }
+});
 </script>
 @endsection

@@ -344,6 +344,26 @@
                                     Filter
                                 </button>
                                 <div class="filter-dropdown" id="filterDropdownMenu">
+                                    <div class="filter-label cascading-label" data-cascade="schoolyear">
+                                        <span>School Year</span>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                    </div>
+                                    <div class="filter-cascade filter-cascade-schoolyear">
+                                        <div class="filter-option" data-filter="school_year" data-value="">All School Years</div>
+                                        @foreach($availableSchoolYears as $year)
+                                            <div class="filter-option {{ $selectedSchoolYear == $year ? 'active' : '' }}" data-filter="school_year" data-value="{{ $year }}">{{ $year }}</div>
+                                        @endforeach
+                                    </div>
+                                    <div class="filter-label cascading-label" data-cascade="semester">
+                                        <span>Semester</span>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                    </div>
+                                    <div class="filter-cascade filter-cascade-semester">
+                                        <div class="filter-option" data-filter="semester" data-value="">All Semesters</div>
+                                        @foreach($availableSemesters as $semester)
+                                            <div class="filter-option {{ $selectedSemester == $semester ? 'active' : '' }}" data-filter="semester" data-value="{{ $semester }}">{{ $semester }}</div>
+                                        @endforeach
+                                    </div>
                                     <div class="filter-label cascading-label" data-cascade="course">
                                         <span>Course</span>
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -493,6 +513,8 @@
     // Cascading submenu logic for filter
     const cascadeLabels = document.querySelectorAll('.cascading-label');
     const cascades = {
+        schoolyear: document.querySelector('.filter-cascade-schoolyear'),
+        semester: document.querySelector('.filter-cascade-semester'),
         course: document.querySelector('.filter-cascade-course'),
         year: document.querySelector('.filter-cascade-year')
     };

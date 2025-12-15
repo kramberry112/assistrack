@@ -14,6 +14,10 @@ class OfficeStudentListController extends Controller
         // Get the student type filter (default to 'assigned')
         $studentType = $request->get('student_type', 'assigned');
         
+        // Get session values for school year and semester
+        $selectedSchoolYear = session('head_school_year', '');
+        $selectedSemester = session('head_semester', '');
+        
         $query = Student::query();
 
         // Filter students based on type
@@ -38,6 +42,21 @@ class OfficeStudentListController extends Controller
                 $query->where('designated_office', $user->office_name);
             }
         }
+        
+        // Apply school year and semester filters from session
+        if ($selectedSchoolYear && $selectedSemester) {
+            $query->where(function($q) use ($selectedSchoolYear, $selectedSemester) {
+                $q->where(function($subQ) use ($selectedSchoolYear, $selectedSemester) {
+                    $subQ->where('school_year', $selectedSchoolYear)
+                         ->where('semester', $selectedSemester);
+                })->orWhere(function($subQ) {
+                    $subQ->whereNull('school_year')
+                         ->orWhereNull('semester')
+                         ->orWhere('school_year', '')
+                         ->orWhere('semester', '');
+                });
+            });
+        }
 
         if ($request->has('course') && $request->course !== '') {
             $query->where('course', $request->course);
@@ -58,7 +77,18 @@ class OfficeStudentListController extends Controller
 
         $students = $query->orderBy('created_at', 'desc')->paginate(9)->appends($request->except('page'));
         
-        return view('offices.studentlists.index', compact('students', 'officeName', 'studentType'));
+        // Get distinct school years from students table
+        $availableSchoolYears = Student::distinct()
+            ->whereNotNull('school_year')
+            ->where('school_year', '!=', '')
+            ->pluck('school_year')
+            ->sort()
+            ->values();
+        
+        // Available semesters
+        $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+        
+        return view('offices.studentlists.index', compact('students', 'officeName', 'studentType', 'availableSchoolYears', 'availableSemesters', 'selectedSchoolYear', 'selectedSemester'));
     }
 
     public function requestSa(Request $request)

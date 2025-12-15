@@ -21,7 +21,23 @@ class GradeController extends Controller {
         } else {
             $grades = \App\Models\Grade::with(['student', 'user'])->orderBy('created_at', 'desc')->get();
         }
-        return view('offices.reports.grades', compact('grades'));
+        
+        // Get distinct school years from students table
+        $availableSchoolYears = \App\Models\Student::distinct()
+            ->whereNotNull('school_year')
+            ->where('school_year', '!=', '')
+            ->pluck('school_year')
+            ->sort()
+            ->values();
+        
+        // Available semesters
+        $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+        
+        // Get session values for school year and semester
+        $selectedSchoolYear = session('head_school_year', '');
+        $selectedSemester = session('head_semester', '');
+        
+        return view('offices.reports.grades', compact('grades', 'availableSchoolYears', 'availableSemesters', 'selectedSchoolYear', 'selectedSemester'));
     }
 
     // Office grade details fullpage

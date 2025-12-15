@@ -44,6 +44,24 @@
     <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
             <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">School Year</label>
+                <select id="schoolYearFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white;">
+                    <option value="">All School Years</option>
+                    @foreach($availableSchoolYears as $year)
+                        <option value="{{ $year }}" {{ $selectedSchoolYear == $year ? 'selected' : '' }}>{{ $year }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Semester</label>
+                <select id="semesterFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white;">
+                    <option value="">All Semesters</option>
+                    @foreach($availableSemesters as $semester)
+                        <option value="{{ $semester }}" {{ $selectedSemester == $semester ? 'selected' : '' }}>{{ $semester }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
                 <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Year Level</label>
                 <select id="yearFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white;">
                     <option value="">All Years</option>
@@ -51,15 +69,6 @@
                     <option value="second year">Second Year</option>
                     <option value="third year">Third Year</option>
                     <option value="fourth year">Fourth Year</option>
-                </select>
-            </div>
-            <div>
-                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Semester</label>
-                <select id="semesterFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white;">
-                    <option value="">All Semesters</option>
-                    <option value="1st semester">1st Semester</option>
-                    <option value="2nd semester">2nd Semester</option>
-                    <option value="summer">Summer</option>
                 </select>
             </div>
             <div>
@@ -87,7 +96,7 @@
             </thead>
             <tbody>
                     @forelse($grades as $grade)
-                        <tr style="transition: all 0.2s ease;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='#ffffff'">
+                        <tr data-school-year="{{ $grade->student->school_year ?? '' }}" data-semester="{{ $grade->student->semester ?? '' }}" style="transition: all 0.2s ease;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='#ffffff'">
                             <td style="padding: 16px 20px; color: #111827; font-weight: 500;">
                                 {{ $grade->student_name }}
                             </td>
@@ -190,8 +199,9 @@ function toggleFilters() {
 }
 
 function applyFilters() {
-    const yearValue = document.getElementById('yearFilter').value.toLowerCase();
+    const schoolYearValue = document.getElementById('schoolYearFilter').value.toLowerCase();
     const semesterValue = document.getElementById('semesterFilter').value.toLowerCase();
+    const yearValue = document.getElementById('yearFilter').value.toLowerCase();
     const searchValue = document.getElementById('searchFilter').value.toLowerCase();
     const table = document.querySelector('.reports-table tbody');
     const rows = table.getElementsByTagName('tr');
@@ -201,15 +211,17 @@ function applyFilters() {
         if (row.querySelector('td[colspan]')) continue;
         
         const cells = row.getElementsByTagName('td');
+        const schoolYear = (row.getAttribute('data-school-year') || '').toLowerCase();
+        const semester = (row.getAttribute('data-semester') || '').toLowerCase();
         const name = cells[0]?.textContent.toLowerCase() || '';
         const year = cells[1]?.textContent.toLowerCase() || '';
-        const semester = cells[2]?.textContent.toLowerCase() || '';
         
-        const matchesYear = !yearValue || year.includes(yearValue);
+        const matchesSchoolYear = !schoolYearValue || schoolYear.includes(schoolYearValue);
         const matchesSemester = !semesterValue || semester.includes(semesterValue);
+        const matchesYear = !yearValue || year.includes(yearValue);
         const matchesSearch = !searchValue || name.includes(searchValue);
         
-        if (matchesYear && matchesSemester && matchesSearch) {
+        if (matchesSchoolYear && matchesSemester && matchesYear && matchesSearch) {
             row.style.display = '';
             visibleCount++;
         } else {
@@ -222,8 +234,9 @@ function applyFilters() {
 }
 
 function clearFilters() {
-    document.getElementById('yearFilter').value = '';
+    document.getElementById('schoolYearFilter').value = '';
     document.getElementById('semesterFilter').value = '';
+    document.getElementById('yearFilter').value = '';
     document.getElementById('searchFilter').value = '';
     applyFilters();
 }
@@ -251,5 +264,15 @@ function updateNoResultsMessage(table, visibleCount) {
         noResultsRow.style.display = 'none';
     }
 }
+
+// Auto-apply filters on page load if session values exist
+document.addEventListener('DOMContentLoaded', function() {
+    const schoolYear = '{{ $selectedSchoolYear }}';
+    const semester = '{{ $selectedSemester }}';
+    
+    if (schoolYear || semester) {
+        applyFilters();
+    }
+});
 </script>
 @endsection

@@ -42,8 +42,23 @@ class TaskController extends Controller {
             }
         }
 
+        // Get distinct school years from students table
+        $availableSchoolYears = \App\Models\Student::distinct()
+            ->whereNotNull('school_year')
+            ->where('school_year', '!=', '')
+            ->pluck('school_year')
+            ->sort()
+            ->values();
+        
+        // Available semesters
+        $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+        
+        // Get session values for school year and semester
+        $selectedSchoolYear = session('head_school_year', '');
+        $selectedSemester = session('head_semester', '');
+        
         $currentUser = $user;
-        return view('offices.reports.tasks', compact('studentsWithTasks', 'currentUser'));
+        return view('offices.reports.tasks', compact('studentsWithTasks', 'currentUser', 'availableSchoolYears', 'availableSemesters', 'selectedSchoolYear', 'selectedSemester'));
     }
 
     // Get completed tasks for a specific user (for modal view)

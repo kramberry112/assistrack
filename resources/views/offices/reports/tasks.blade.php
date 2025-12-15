@@ -42,6 +42,24 @@
     <div id="filterPanel" style="display: none; background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
             <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">School Year</label>
+                <select id="schoolYearFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All School Years</option>
+                    @foreach($availableSchoolYears as $year)
+                        <option value="{{ $year }}" {{ $selectedSchoolYear == $year ? 'selected' : '' }}>{{ $year }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Semester</label>
+                <select id="semesterFilter" onchange="applyFilters()" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    <option value="">All Semesters</option>
+                    @foreach($availableSemesters as $semester)
+                        <option value="{{ $semester }}" {{ $selectedSemester == $semester ? 'selected' : '' }}>{{ $semester }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
                 <label style="display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px;">Search</label>
                 <input type="text" id="searchFilter" oninput="applyFilters()" placeholder="Search by name or ID..." style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
             </div>
@@ -64,7 +82,7 @@
         </thead>
         <tbody>
             @forelse($studentsWithTasks as $user)
-                <tr>
+                <tr data-school-year="{{ $user->student->school_year ?? '' }}" data-semester="{{ $user->student->semester ?? '' }}">
                     <td>{{ $user->student->id_number ?? 'N/A' }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->student->designated_office ?? 'Not Assigned' }}</td>
@@ -177,6 +195,8 @@ function toggleFilters() {
 }
 
 function applyFilters() {
+    const schoolYearValue = document.getElementById('schoolYearFilter').value.toLowerCase();
+    const semesterValue = document.getElementById('semesterFilter').value.toLowerCase();
     const searchValue = document.getElementById('searchFilter').value.toLowerCase();
     const table = document.querySelector('.reports-table tbody');
     const rows = table.getElementsByTagName('tr');
@@ -186,12 +206,16 @@ function applyFilters() {
         if (row.querySelector('.empty-state')) continue;
         
         const cells = row.getElementsByTagName('td');
+        const schoolYear = (row.getAttribute('data-school-year') || '').toLowerCase();
+        const semester = (row.getAttribute('data-semester') || '').toLowerCase();
         const studentId = cells[0]?.textContent.toLowerCase() || '';
         const name = cells[1]?.textContent.toLowerCase() || '';
         
+        const matchesSchoolYear = !schoolYearValue || schoolYear.includes(schoolYearValue);
+        const matchesSemester = !semesterValue || semester.includes(semesterValue);
         const matchesSearch = !searchValue || studentId.includes(searchValue) || name.includes(searchValue);
         
-        if (matchesSearch) {
+        if (matchesSchoolYear && matchesSemester && matchesSearch) {
             row.style.display = '';
             visibleCount++;
         } else {
@@ -204,6 +228,8 @@ function applyFilters() {
 }
 
 function clearFilters() {
+    document.getElementById('schoolYearFilter').value = '';
+    document.getElementById('semesterFilter').value = '';
     document.getElementById('searchFilter').value = '';
     applyFilters();
 }
@@ -231,6 +257,16 @@ function updateNoResultsMessage(table, visibleCount) {
         noResultsRow.style.display = 'none';
     }
 }
+
+// Auto-apply filters on page load if session values exist
+document.addEventListener('DOMContentLoaded', function() {
+    const schoolYear = '{{ $selectedSchoolYear }}';
+    const semester = '{{ $selectedSemester }}';
+    
+    if (schoolYear || semester) {
+        applyFilters();
+    }
+});
 </script>
 
 @endsection

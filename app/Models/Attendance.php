@@ -71,6 +71,10 @@ class Attendance extends Model {
             if ($in_time && $out_time) {
                 $total_hours = $in_time->diffInMinutes($out_time) / 60;
             }
+            
+            // Calculate accumulated total hours across all dates
+            $accumulated_hours = self::calculateAccumulatedHours($id_number);
+            
             $status = ($in_time && $out_time) ? 'Present' : 'Incomplete';
             $result[] = [
                 'id_number' => $id_number,
@@ -79,12 +83,38 @@ class Attendance extends Model {
                 'time_in' => $in_time,
                 'time_out' => $out_time,
                 'total_hours' => $total_hours,
+                'accumulated_hours' => $accumulated_hours,
                 'status' => $status,
                 'school_year' => isset($students[$id_number]) ? $students[$id_number]->school_year : null,
                 'semester' => isset($students[$id_number]) ? $students[$id_number]->semester : null
             ];
         }
         return $result;
+    }
+    
+    // Calculate accumulated total hours for a student across all attendance records
+    public static function calculateAccumulatedHours($id_number)
+    {
+        // Get all attendance records for this student grouped by date
+        $allRecords = self::where('id_number', $id_number)
+            ->orderBy('clock_time', 'asc')
+            ->get()
+            ->groupBy(function($record) {
+                return $record->clock_time->format('Y-m-d');
+            });
+        
+        $totalHours = 0;
+        
+        foreach ($allRecords as $date => $dailyRecords) {
+            $time_in = $dailyRecords->where('action', 'in')->sortBy('clock_time')->first();
+            $time_out = $dailyRecords->where('action', 'out')->sortByDesc('clock_time')->first();
+            
+            if ($time_in && $time_out) {
+                $totalHours += $time_in->clock_time->diffInMinutes($time_out->clock_time) / 60;
+            }
+        }
+        
+        return $totalHours;
     }
 
 

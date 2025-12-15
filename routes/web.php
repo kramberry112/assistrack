@@ -371,26 +371,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         $date = $request->input('date') ?? now()->toDateString();
         
-        // Apply filters to attendance query
-        $query = \App\Models\Attendance::whereDate('created_at', $date);
-        if ($schoolYear || $semester) {
-            $query->whereHas('student', function($q) use ($schoolYear, $semester) {
-                if ($schoolYear) {
-                    $q->where('school_year', $schoolYear);
-                }
-                if ($semester) {
-                    $q->where('semester', $semester);
-                }
-            });
-        }
+        // Get grouped attendance records by date
+        $records = \App\Models\Attendance::getGroupedRecordsByDate($date);
         
-        $records = $query->with('student')->get();
+        // Calculate stats
         $stats = [
             'total' => count($records),
             'clock_ins' => collect($records)->whereNotNull('time_in')->count(),
             'clock_outs' => collect($records)->whereNotNull('time_out')->count(),
             'unique_users' => collect($records)->pluck('id_number')->unique()->count(),
         ];
+        
         return view('headoffice.reports.attendance', compact('records', 'stats', 'schoolYear', 'semester'));
     })->name('head.reports.attendance');
     
@@ -514,32 +505,133 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $user = auth()->user();
         $officeName = $user && $user->office_name ? $user->office_name : null;
 
-        // Get student IDs assigned to this office
+        // Auto-detect school year and semester if not in session
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+        
+        // Determine default school year
+        if ($currentMonth >= 8) {
+            $defaultSchoolYear = $currentYear . '-' . ($currentYear + 1);
+        } else {
+            $defaultSchoolYear = ($currentYear - 1) . '-' . $currentYear;
+        }
+        
+        // Determine default semester
+        if ($currentMonth >= 8 && $currentMonth <= 12) {
+            $defaultSemester = '1st Semester';
+        } elseif ($currentMonth >= 1 && $currentMonth <= 5) {
+            $defaultSemester = '2nd Semester';
+        } else {
+            $defaultSemester = 'Summer';
+        }
+        
+        // Get or set session values
+        if (!session()->has('head_school_year')) {
+            session(['head_school_year' => $defaultSchoolYear]);
+        }
+        if (!session()->has('head_semester')) {
+            session(['head_semester' => $defaultSemester]);
+        }
+        
+        // Handle filter updates
+        if (request()->has('school_year')) {
+            session(['head_school_year' => request('school_year')]);
+        }
+        if (request()->has('semester')) {
+            session(['head_semester' => request('semester')]);
+        }
+        
+        $selectedSchoolYear = session('head_school_year');
+        $selectedSemester = session('head_semester');
+
+        // Get distinct school years from students table (only populated values)
+        $availableSchoolYears = \App\Models\Student::distinct()
+            ->whereNotNull('school_year')
+            ->where('school_year', '!=', '')
+            ->pluck('school_year')
+            ->sort()
+            ->values();
+        
+        // If no school years found in database, use current auto-detected one
+        if ($availableSchoolYears->isEmpty()) {
+            $availableSchoolYears = collect([$defaultSchoolYear]);
+        }
+        
+        // Available semesters
+        $availableSemesters = ['1st Semester', '2nd Semester', 'Summer'];
+
+        // Total students in this office (filtered by school year and semester)
+        $totalStudents = $officeName
+            ? \App\Models\Student::where('designated_office', $officeName)
+                ->where('school_year', $selectedSchoolYear)
+                ->where('semester', $selectedSemester)
+                ->count()
+            : 0;
+
+        // Get student IDs assigned to this office (filtered by school year and semester)
         $assignedStudentIds = $officeName
-            ? \App\Models\Student::where('designated_office', $officeName)->whereNotNull('user_id')->pluck('user_id')->toArray()
+            ? \App\Models\Student::where('designated_office', $officeName)
+                ->where('school_year', $selectedSchoolYear)
+                ->where('semester', $selectedSemester)
+                ->whereNotNull('user_id')
+                ->pluck('user_id')
+                ->toArray()
             : [];
 
-        // Total tasks for students in this office
-        $totalTasks = $assignedStudentIds
-            ? \App\Models\StudentTask::whereIn('user_id', $assignedStudentIds)->count()
-            : 0;
-
-        // Total students in this office
-        $totalStudents = $officeName
-            ? \App\Models\Student::where('designated_office', $officeName)->count()
-            : 0;
-
-        // Attendance count for students in this office (today)
-        $attendanceCount = 0;
-        if ($officeName) {
-            $today = now()->format('Y-m-d');
-            $studentIdNumbers = \App\Models\Student::where('designated_office', $officeName)->pluck('id_number')->toArray();
-            $attendanceCount = \App\Models\Attendance::whereIn('id_number', $studentIdNumbers)
-                ->whereDate('clock_time', $today)
+        // Total tasks for students in this office (filtered by school year and semester)
+        $totalTasks = 0;
+        if ($assignedStudentIds) {
+            $totalTasks = \App\Models\StudentTask::whereIn('user_id', $assignedStudentIds)
+                ->where(function($query) use ($selectedSchoolYear, $selectedSemester) {
+                    $query->where(function($q) use ($selectedSchoolYear, $selectedSemester) {
+                        $q->where('school_year', $selectedSchoolYear)
+                          ->where('semester', $selectedSemester);
+                    })->orWhere(function($q) {
+                        $q->whereNull('school_year')
+                          ->orWhereNull('semester')
+                          ->orWhere('school_year', '')
+                          ->orWhere('semester', '');
+                    });
+                })
                 ->count();
         }
 
-        return view('offices.dashboard.index', compact('user', 'totalTasks', 'totalStudents', 'attendanceCount'));
+        // Attendance count for students in this office (filtered by school year and semester)
+        $attendanceCount = 0;
+        if ($officeName) {
+            $today = now()->format('Y-m-d');
+            $studentIdNumbers = \App\Models\Student::where('designated_office', $officeName)
+                ->where('school_year', $selectedSchoolYear)
+                ->where('semester', $selectedSemester)
+                ->pluck('id_number')
+                ->toArray();
+            
+            if (!empty($studentIdNumbers)) {
+                $attendanceCount = \App\Models\Attendance::whereIn('id_number', $studentIdNumbers)
+                    ->whereDate('clock_time', $today)
+                    ->count();
+            }
+        }
+
+        // Total grades for students in this office (filtered by school year and semester)
+        $totalGrades = 0;
+        if ($assignedStudentIds) {
+            $totalGrades = \App\Models\Grade::whereIn('user_id', $assignedStudentIds)
+                ->where(function($query) use ($selectedSchoolYear, $selectedSemester) {
+                    $query->where(function($q) use ($selectedSchoolYear, $selectedSemester) {
+                        $q->where('school_year', $selectedSchoolYear)
+                          ->where('semester', $selectedSemester);
+                    })->orWhere(function($q) {
+                        $q->whereNull('school_year')
+                          ->orWhereNull('semester')
+                          ->orWhere('school_year', '')
+                          ->orWhere('semester', '');
+                    });
+                })
+                ->count();
+        }
+
+        return view('offices.dashboard.index', compact('user', 'totalTasks', 'totalStudents', 'attendanceCount', 'totalGrades', 'selectedSchoolYear', 'selectedSemester', 'availableSchoolYears', 'availableSemesters'));
     })->name('offices.dashboard');
     Route::get('/offices-student-list', [\App\Http\Controllers\OfficeStudentListController::class, 'index'])->name('offices.studentlists.index');
     Route::post('/offices-student-list/request-sa', [\App\Http\Controllers\OfficeStudentListController::class, 'requestSa'])->name('offices.studentlists.request_sa');

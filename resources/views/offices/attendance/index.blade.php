@@ -129,8 +129,12 @@
                                             @endif
                                         </td>
                                         <td class="px-4 py-2">
-                                            @if($record['total_hours'])
-                                                {{ number_format($record['total_hours'], 2) }}
+                                            @if($record['time_out'])
+                                                @if(isset($record['accumulated_hours']) && $record['accumulated_hours'] > 0)
+                                                    <span class="font-semibold text-indigo-700">{{ number_format($record['accumulated_hours'], 2) }} hrs</span>
+                                                @else
+                                                    <span class="text-gray-400">0.00 hrs</span>
+                                                @endif
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
