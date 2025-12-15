@@ -1264,53 +1264,68 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Check if photo is uploaded first
-            if (!isPhotoUploaded()) {
-                var photoError = document.getElementById('photoError');
-                photoError.style.display = 'block';
-                setTimeout(function() { photoError.style.display = 'none'; }, 3000);
-                return;
+            // Comprehensive field validation with specific alerts
+            const validationRules = [
+                { field: document.getElementById('cropped-picture'), name: 'Profile Photo', check: () => isPhotoUploaded() },
+                { field: document.querySelector('input[name="student_name"]'), name: "Student's Name" },
+                { field: document.querySelector('select[name="course"]'), name: 'Course' },
+                { field: document.querySelector('select[name="year_level"]'), name: 'Year Level' },
+                { field: document.querySelector('input[name="age"]'), name: 'Age' },
+                { field: document.querySelector('input[name="id_number"]'), name: 'ID Number' },
+                { field: document.querySelector('input[name="address"]'), name: 'Address' },
+                { field: document.querySelector('input[name="email"]'), name: 'Email Address' },
+                { field: document.querySelector('input[name="telephone"]'), name: 'Telephone/CP Number' },
+                { field: document.querySelector('input[name="father_name"]'), name: "Father's Name" },
+                { field: document.querySelector('input[name="father_age"]'), name: "Father's Age" },
+                { field: document.getElementById('father_occupation'), name: "Father's Occupation", check: () => {
+                    const deceased = document.getElementById('father_deceased');
+                    const occupation = document.getElementById('father_occupation');
+                    return deceased.checked || occupation.value.trim() !== '';
+                }},
+                { field: document.querySelector('input[name="mother_name"]'), name: "Mother's Name" },
+                { field: document.querySelector('input[name="mother_age"]'), name: "Mother's Age" },
+                { field: document.getElementById('mother_occupation'), name: "Mother's Occupation", check: () => {
+                    const deceased = document.getElementById('mother_deceased');
+                    const occupation = document.getElementById('mother_occupation');
+                    return deceased.checked || occupation.value.trim() !== '';
+                }},
+                { field: document.querySelector('input[name="monthly_income"]'), name: 'Monthly Household Income' },
+                { field: document.querySelector('input[name="parent_consent"]'), name: 'Parent Consent Form', check: (field) => field.files.length > 0 },
+                { field: document.querySelector('input[name="is_literate"]:checked'), name: 'Computer Literacy (Yes/No)' },
+                { field: document.querySelector('input[name="can_commit"]:checked'), name: 'Commitment to Working Hours (Yes/No)' },
+                { field: document.querySelector('input[name="willing_overtime"]:checked'), name: 'Willing to Work Overtime (Yes/No)' },
+                { field: document.querySelector('input[name="comfortable_clerical"]:checked'), name: 'Comfortable with Clerical Tasks (Yes/No)' },
+                { field: document.querySelector('input[name="strong_communication"]:checked'), name: 'Strong Communication Skills (Yes/No)' },
+                { field: document.querySelector('input[name="willing_training"]:checked'), name: 'Willing to Undergo Training (Yes/No)' }
+            ];
+            
+            // Validate each field
+            for (let rule of validationRules) {
+                if (!rule.field) continue;
+                
+                let isFieldValid = true;
+                if (rule.check) {
+                    isFieldValid = rule.check(rule.field);
+                } else {
+                    isFieldValid = rule.field.value && rule.field.value.trim() !== '';
+                }
+                
+                if (!isFieldValid) {
+                    alert(`The ${rule.name} field is required.`);
+                    if (rule.field.focus) {
+                        rule.field.focus();
+                    } else if (rule.field.scrollIntoView) {
+                        rule.field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    return;
+                }
             }
             
-            // Get checkbox and occupation field references
+            // If all validations pass, proceed with submission
             const fatherDeceasedCheckbox = document.getElementById('father_deceased');
             const motherDeceasedCheckbox = document.getElementById('mother_deceased');
             const fatherOccupation = document.getElementById('father_occupation');
             const motherOccupation = document.getElementById('mother_occupation');
-            
-            // Manual validation - check all required fields except disabled ones
-            const requiredFields = form.querySelectorAll('[required]');
-            let isValid = true;
-            let firstInvalidField = null;
-            
-            requiredFields.forEach(field => {
-                // Skip disabled fields (like deceased parent's occupation)
-                if (!field.disabled && !field.value.trim()) {
-                    isValid = false;
-                    if (!firstInvalidField) {
-                        firstInvalidField = field;
-                    }
-                }
-            });
-            
-            // Additional check: occupation fields must be filled only if deceased is NOT checked
-            if (!fatherDeceasedCheckbox.checked && !fatherOccupation.disabled && !fatherOccupation.value.trim()) {
-                isValid = false;
-                if (!firstInvalidField) firstInvalidField = fatherOccupation;
-            }
-            
-            if (!motherDeceasedCheckbox.checked && !motherOccupation.disabled && !motherOccupation.value.trim()) {
-                isValid = false;
-                if (!firstInvalidField) firstInvalidField = motherOccupation;
-            }
-            
-            if (!isValid) {
-                alert('Please fill out all required fields before submitting the form.');
-                if (firstInvalidField) {
-                    firstInvalidField.focus();
-                }
-                return;
-            }
             
             if (!allowSubmit) {
                 modal.style.display = 'flex';
