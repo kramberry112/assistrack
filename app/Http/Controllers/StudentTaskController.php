@@ -18,7 +18,7 @@ class StudentTaskController extends Controller {
                 return $task->status === 'todo';
             }),
             'in_progress' => $tasks->where('status', 'in_progress'),
-            'completed' => $tasks->where('status', 'completed'),
+            'completed' => $tasks->where('status', 'completed')->sortByDesc('updated_at'),
             // Only show tasks that are NOT completed or rejected and due today or earlier
             'due' => $tasks->filter(function($task) {
                 return $task->status !== 'completed' && $task->status !== 'rejected' && $task->due_date <= now()->toDateString();
@@ -129,6 +129,9 @@ class StudentTaskController extends Controller {
             $task->started_date = now()->toDateString(); // Y-m-d
             $task->started_time = now()->toTimeString(); // H:i:s
         }
+        if ($request->status === 'completed') {
+            $task->current_step = 10;
+        }
         $task->save();
         return response()->json([
             'success' => true,
@@ -201,5 +204,73 @@ class StudentTaskController extends Controller {
             ->get(['id', 'title', 'verified', 'status', 'started_date', 'updated_at']);
         
         return response()->json($notifications);
+    }
+
+    // Update task step (AJAX)
+    public function updateStep(Request $request, $id)
+    {
+        $task = StudentTask::where('user_id', Auth::id())->findOrFail($id);
+        
+        $validator = \Validator::make($request->all(), [
+            'step' => 'required|integer|min:1|max:10',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+        
+        $task->current_step = $request->step;
+        $task->save();
+        
+        return response()->json([
+            'success' => true,
+            'current_step' => $task->current_step,
+            'percentage' => $task->current_step * 10
+        ]);
+    }
+
+    // Start task (AJAX)
+    public function startTask($id)
+    {
+        $task = StudentTask::where('user_id', Auth::id())->findOrFail($id);
+        
+        $task->status = 'in_progress';
+        $task->current_step = 0;
+        if (!$task->started_date && !$task->started_time) {
+            $task->started_date = now()->toDateString();
+            $task->started_time = now()->toTimeString();
+        }
+        $task->save();
+        
+        return response()->json([
+            'success' => true,
+            'status' => 'in_progress'
+        ]);
+    }
+
+    // Complete task (AJAX)
+    public function completeTask($id)
+    {
+        $task = StudentTask::where('user_id', Auth::id())->findOrFail($id);
+        
+        // Check if task has reached 100% (step 10)
+        if ($task->current_step < 10) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Task must reach 100% progress before completion'
+            ], 400);
+        }
+        
+        $task->status = 'completed';
+        $task->current_step = 10; // Ensure it stays at 10
+        $task->save();
+        
+        return response()->json([
+            'success' => true,
+            'status' => 'completed'
+        ]);
     }
 }

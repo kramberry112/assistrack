@@ -11,7 +11,8 @@ class Student extends Model
     protected $guarded = [];
 
     protected $fillable = [
-        'student_name', 'course', 'year_level', 'id_number', 'age',
+        'last_name', 'first_name', 'middle_name',
+        'course', 'year_level', 'id_number', 'age',
         'address', 'email', 'telephone', 'picture', 'designated_office',
         'matriculation', 'semester', 'school_year',
         // Family Background
@@ -22,6 +23,25 @@ class Student extends Model
         'is_literate', 'tools', 'can_commit', 'willing_overtime',
         'comfortable_clerical', 'strong_communication', 'willing_training', 'other_skills'
     ];
+
+    // Add student_name accessor for backward compatibility
+    public function getStudentNameAttribute()
+    {
+        $lastName = $this->last_name ?? '';
+        $firstName = $this->first_name ?? '';
+        $middleName = $this->middle_name ?? '';
+        
+        if (!$lastName && !$firstName && !$middleName) {
+            return '';
+        }
+        
+        $name = $lastName;
+        if ($firstName || $middleName) {
+            $name .= ', ' . trim($firstName . ' ' . $middleName);
+        }
+        
+        return $name;
+    }
 
     // Add office field accessor for compatibility
     public function getOfficeAttribute()

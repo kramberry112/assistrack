@@ -46,7 +46,9 @@ class ApplicationController extends Controller
             ]);
 
             $data = $request->validate([
-                'student_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'first_name' => 'required|string|max:255',
+                'middle_name' => 'nullable|string|max:255',
                 'course' => 'required|string|max:255',
                 'year_level' => 'required|string|max:255',
                 'age' => 'required|string|max:10',
@@ -115,7 +117,10 @@ class ApplicationController extends Controller
                 }
             }
 
-            \Log::info('Creating application with data', ['student_name' => $data['student_name'] ?? 'N/A']);
+            \Log::info('Creating application with data', [
+                'last_name' => $data['last_name'] ?? 'N/A',
+                'first_name' => $data['first_name'] ?? 'N/A'
+            ]);
             $application = Application::create($data);
             \Log::info('Application created successfully', ['id' => $application->id]);
 

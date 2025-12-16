@@ -489,8 +489,15 @@ window.currentUserId = {{ auth()->id() }};
         box-shadow: 0 2px 8px rgba(34,197,94,0.12);
     }
 
-    .task-action.complete:hover {
+    .task-action.complete:hover:not(:disabled) {
         background: #16a34a;
+    }
+
+    .task-action.complete:disabled {
+        background: #d1d5db;
+        color: #9ca3af;
+        cursor: not-allowed;
+        box-shadow: none;
     }
 
     /* Global mobile fixes */
@@ -650,6 +657,20 @@ window.currentUserId = {{ auth()->id() }};
             font-size: 0.9rem !important;
             box-sizing: border-box !important;
         }
+        
+        .step-tracker {
+            margin: 12px 0 !important;
+        }
+        
+        .steps-container {
+            gap: 6px !important;
+        }
+        
+        .step-item {
+            width: 28px !important;
+            height: 28px !important;
+            font-size: 0.8rem !important;
+        }
 
         /* Modal Mobile Styles */
         #createTaskModal {
@@ -761,6 +782,78 @@ window.currentUserId = {{ auth()->id() }};
             font-size: 0.85rem !important;
             padding: 6px 12px !important;
         }
+    }
+
+    /* Step Tracker Styles */
+    .step-tracker {
+        margin: 16px 0;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+    }
+
+    .step-tracker-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+
+    .steps-container {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+    }
+
+    .step-item {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 2px solid #e5e7eb;
+        background: #fff;
+        color: #9ca3af;
+    }
+
+    .step-item:hover {
+        border-color: #7c83e7;
+        transform: scale(1.05);
+    }
+
+    .step-item.completed {
+        background: #7c83e7;
+        border-color: #7c83e7;
+        color: #fff;
+    }
+
+    .progress-bar-container {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #7c83e7, #6366f1);
+        transition: width 0.3s ease;
+        border-radius: 4px;
+    }
+
+    .progress-percentage {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #7c83e7;
+        margin-top: 4px;
+        text-align: right;
     }
 
     /* Notification Styles */
@@ -964,6 +1057,29 @@ window.currentUserId = {{ auth()->id() }};
                                 @endif
                             </div>
                             <div class="task-description" style="font-size:0.95rem;color:#6b7280;margin-bottom:12px;">{{ $task->description }}</div>
+                            
+                            @if($tab === 'in_progress' || $tab === 'completed')
+                                <div class="step-tracker">
+                                    <div class="step-tracker-title">Progress Steps</div>
+                                    <div class="steps-container">
+                                        @for($i = 1; $i <= 10; $i++)
+                                            <div class="step-item {{ ($task->current_step ?? 0) >= $i ? 'completed' : '' }}" 
+                                                 data-step="{{ $i }}"
+                                                 @if($tab === 'in_progress')
+                                                     onclick="updateTaskStep({{ $task->id }}, {{ $i }})"
+                                                 @else
+                                                     style="cursor: default;"
+                                                 @endif>
+                                                {{ $i }}
+                                            </div>
+                                        @endfor
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-fill" style="width: {{ ($task->current_step ?? 0) * 10 }}%"></div>
+                                    </div>
+                                    <div class="progress-percentage">{{ ($task->current_step ?? 0) * 10 }}%</div>
+                                </div>
+                            @endif
                             <div class="task-meta" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:0.85rem;">
                                 <div style="display:flex;align-items:center;gap:6px;">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -974,9 +1090,6 @@ window.currentUserId = {{ auth()->id() }};
                                         <span style="font-weight:500;">Due:</span>
                                         {{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}
                                     </span>
-                                </div>
-                                <div style="text-align:right;color:#374151;">
-                                    @if($task->status == 'completed')100%@elseif($task->status == 'in_progress')0%@else&nbsp;@endif
                                 </div>
                                 @if(($task->status == 'in_progress' || $task->status == 'completed') && $task->started_date && $task->started_time)
                                     <div style="grid-column:1/-1;padding-top:8px;border-top:1px solid #e5e7eb;display:flex;align-items:center;gap:6px;">
@@ -1002,7 +1115,11 @@ window.currentUserId = {{ auth()->id() }};
                                         <button class="task-action start" data-id="{{ $task->id }}" data-status="in_progress" disabled style="background:#e5e7eb;color:#888;cursor:not-allowed;" title="Waiting for verification">⏳ Pending</button>
                                     @endif
                                 @elseif($task->status == 'in_progress')
-                                    <button class="task-action complete" data-id="{{ $task->id }}" data-status="completed" style="background:#22c55e;color:#fff;" title="Complete this task">✅ Complete</button>
+                                    <button class="task-action complete" data-id="{{ $task->id }}" data-status="completed" 
+                                            style="background:#22c55e;color:#fff;" title="Complete this task"
+                                            {{ ($task->current_step ?? 0) < 10 ? 'disabled' : '' }}>
+                                        ✅ Complete
+                                    </button>
                                 @endif
                             </div>
                         </div>
@@ -1042,7 +1159,7 @@ window.currentUserId = {{ auth()->id() }};
                     </div>
                     <div class="form-group">
                         <label for="taskDue" class="form-label">Due Date</label>
-                        <input type="date" id="taskDue" name="due_date" required class="form-input">
+                        <input type="date" id="taskDue" name="due_date" required class="form-input" min="{{ date('Y-m-d') }}">
                     </div>
                     <div id="taskFormMsg" class="form-message"></div>
                     <div class="modal-actions">
@@ -1625,6 +1742,60 @@ function showNotification(message, type = 'info') {
             closeNotification('dynamicNotification');
         }, 5000);
     }
+}
+
+// Update task step function
+function updateTaskStep(taskId, step) {
+    fetch('/student/tasks/' + taskId + '/update-step', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ step: step })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            var card = document.querySelector('.task-card[data-task-id="' + taskId + '"]');
+            if (card) {
+                // Update step items
+                var stepItems = card.querySelectorAll('.step-item');
+                stepItems.forEach(function(item) {
+                    var itemStep = parseInt(item.getAttribute('data-step'));
+                    if (itemStep <= step) {
+                        item.classList.add('completed');
+                    } else {
+                        item.classList.remove('completed');
+                    }
+                });
+                
+                // Update progress bar
+                var progressBar = card.querySelector('.progress-bar-fill');
+                if (progressBar) {
+                    progressBar.style.width = (step * 10) + '%';
+                }
+                
+                // Update percentage text
+                var percentageText = card.querySelector('.progress-percentage');
+                if (percentageText) {
+                    percentageText.textContent = (step * 10) + '%';
+                }
+                
+                // Enable/disable complete button
+                var completeBtn = card.querySelector('.task-action.complete');
+                if (completeBtn) {
+                    completeBtn.disabled = step < 10;
+                }
+            }
+            
+            showNotification('Progress updated: ' + (step * 10) + '%', 'success');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Failed to update progress. Please try again.', 'error');
+    });
 }
 
 // Auto-hide success notifications after 5 seconds

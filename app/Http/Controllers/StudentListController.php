@@ -45,7 +45,9 @@ class StudentListController extends Controller
         }
         
         $student = Student::create([
-            'student_name' => $application->student_name,
+            'last_name' => $application->last_name,
+            'first_name' => $application->first_name,
+            'middle_name' => $application->middle_name,
             'course' => $application->course,
             'year_level' => $application->year_level,
             'id_number' => $application->id_number,

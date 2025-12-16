@@ -622,15 +622,23 @@
             <div class="personal-section" style="display: grid; grid-template-columns: 2fr 1fr; gap: 38px; align-items: flex-start; margin-bottom: 0;">
                 <div class="personal-info-fields">
                        <div style="display: flex; gap: 18px; margin-bottom: 8px;">
-                           <div style="flex: 2;">
-                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Student’s Name:</label>
-                               <input type="text" name="student_name" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
+                           <div style="flex: 1;">
+                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Last Name:</label>
+                               <input type="text" name="last_name" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
+                           </div>
+                           <div style="flex: 1;">
+                               <label style="font-size: 16px; font-weight: bold; text-align: left;">First Name:</label>
+                               <input type="text" name="first_name" required style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
+                           </div>
+                           <div style="flex: 1;">
+                               <label style="font-size: 16px; font-weight: bold; text-align: left;">Middle Name:</label>
+                               <input type="text" name="middle_name" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; padding: 7px 12px; font-size: 15px; background: #fff;">
                            </div>
                        </div>
                        <div class="form-grid-3" style="display: flex; gap: 18px; margin-bottom: 8px;">
                            <div class="form-field" style="flex: 1;">
-                               <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">Course:</label>
-                               <select name="course" required class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">School:</label>
+                               <select name="course" id="school-select" required class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
                                    <option value="">Select</option>
                                    <option value="SOH">SOH</option>
                                    <option value="STE">STE</option>
@@ -642,6 +650,80 @@
                                    <option value="SOC">SOC</option>
                                </select>
                            </div>
+                       </div>
+                       <div id="site-program-field" style="display: none; margin-bottom: 8px;">
+                           <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">SITE Program:</label>
+                           <select name="site_program" id="site-program-select" class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <option value="">Select Program</option>
+                               <option value="BSCS – Data Science">BSCS – Data Science</option>
+                               <option value="BSIT – Web Development">BSIT – Web Development</option>
+                               <option value="BSIT – Multimedia Arts">BSIT – Multimedia Arts</option>
+                               <option value="BSIT – Infrastructure & Cybersecurity">BSIT – Infrastructure & Cybersecurity</option>
+                               <option value="ETEAAP">ETEAAP</option>
+                           </select>
+                       </div>
+                       <div id="soe-program-field" style="display: none; margin-bottom: 8px;">
+                           <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">SOE Program:</label>
+                           <select name="soe_program" id="soe-program-select" class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <option value="">Select Program</option>
+                               <option value="BS Civil Engineering">BS Civil Engineering</option>
+                               <option value="BS Computer Engineering">BS Computer Engineering</option>
+                               <option value="BS Electrical Engineering">BS Electrical Engineering</option>
+                               <option value="BS Electronic Engineering">BS Electronic Engineering</option>
+                           </select>
+                       </div>
+                       <div id="ste-program-field" style="display: none; margin-bottom: 8px;">
+                           <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">STE Program:</label>
+                           <select name="ste_program" id="ste-program-select" class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <option value="">Select Program</option>
+                               <option value="BEd – Early Childhood Education">BEd – Early Childhood Education</option>
+                               <option value="BEd – Elementary Education">BEd – Elementary Education</option>
+                               <option value="BEd – Secondary Education (English / Filipino / Math / Science)">BEd – Secondary Education (English / Filipino / Math / Science)</option>
+                               <option value="BEd – Special Needs Education (Generalist)">BEd – Special Needs Education (Generalist)</option>
+                           </select>
+                       </div>
+                       <div id="sba-program-field" style="display: none; margin-bottom: 8px;">
+                           <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">SBA Program:</label>
+                           <select name="sba_program" id="sba-program-select" class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <option value="">Select Program</option>
+                               <option value="BSA – Accountancy">BSA – Accountancy</option>
+                               <option value="BSBA – Financial Management">BSBA – Financial Management</option>
+                               <option value="BSBA – Management Accounting">BSBA – Management Accounting</option>
+                               <option value="BSBA – Marketing Management">BSBA – Marketing Management</option>
+                               <option value="ETEEAP">ETEEAP</option>
+                           </select>
+                       </div>
+                       <div id="sihm-program-field" style="display: none; margin-bottom: 8px;">
+                           <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">SIHM Program:</label>
+                           <select name="sihm_program" id="sihm-program-select" class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <option value="">Select Program</option>
+                               <option value="BSTM – Tourism Management">Bachelor of Science in Tourism Management</option>
+                               <option value="BSHM – Hospitality Management">Bachelor of Science in Hospitality Management</option>
+                           </select>
+                       </div>
+                       <div id="sohs-program-field" style="display: none; margin-bottom: 8px;">
+                           <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">SOHS Program:</label>
+                           <select name="sohs_program" id="sohs-program-select" class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <option value="">Select Program</option>
+                               <option value="BSN – Nursing">Bachelor of Science in Nursing</option>
+                           </select>
+                       </div>
+                       <div id="soh-program-field" style="display: none; margin-bottom: 8px;">
+                           <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">SOH Program:</label>
+                           <select name="soh_program" id="soh-program-select" class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <option value="">Select Program</option>
+                               <option value="Bachelor of Arts in Mass Communication">Bachelor of Arts in Mass Communication</option>
+                               <option value="Bachelor of Science in Psychology">Bachelor of Science in Psychology</option>
+                           </select>
+                       </div>
+                       <div id="soc-program-field" style="display: none; margin-bottom: 8px;">
+                           <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">SOC Program:</label>
+                           <select name="soc_program" id="soc-program-select" class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
+                               <option value="">Select Program</option>
+                               <option value="Bachelor of Science in Criminology">Bachelor of Science in Criminology</option>
+                           </select>
+                       </div>
+                       <div class="form-grid-3" style="display: flex; gap: 18px; margin-bottom: 8px;">
                            <div class="form-field" style="flex: 1;">
                                <label class="form-label" style="font-size: 16px; font-weight: bold; text-align: left;">Year Level:</label>
                                <select name="year_level" required class="form-select" style="width: 100%; border: 1.5px solid #888; border-radius: 6px; font-size: 15px; background: #fff; appearance: auto;">
@@ -1241,6 +1323,110 @@
             // Initialize on page load
             updateOccupationField(fatherDeceasedCheckbox, fatherOccupationInput);
             updateOccupationField(motherDeceasedCheckbox, motherOccupationInput);
+
+            // Program dropdown logic: show/hide based on school selection
+            const schoolSelect = document.getElementById('school-select');
+            const siteProgramField = document.getElementById('site-program-field');
+            const siteProgramSelect = document.getElementById('site-program-select');
+            const soeProgramField = document.getElementById('soe-program-field');
+            const soeProgramSelect = document.getElementById('soe-program-select');
+            const steProgramField = document.getElementById('ste-program-field');
+            const steProgramSelect = document.getElementById('ste-program-select');
+            const sbaProgramField = document.getElementById('sba-program-field');
+            const sbaProgramSelect = document.getElementById('sba-program-select');
+            const sihmProgramField = document.getElementById('sihm-program-field');
+            const sihmProgramSelect = document.getElementById('sihm-program-select');
+            const sohsProgramField = document.getElementById('sohs-program-field');
+            const sohsProgramSelect = document.getElementById('sohs-program-select');
+            const sohProgramField = document.getElementById('soh-program-field');
+            const sohProgramSelect = document.getElementById('soh-program-select');
+            const socProgramField = document.getElementById('soc-program-field');
+            const socProgramSelect = document.getElementById('soc-program-select');
+
+            function updateProgramFields() {
+                // Handle SITE
+                if (schoolSelect.value === 'SITE') {
+                    siteProgramField.style.display = 'block';
+                    siteProgramSelect.setAttribute('required', 'required');
+                } else {
+                    siteProgramField.style.display = 'none';
+                    siteProgramSelect.removeAttribute('required');
+                    siteProgramSelect.value = '';
+                }
+                
+                // Handle SOE
+                if (schoolSelect.value === 'SOE') {
+                    soeProgramField.style.display = 'block';
+                    soeProgramSelect.setAttribute('required', 'required');
+                } else {
+                    soeProgramField.style.display = 'none';
+                    soeProgramSelect.removeAttribute('required');
+                    soeProgramSelect.value = '';
+                }
+                
+                // Handle STE
+                if (schoolSelect.value === 'STE') {
+                    steProgramField.style.display = 'block';
+                    steProgramSelect.setAttribute('required', 'required');
+                } else {
+                    steProgramField.style.display = 'none';
+                    steProgramSelect.removeAttribute('required');
+                    steProgramSelect.value = '';
+                }
+                
+                // Handle SBA
+                if (schoolSelect.value === 'SBA') {
+                    sbaProgramField.style.display = 'block';
+                    sbaProgramSelect.setAttribute('required', 'required');
+                } else {
+                    sbaProgramField.style.display = 'none';
+                    sbaProgramSelect.removeAttribute('required');
+                    sbaProgramSelect.value = '';
+                }
+                
+                // Handle SIHM
+                if (schoolSelect.value === 'SIHM') {
+                    sihmProgramField.style.display = 'block';
+                    sihmProgramSelect.setAttribute('required', 'required');
+                } else {
+                    sihmProgramField.style.display = 'none';
+                    sihmProgramSelect.removeAttribute('required');
+                    sihmProgramSelect.value = '';
+                }
+                
+                // Handle SOHS
+                if (schoolSelect.value === 'SOHS') {
+                    sohsProgramField.style.display = 'block';
+                    sohsProgramSelect.setAttribute('required', 'required');
+                } else {
+                    sohsProgramField.style.display = 'none';
+                    sohsProgramSelect.removeAttribute('required');
+                    sohsProgramSelect.value = '';
+                }
+                
+                // Handle SOH
+                if (schoolSelect.value === 'SOH') {
+                    sohProgramField.style.display = 'block';
+                    sohProgramSelect.setAttribute('required', 'required');
+                } else {
+                    sohProgramField.style.display = 'none';
+                    sohProgramSelect.removeAttribute('required');
+                    sohProgramSelect.value = '';
+                }
+                
+                // Handle SOC
+                if (schoolSelect.value === 'SOC') {
+                    socProgramField.style.display = 'block';
+                    socProgramSelect.setAttribute('required', 'required');
+                } else {
+                    socProgramField.style.display = 'none';
+                    socProgramSelect.removeAttribute('required');
+                    socProgramSelect.value = '';
+                }
+            }
+
+            schoolSelect.addEventListener('change', updateProgramFields);
+            updateProgramFields(); // Initialize on page load
         });
         const form = document.getElementById('applicationForm');
         const modal = document.getElementById('modalConfirm');
@@ -1267,8 +1453,49 @@
             // Comprehensive field validation with specific alerts
             const validationRules = [
                 { field: document.getElementById('cropped-picture'), name: 'Profile Photo', check: () => isPhotoUploaded() },
-                { field: document.querySelector('input[name="student_name"]'), name: "Student's Name" },
-                { field: document.querySelector('select[name="course"]'), name: 'Course' },
+                { field: document.querySelector('input[name="last_name"]'), name: "Last Name" },
+                { field: document.querySelector('input[name="first_name"]'), name: "First Name" },
+                { field: document.querySelector('select[name="course"]'), name: 'School' },
+                { field: document.getElementById('site-program-select'), name: 'SITE Program', check: () => {
+                    const schoolSelect = document.getElementById('school-select');
+                    const siteProgramSelect = document.getElementById('site-program-select');
+                    return schoolSelect.value !== 'SITE' || (siteProgramSelect.value && siteProgramSelect.value.trim() !== '');
+                }},
+                { field: document.getElementById('soe-program-select'), name: 'SOE Program', check: () => {
+                    const schoolSelect = document.getElementById('school-select');
+                    const soeProgramSelect = document.getElementById('soe-program-select');
+                    return schoolSelect.value !== 'SOE' || (soeProgramSelect.value && soeProgramSelect.value.trim() !== '');
+                }},
+                { field: document.getElementById('ste-program-select'), name: 'STE Program', check: () => {
+                    const schoolSelect = document.getElementById('school-select');
+                    const steProgramSelect = document.getElementById('ste-program-select');
+                    return schoolSelect.value !== 'STE' || (steProgramSelect.value && steProgramSelect.value.trim() !== '');
+                }},
+                { field: document.getElementById('sba-program-select'), name: 'SBA Program', check: () => {
+                    const schoolSelect = document.getElementById('school-select');
+                    const sbaProgramSelect = document.getElementById('sba-program-select');
+                    return schoolSelect.value !== 'SBA' || (sbaProgramSelect.value && sbaProgramSelect.value.trim() !== '');
+                }},
+                { field: document.getElementById('sihm-program-select'), name: 'SIHM Program', check: () => {
+                    const schoolSelect = document.getElementById('school-select');
+                    const sihmProgramSelect = document.getElementById('sihm-program-select');
+                    return schoolSelect.value !== 'SIHM' || (sihmProgramSelect.value && sihmProgramSelect.value.trim() !== '');
+                }},
+                { field: document.getElementById('sohs-program-select'), name: 'SOHS Program', check: () => {
+                    const schoolSelect = document.getElementById('school-select');
+                    const sohsProgramSelect = document.getElementById('sohs-program-select');
+                    return schoolSelect.value !== 'SOHS' || (sohsProgramSelect.value && sohsProgramSelect.value.trim() !== '');
+                }},
+                { field: document.getElementById('soh-program-select'), name: 'SOH Program', check: () => {
+                    const schoolSelect = document.getElementById('school-select');
+                    const sohProgramSelect = document.getElementById('soh-program-select');
+                    return schoolSelect.value !== 'SOH' || (sohProgramSelect.value && sohProgramSelect.value.trim() !== '');
+                }},
+                { field: document.getElementById('soc-program-select'), name: 'SOC Program', check: () => {
+                    const schoolSelect = document.getElementById('school-select');
+                    const socProgramSelect = document.getElementById('soc-program-select');
+                    return schoolSelect.value !== 'SOC' || (socProgramSelect.value && socProgramSelect.value.trim() !== '');
+                }},
                 { field: document.querySelector('select[name="year_level"]'), name: 'Year Level' },
                 { field: document.querySelector('input[name="age"]'), name: 'Age' },
                 { field: document.querySelector('input[name="id_number"]'), name: 'ID Number' },
@@ -1461,7 +1688,7 @@
                             <div class="print-personal-info">
                                 <div class="print-field">
                                     <span class="print-field-label">Student's Name:</span>
-                                    <span class="print-field-value">${formData.get('student_name') || ''}</span>
+                                    <span class="print-field-value">${formData.get('last_name') || ''}, ${formData.get('first_name') || ''} ${formData.get('middle_name') || ''}</span>
                                 </div>
                                 <div class="print-grid-3">
                                     <div class="print-field">

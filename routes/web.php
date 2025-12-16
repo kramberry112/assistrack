@@ -472,6 +472,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/student-tasks/{id}/status', [\App\Http\Controllers\StudentTaskController::class, 'updateStatus'])->name('student.tasks.status');
     Route::post('/tasks/{id}/reject', [\App\Http\Controllers\StudentTaskController::class, 'rejectTask'])->name('tasks.reject');
     Route::post('/student-tasks/{id}/progress', [\App\Http\Controllers\StudentTaskController::class, 'updateProgress'])->name('student.tasks.progress');
+    Route::post('/student/tasks/{id}/update-step', [\App\Http\Controllers\StudentTaskController::class, 'updateStep'])->name('student.tasks.updateStep');
+    Route::post('/student/tasks/{id}/start', [\App\Http\Controllers\StudentTaskController::class, 'startTask'])->name('student.tasks.start');
+    Route::post('/student/tasks/{id}/complete', [\App\Http\Controllers\StudentTaskController::class, 'completeTask'])->name('student.tasks.complete');
     Route::get('/student-community', [\App\Http\Controllers\CommunityGroupController::class, 'index'])->name('student.community');
     Route::post('/student-community', [\App\Http\Controllers\CommunityGroupController::class, 'store'])->name('student.community.create');
     Route::post('/community/send-message', [App\Http\Controllers\CommunityGroupController::class, 'sendMessage'])->name('community.sendMessage');

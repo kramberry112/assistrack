@@ -248,7 +248,7 @@
                         </div>
                         <div style="margin-bottom:24px;">
                             <label for="modal_due_date" style="font-weight:600;">Due Date</label>
-                            <input type="date" name="due_date" id="modal_due_date" required style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d5db;margin-top:4px;">
+                            <input type="date" name="due_date" id="modal_due_date" required min="{{ date('Y-m-d') }}" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d5db;margin-top:4px;">
                         </div>
                         <div style="display:flex;justify-content:flex-end;gap:12px;">
                             <button type="button" id="cancelCreateTask" style="background:#e5e7eb;color:#374151;padding:8px 24px;border:none;border-radius:8px;font-weight:500;">Cancel</button>
@@ -414,11 +414,11 @@
                                     <button class="btn-view" disabled style="background:#fee2e2;color:#b91c1c;cursor:not-allowed;">Rejected</button>
                                 @elseif(!$task->verified)
                                     <div style="display:flex;gap:8px;">
-                                        <button type="button" class="btn-verify" data-task-id="{{ $task->id }}" title="Verify this task">
+                                        <button type="button" class="btn-verify" data-task-id="{{ $task->id }}" title="Approve this task">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <polyline points="20,6 9,17 4,12"/>
                                             </svg>
-                                            Verify
+                                            Approve
                                         </button>
                                         <button type="button" class="btn-reject" data-task-id="{{ $task->id }}" title="Reject this task">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -433,7 +433,7 @@
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <polyline points="20,6 9,17 4,12"/>
                                         </svg>
-                                        Verified
+                                        Approved
                                     </button>
                                 @endif
                             </td>
@@ -530,7 +530,7 @@
                     window.dispatchEvent(new CustomEvent('task-verified', { detail: { taskId } }));
                     
                     // Show success message
-                    showSuccessToast('Task verified successfully!');
+                    showSuccessToast('Task approved successfully!');
                 })
                 .catch(() => {
                     alert('Failed to verify task.');
@@ -562,11 +562,11 @@
                                 ? `<button class='btn-view' disabled style='background:#fee2e2;color:#b91c1c;cursor:not-allowed;'>Rejected</button>`
                                 : (!task.verified
                                     ? `<div style='display:flex;gap:8px;'>
-                                         <button type='button' class='btn-verify' data-task-id='${task.id}' title='Verify this task'>
+                                         <button type='button' class='btn-verify' data-task-id='${task.id}' title='Approve this task'>
                                            <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>
                                              <polyline points='20,6 9,17 4,12'/>
                                            </svg>
-                                           Verify
+                                           Approve
                                          </button>
                                          <button type='button' class='btn-reject' data-task-id='${task.id}' title='Reject this task'>
                                            <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>
@@ -580,7 +580,7 @@
                                          <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>
                                            <polyline points='20,6 9,17 4,12'/>
                                          </svg>
-                                         Verified
+                                         Approved
                                        </button>`)}
                         </td>
                     `;

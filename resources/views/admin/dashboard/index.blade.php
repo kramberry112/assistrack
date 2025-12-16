@@ -501,7 +501,7 @@
             <span class="stat-icon"><i class="bi bi-people"></i></span>
             <div>
                 <div class="stat-number">{{ \App\Models\Student::where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester)->count() }}</div>
-                <div class="stat-label">Total Students</div>
+                <div class="stat-label">Current Student Assistants</div>
             </div>
         </a>
         <a href="{{ route('applicants.list') }}" class="stat-card">
@@ -515,7 +515,7 @@
             <span class="stat-icon"><i class="bi bi-person-badge"></i></span>
             <div>
                 <div class="stat-number">{{ \App\Models\User::where(function($q) use ($selectedSchoolYear, $selectedSemester) { $q->where('role', '!=', 'student')->orWhereHas('student', function($sq) use ($selectedSchoolYear, $selectedSemester) { $sq->where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester); }); })->count() }}</div>
-                <div class="stat-label">Total Users</div>
+                <div class="stat-label">Users</div>
             </div>
         </a>
         <a href="{{ url('/admin/reports/tasks') }}" class="stat-card">
@@ -536,7 +536,7 @@
             <span class="stat-icon"><i class="bi bi-clipboard-data"></i></span>
             <div>
                 <div class="stat-number">{{ \App\Models\Evaluation::whereHas('student', function($q) use ($selectedSchoolYear, $selectedSemester) { $q->where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester); })->count() }}</div>
-                <div class="stat-label">Total Evaluations</div>
+                <div class="stat-label">Evaluated Students</div>
             </div>
         </a>
         <a href="{{ url('/admin/reports/grades') }}" class="stat-card">
@@ -550,7 +550,7 @@
                         ->count() 
                     }}
                 </div>
-                <div class="stat-label">Total Grades</div>
+                <div class="stat-label">Grades Submitted</div>
             </div>
         </a>
     </div>

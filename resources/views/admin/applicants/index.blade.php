@@ -610,7 +610,6 @@
                             <th>Course</th>
                             <th>Year Level</th>
                             <th>Student ID</th>
-                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -621,7 +620,6 @@
                                 <td>{{ $applicant->course }}</td>
                                 <td>{{ $applicant->year_level }}</td>
                                 <td>{{ $applicant->id_number }}</td>
-                                <td>Pending</td>
                                 <td class="action-cell">
                                     <span style="display:flex;gap:10px;align-items:center;">
                                         <a href="{{ route('applications.show', $applicant->id) }}">View</a>
@@ -662,10 +660,6 @@
                         <div class="applicant-card-info-row">
                             <span class="applicant-card-label">Student ID:</span>
                             <span class="applicant-card-value">{{ $applicant->id_number }}</span>
-                        </div>
-                        <div class="applicant-card-info-row">
-                            <span class="applicant-card-label">Status:</span>
-                            <span class="applicant-card-value" style="color: #f59e0b; font-weight: 500;">Pending</span>
                         </div>
                     </div>
                     
