@@ -115,7 +115,14 @@ class StudentListController extends Controller
         if (request('school_year')) {
             $query->where('school_year', request('school_year'));
         }
-        $students = $query->paginate(9)->appends(request()->except('page'));
+        
+        // Check if this is a print request (for getting all students)
+        if (request('print') === 'all') {
+            $students = $query->paginate(999999)->appends(request()->except('page'));
+        } else {
+            $students = $query->paginate(9)->appends(request()->except('page'));
+        }
+        
         return view('admin.studentlists.index', compact('students'));
     }
     public function show(Student $student)

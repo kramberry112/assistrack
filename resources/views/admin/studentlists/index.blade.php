@@ -871,23 +871,23 @@
         .print-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
+            font-size: 13px;
             margin-bottom: 20px;
         }
         
         .print-table th {
             background: #f3f4f6;
             border: 1px solid #000;
-            padding: 6px 5px;
+            padding: 8px 6px;
             text-align: left;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 13px;
         }
         
         .print-table td {
             border: 1px solid #000;
-            padding: 5px;
-            font-size: 14px;
+            padding: 6px;
+            font-size: 13px;
         }
         
         .print-footer {
@@ -1636,66 +1636,84 @@ function printStudentList() {
     const today = new Date();
     const formattedDate = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     
-    // Get current filter values
-    const semesterFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="semester"].selected')).map(el => el.dataset.value);
-    const schoolYearFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="school_year"].selected')).map(el => el.dataset.value);
-    const courseFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="course"].selected')).map(el => el.dataset.value);
-    const yearFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="year_level"].selected')).map(el => el.dataset.value);
-    const officeFilter = Array.from(document.querySelectorAll('.filter-option[data-filter="office"].selected')).map(el => el.dataset.value);
+    // Get current URL parameters to fetch all students with same filters
+    const urlParams = new URLSearchParams(window.location.search);
+    const fetchUrl = new URL(window.location.href);
+    fetchUrl.searchParams.set('print', 'all'); // Add print parameter to get all records
     
-    // Get visible table rows
-    const visibleRows = Array.from(document.querySelectorAll('.student-table tbody tr')).filter(row => {
-        return row.style.display !== 'none';
-    });
+    // Show loading message
+    const loadingMsg = document.createElement('div');
+    loadingMsg.textContent = 'Loading all students for printing...';
+    loadingMsg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:99999;font-size:16px;';
+    document.body.appendChild(loadingMsg);
     
-    if (visibleRows.length === 0) {
-        alert('No students to print. Please adjust your filters.');
-        return;
-    }
-    
-    // Build filter description
-    let filterDesc = '';
-    if (semesterFilter.length > 0 || schoolYearFilter.length > 0 || courseFilter.length > 0 || yearFilter.length > 0 || officeFilter.length > 0) {
-        const filters = [];
-        if (semesterFilter.length > 0) filters.push(semesterFilter.join(', '));
-        if (schoolYearFilter.length > 0) filters.push(schoolYearFilter.join(', '));
-        if (courseFilter.length > 0) filters.push(courseFilter.join(', '));
-        if (yearFilter.length > 0) filters.push(yearFilter.join(', '));
-        if (officeFilter.length > 0) filters.push(officeFilter.join(', '));
-        filterDesc = filters.join(' - ');
-    } else {
-        filterDesc = 'All Students';
-    }
-    
-    // Build table rows
-    let tableRows = '';
-    visibleRows.forEach((row, index) => {
-        const cells = row.querySelectorAll('td');
-        tableRows += `
-            <tr>
-                <td>${cells[1]?.textContent || ''}</td>
-                <td>${cells[0]?.textContent || ''}</td>
-                <td>${cells[3]?.textContent || ''}</td>
-            </tr>
-        `;
-    });
-    
-    // Create print content
-    const printContent = `
-        <div id="printArea">
-            <div class="print-header">
-                <img src="/images/uddlogo.png" class="print-logo" alt="CDD Logo" onerror="this.style.display='none'">
-                <div class="print-title-section">
-                    <p class="print-university">UNIVERSIDAD DE DAGUPAN</p>
-                    <p style="margin: 0; font-size: 12px;">(Formerly Colegio de Dagupan)</p>
-                    <p class="print-office">Student Affairs Office</p>
+    // Fetch all students with current filters
+    fetch(fetchUrl.toString(), {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.text())
+    .then(html => {
+        // Parse the HTML to extract all student data
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const allRows = doc.querySelectorAll('.student-table tbody tr');
+        
+        if (allRows.length === 0) {
+            document.body.removeChild(loadingMsg);
+            alert('No students to print. Please adjust your filters.');
+            return;
+        }
+        
+        // Build table rows from all students
+        let tableRows = '';
+        allRows.forEach((row, index) => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length > 0) {
+                // Get the actual selected value from the matriculation input field
+                const matriculationInput = cells[4]?.querySelector('.matriculation-combo-input');
+                const matriculation = matriculationInput ? matriculationInput.value : '';
+                const office = cells[5]?.querySelector('.office-combo-input')?.value || cells[5]?.textContent || '';
+                
+                tableRows += `
+                    <tr>
+                        <td>${cells[1]?.textContent || ''}</td>
+                        <td>${cells[0]?.textContent || ''}</td>
+                        <td>${cells[3]?.textContent || ''}</td>
+                        <td>${matriculation}</td>
+                        <td>${office}</td>
+                    </tr>
+                `;
+            }
+        });
+        
+        // Remove loading message
+        document.body.removeChild(loadingMsg);
+        
+        // Preload logo image
+        const logoUrl = '{{ asset('images/uddlogo.png') }}';
+        const logoImg = new Image();
+        logoImg.src = logoUrl;
+        
+        // Wait for logo to load before printing
+        logoImg.onload = function() {
+            // Create print content
+            const printContent = `
+                <div id="printArea">
+                <div class="print-header">
+                    <img src="${logoUrl}" class="print-logo" alt="UDD Logo">
+                    <div class="print-title-section">
+                        <p class="print-university">UNIVERSIDAD DE DAGUPAN</p>
+                        <p style="margin: 0; font-size: 12px;">(Formerly Colegio de Dagupan)</p>
+                        <p class="print-office">Student Affairs Office</p>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="print-date">${formattedDate}</div>
-            
-            <div class="print-doc-title">University Scholarship</div>
-            <div class="print-doc-subtitle">A.Y 2025-2026</div>
+                
+                <div class="print-date">${formattedDate}</div>
+                
+                <div class="print-doc-title">University Scholarship</div>
+                <div class="print-doc-subtitle">A.Y 2025-2026</div>
             
             <table class="print-table">
                 <thead>
@@ -1703,6 +1721,8 @@ function printStudentList() {
                         <th>Program</th>
                         <th>Name</th>
                         <th>I.D. Number</th>
+                        <th>Matriculation</th>
+                        <th>Office</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1744,26 +1764,126 @@ function printStudentList() {
             </div>
         </div>
     `;
-    
-    // Insert print content into page (hidden by default)
-    let printDiv = document.getElementById('printArea');
-    if (!printDiv) {
-        printDiv = document.createElement('div');
-        printDiv.id = 'printArea';
-        printDiv.style.display = 'none'; // Hide on screen
-        document.body.appendChild(printDiv);
-    }
-    printDiv.innerHTML = printContent;
-    
-    // Trigger print
-    window.print();
-    
-    // Clean up after print dialog closes
-    setTimeout(() => {
-        if (printDiv) {
-            printDiv.remove();
+            
+            // Insert print content into page (hidden by default)
+            let printDiv = document.getElementById('printArea');
+            if (!printDiv) {
+                printDiv = document.createElement('div');
+                printDiv.id = 'printArea';
+                printDiv.style.display = 'none'; // Hide on screen
+                document.body.appendChild(printDiv);
+            }
+            printDiv.innerHTML = printContent;
+            
+            // Trigger print after a short delay to ensure image is loaded
+            setTimeout(() => {
+                window.print();
+            }, 100);
+            
+            // Clean up after print dialog closes
+            setTimeout(() => {
+                if (printDiv) {
+                    printDiv.remove();
+                }
+            }, 1000);
+        };
+        
+        // Fallback if image fails to load
+        logoImg.onerror = function() {
+            alert('Failed to load logo image. Printing without logo.');
+            const printContent = `
+                <div id="printArea">
+                <div class="print-header">
+                    <div class="print-title-section" style="margin-left: 0;">
+                        <p class="print-university">UNIVERSIDAD DE DAGUPAN</p>
+                        <p style="margin: 0; font-size: 12px;">(Formerly Colegio de Dagupan)</p>
+                        <p class="print-office">Student Affairs Office</p>
+                    </div>
+                </div>
+                
+                <div class="print-date">${formattedDate}</div>
+                
+                <div class="print-doc-title">University Scholarship</div>
+                <div class="print-doc-subtitle">A.Y 2025-2026</div>
+                
+                <table class="print-table">
+                    <thead>
+                        <tr>
+                            <th>Program</th>
+                            <th>Name</th>
+                            <th>I.D. Number</th>
+                            <th>Matriculation</th>
+                            <th>Office</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+                
+                <div class="print-footer">
+                    <div class="print-signature-section">
+                        <div class="print-signature-line">DARYL SERAPION</div>
+                        <div class="print-signature-title">Student Affairs Coordinator and<br>Scholarship Officer</div>
+                        <div style="margin-top: 10px; font-size: 10px;">Recommending Approval:</div>
+                    </div>
+                    
+                    <div class="print-signature-section">
+                        <div class="print-signature-line">MAY JACKLYN RADOC-SAMSON</div>
+                        <div class="print-signature-title">Director, Student Affairs</div>
+                        <div style="margin-top: 10px; font-size: 10px;">Noted by:</div>
+                    </div>
+                </div>
+                
+                <div class="print-footer" style="margin-top: 30px;">
+                    <div class="print-signature-section">
+                        <div class="print-signature-line">DR. JUSTIN Q. CALLESTO</div>
+                        <div class="print-signature-title">Vice President For Administration and<br>Finance</div>
+                    </div>
+                    
+                    <div class="print-signature-section">
+                        <div class="print-signature-line">MR. JANN ALFRED ARZADON QUINTO</div>
+                        <div class="print-signature-title">Chief Operating Officer</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; font-size: 10px; text-align: center;">
+                    Arellano Street, Dagupan City, Philippines 2400<br>
+                    (075) 522-2405 | 522-0143<br>
+                    cdsao@cdd.edu.ph<br>
+                    www.cdd.edu.ph
+                </div>
+            </div>
+        `;
+            
+            // Insert print content into page (hidden by default)
+            let printDiv = document.getElementById('printArea');
+            if (!printDiv) {
+                printDiv = document.createElement('div');
+                printDiv.id = 'printArea';
+                printDiv.style.display = 'none'; // Hide on screen
+                document.body.appendChild(printDiv);
+            }
+            printDiv.innerHTML = printContent;
+            
+            // Trigger print
+            window.print();
+            
+            // Clean up after print dialog closes
+            setTimeout(() => {
+                if (printDiv) {
+                    printDiv.remove();
+                }
+            }, 1000);
+        };
+    })
+    .catch(error => {
+        if (document.body.contains(loadingMsg)) {
+            document.body.removeChild(loadingMsg);
         }
-    }, 1000);
+        console.error('Error fetching students for print:', error);
+        alert('Error loading students for printing. Please try again.');
+    });
 }
 </script>
 </div>

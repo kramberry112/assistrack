@@ -438,14 +438,14 @@
                         <label for="remember_me" style="margin:0;">Remember me</label>
                     </div>
 
-                    <div class="links">
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}">Forgot your password?</a>
-                        @endif
-                        <a href="{{ route('register') }}">Sign up</a>
-                    </div>
-
                     <button type="submit" class="login-btn">Log In</button>
+
+                    <div style="text-align: center; margin-top: 1rem; padding: 12px; background: rgba(35, 64, 142, 0.05); border-radius: 8px; border-left: 3px solid #23408e;">
+                        <p style="margin: 0; color: #23408e; font-size: 0.9rem; line-height: 1.5;">
+                            <strong>Forgot your password?</strong><br>
+                            Please visit the SAO Office for assistance.
+                        </p>
+                    </div>
 
                     <a href="/welcome" class="return-home">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
