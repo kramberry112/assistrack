@@ -505,7 +505,14 @@
                     </svg>
                     @php
                         $unreadCount = auth()->user()->unreadNotifications()
-                            ->whereIn('type', ['App\\Notifications\\SaAssigned', 'App\\Notifications\\SaRequestRejected', 'App\\Notifications\\SaRequestApproved'])
+                            ->whereIn('type', [
+                                'App\\Notifications\\SaAssigned', 
+                                'App\\Notifications\\SaRequestRejected', 
+                                'App\\Notifications\\SaRequestApproved',
+                                'App\\Notifications\\TaskCreatedNotification',
+                                'App\\Notifications\\TaskVerifiedNotification',
+                                'App\\Notifications\\TaskRejectedNotification'
+                            ])
                             ->count();
                     @endphp
                     <span class="notification-count" id="officeNotificationCount">{{ $unreadCount }}</span>
@@ -516,11 +523,30 @@
                             <button onclick="markAllAsRead()" style="background: none; border: none; color: #6366f1; font-size: 13px; cursor: pointer; padding: 4px 8px;">Mark all as read</button>
                         </div>
                         <div id="notificationList" style="max-height: 400px; overflow-y: auto;">
-                            @forelse(auth()->user()->notifications()->whereIn('type', ['App\\Notifications\\SaAssigned', 'App\\Notifications\\SaRequestRejected', 'App\\Notifications\\SaRequestApproved'])->take(10)->get() as $notification)
+                            @forelse(auth()->user()->notifications()->whereIn('type', [
+                                'App\\Notifications\\SaAssigned', 
+                                'App\\Notifications\\SaRequestRejected', 
+                                'App\\Notifications\\SaRequestApproved',
+                                'App\\Notifications\\TaskCreatedNotification',
+                                'App\\Notifications\\TaskVerifiedNotification',
+                                'App\\Notifications\\TaskRejectedNotification'
+                            ])->orderBy('created_at', 'desc')->take(10)->get() as $notification)
                                 <div class="notification-item {{ $notification->read_at ? 'read' : 'unread' }}" data-id="{{ $notification->id }}" onclick="handleNotificationClick('{{ $notification->id }}', '{{ $notification->type }}')" style="padding: 16px; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: background 0.2s; background: {{ $notification->read_at ? 'white' : '#eff6ff' }};" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='{{ $notification->read_at ? 'white' : '#eff6ff' }}'">
                                     <div style="display: flex; gap: 12px;">
                                         <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center;">
-                                            @if(str_contains($notification->type, 'SaAssigned'))
+                                            @if(str_contains($notification->type, 'TaskCreated'))
+                                                <svg style="width: 20px; height: 20px; color: #f59e0b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                </svg>
+                                            @elseif(str_contains($notification->type, 'TaskVerified'))
+                                                <svg style="width: 20px; height: 20px; color: #10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            @elseif(str_contains($notification->type, 'TaskRejected'))
+                                                <svg style="width: 20px; height: 20px; color: #ef4444;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            @elseif(str_contains($notification->type, 'SaAssigned'))
                                                 <svg style="width: 20px; height: 20px; color: #3b82f6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                 </svg>
@@ -706,21 +732,10 @@ function handleNotificationClick(notificationId, notificationType) {
     }).then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update UI
-            const notificationItem = document.querySelector(`[data-id="${notificationId}"]`);
-            if (notificationItem) {
-                notificationItem.classList.remove('unread');
-                notificationItem.classList.add('read');
-                notificationItem.style.background = 'white';
-                const dot = notificationItem.querySelector('div[style*="border-radius: 50%"][style*="background: #3b82f6"]');
-                if (dot) dot.remove();
-            }
-            
-            // Update badge
-            updateNotificationBadge();
-            
             // Redirect based on notification type
-            if (notificationType.includes('SaAssigned') || notificationType.includes('SaRequestApproved')) {
+            if (notificationType.includes('Task')) {
+                window.location.href = '{{ route('tasks.index') }}';
+            } else if (notificationType.includes('SaAssigned') || notificationType.includes('SaRequestApproved')) {
                 window.location.href = '{{ route('offices.studentlists.index') }}';
             } else if (notificationType.includes('SaRequestRejected')) {
                 window.location.href = '{{ route('offices.studentlists.index') }}';

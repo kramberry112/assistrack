@@ -15,13 +15,16 @@ class StudentTaskController extends Controller {
         $tasks = StudentTask::where('user_id', $userId)->orderBy('due_date')->get();
         $grouped = [
             'todo' => $tasks->filter(function($task) {
-                return $task->status === 'todo' || $task->status === 'rejected';
+                return $task->status === 'todo';
             }),
             'in_progress' => $tasks->where('status', 'in_progress'),
             'completed' => $tasks->where('status', 'completed'),
-            // Only show tasks that are NOT completed and due today or earlier
+            // Only show tasks that are NOT completed or rejected and due today or earlier
             'due' => $tasks->filter(function($task) {
-                return $task->status !== 'completed' && $task->due_date <= now()->toDateString();
+                return $task->status !== 'completed' && $task->status !== 'rejected' && $task->due_date <= now()->toDateString();
+            }),
+            'rejected' => $tasks->filter(function($task) {
+                return $task->status === 'rejected';
             }),
         ];
         return view('students.dashboard.index', compact('grouped'));
@@ -81,6 +84,18 @@ class StudentTaskController extends Controller {
             'due_date_formatted' => \Carbon\Carbon::parse($task->due_date)->format('F d, Y'),
             'verified' => (bool)$task->verified,
         ]))->toOthers();
+
+        // Send notification to office users
+        $student = \App\Models\Student::where('user_id', Auth::id())->first();
+        if ($student && $student->designated_office) {
+            $officeUsers = \App\Models\User::where('role', 'offices')
+                ->where('office_name', $student->designated_office)
+                ->get();
+            
+            foreach ($officeUsers as $officeUser) {
+                $officeUser->notify(new \App\Notifications\TaskCreatedNotification($task, Auth::user()->name));
+            }
+        }
 
         // Return the created task for AJAX instant display
         return response()->json([
@@ -142,6 +157,10 @@ class StudentTaskController extends Controller {
 
         // Broadcast rejection event for student dashboard
         broadcast(new \App\Events\StudentTaskRejected($task->id, $task->user_id));
+
+        // Send notification to current office user
+        $studentName = $task->user ? $task->user->name : 'Unknown Student';
+        auth()->user()->notify(new \App\Notifications\TaskRejectedNotification($task, $studentName));
 
         return response()->json(['success' => true, 'status' => 'rejected']);
     }

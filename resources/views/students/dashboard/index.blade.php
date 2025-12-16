@@ -913,6 +913,7 @@ window.currentUserId = {{ auth()->id() }};
                             <div class="filter-option" data-filter="in_progress">In Progress</div>
                             <div class="filter-option" data-filter="completed">Completed</div>
                             <div class="filter-option" data-filter="due">Due</div>
+                            <div class="filter-option" data-filter="rejected">Rejected</div>
                         </div>
                     </div>
                     <button id="createTaskBtn" class="create-btn">
@@ -931,11 +932,12 @@ window.currentUserId = {{ auth()->id() }};
                 <span id="tab-in_progress" class="tab">In Progress ({{ count($grouped['in_progress']) }})</span>
                 <span id="tab-completed" class="tab">Completed ({{ count($grouped['completed']) }})</span>
                 <span id="tab-due" class="tab">Due ({{ count($grouped['due']) }})</span>
+                <span id="tab-rejected" class="tab">Rejected ({{ count($grouped['rejected']) }})</span>
             </div>
 
             <!-- Tasks Grid -->
             <div id="tasks-container" class="tasks-grid">
-                @foreach(['todo','in_progress','completed','due'] as $tab)
+                @foreach(['todo','in_progress','completed','due','rejected'] as $tab)
                     @foreach($grouped[$tab] as $task)
                         <div class="task-card" data-status="{{ $tab }}" data-task-id="{{ $task->id }}" style="display:{{ $tab == 'todo' ? '' : 'none' }};">
                             <div class="task-header">
@@ -1239,16 +1241,19 @@ document.addEventListener('DOMContentLoaded', function() {
         var inProgressCount = document.querySelectorAll('.task-card[data-status="in_progress"]').length;
         var completedCount = document.querySelectorAll('.task-card[data-status="completed"]').length;
         var dueCount = document.querySelectorAll('.task-card[data-status="due"]').length;
+        var rejectedCount = document.querySelectorAll('.task-card[data-status="rejected"]').length;
         
         var todoTab = document.getElementById('tab-todo');
         var inProgressTab = document.getElementById('tab-in_progress');
         var completedTab = document.getElementById('tab-completed');
         var dueTab = document.getElementById('tab-due');
+        var rejectedTab = document.getElementById('tab-rejected');
         
         if(todoTab) todoTab.innerHTML = todoTab.innerHTML.replace(/\(\d+\)/, '(' + todoCount + ')');
         if(inProgressTab) inProgressTab.innerHTML = inProgressTab.innerHTML.replace(/\(\d+\)/, '(' + inProgressCount + ')');
         if(completedTab) completedTab.innerHTML = completedTab.innerHTML.replace(/\(\d+\)/, '(' + completedCount + ')');
         if(dueTab) dueTab.innerHTML = dueTab.innerHTML.replace(/\(\d+\)/, '(' + dueCount + ')');
+        if(rejectedTab) rejectedTab.innerHTML = rejectedTab.innerHTML.replace(/\(\d+\)/, '(' + rejectedCount + ')');
         
         // Update header stats
         var todoStat = document.querySelector('.stat-item .value.todo');

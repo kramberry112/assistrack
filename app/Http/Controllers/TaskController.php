@@ -193,6 +193,10 @@ class TaskController extends Controller {
         // Broadcast verification event for student dashboard
         broadcast(new StudentTaskVerified($task->id, $task->user_id));
 
+        // Send notification to current office user
+        $studentName = $task->user ? $task->user->name : 'Unknown Student';
+        auth()->user()->notify(new \App\Notifications\TaskVerifiedNotification($task, $studentName));
+
         if (request()->expectsJson() || request()->ajax()) {
             return response()->json(['success' => true]);
         }

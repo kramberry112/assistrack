@@ -737,9 +737,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             // Count only unread community notifications and SA notifications
+            // Task notifications are not counted in the badge since they don't have read tracking
             const unreadCommunityNotifications = communityNotifications.filter(n => !n.read_at);
             const unreadSaNotifications = saNotifications.filter(n => !n.read_at);
-            const totalCount = communityRequests.length + taskNotifications.length + unreadCommunityNotifications.length + unreadSaNotifications.length;
+            const totalCount = communityRequests.length + unreadCommunityNotifications.length + unreadSaNotifications.length;
             const countSpan = document.getElementById('notificationCount');
             if (totalCount > 0) {
                 countSpan.textContent = totalCount;
@@ -756,6 +757,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Mark notification as read
     window.markNotificationAsRead = function(notificationId) {
+        // Get the notification element first
+        const notificationEl = document.querySelector(`.community-notification[data-notification-id="${notificationId}"]`);
+        
+        // Check if already marked as read to prevent duplicate count decreases
+        if (notificationEl && notificationEl.hasAttribute('data-read')) {
+            return; // Already processed
+        }
+        
+        // Mark as read and update UI
+        if (notificationEl) {
+            notificationEl.setAttribute('data-read', 'true');
+            notificationEl.style.opacity = '0.6';
+        }
+        
+        // Immediately update the count
+        const countSpan = document.getElementById('notificationCount');
+        const currentCount = parseInt(countSpan.textContent) || 0;
+        const newCount = Math.max(0, currentCount - 1);
+        
+        countSpan.textContent = newCount;
+        if (newCount > 0) {
+            countSpan.style.display = 'inline-block';
+        } else {
+            countSpan.style.display = 'inline-block';
+        }
+        
         fetch(`/notifications/${notificationId}/read`, {
             method: 'POST',
             headers: {
@@ -767,24 +794,27 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Update the notification visually
-                const notificationEl = document.querySelector(`.community-notification[data-notification-id="${notificationId}"]`);
+                // Sync with server count
+                setTimeout(() => {
+                    updateNotificationCount();
+                }, 500);
+            } else {
+                // Restore if failed
                 if (notificationEl) {
-                    // Remove unread styling
-                    notificationEl.style.boxShadow = 'none';
-                    notificationEl.style.border = 'none';
-                    // Remove unread indicators
-                    const unreadDot = notificationEl.querySelector('span[style*="background:#3b82f6"]');
-                    const newLabel = notificationEl.querySelector('div[style*="color:#3b82f6"]');
-                    if (unreadDot) unreadDot.remove();
-                    if (newLabel) newLabel.remove();
+                    notificationEl.style.opacity = '1';
+                    notificationEl.removeAttribute('data-read');
                 }
-                // Update notification count
-                updateNotificationCount();
+                countSpan.textContent = currentCount;
             }
         })
         .catch(error => {
             console.error('Error marking notification as read:', error);
+            // Restore on error
+            if (notificationEl) {
+                notificationEl.style.opacity = '1';
+                notificationEl.removeAttribute('data-read');
+            }
+            countSpan.textContent = currentCount;
         });
     };
 
@@ -833,7 +863,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 const statusIcon = task.verified ? '✅' : (task.status === 'rejected' ? '❌' : '⏳');
                                 
                                 notificationHTML += `
-                                    <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:8px;border-left:4px solid ${statusColor};">
+                                    <div class="task-notification" data-task-id="${task.id}" style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:8px;border-left:4px solid ${statusColor};cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f8fafc'">
                                         <div style="font-weight:600;color:#111827;display:flex;align-items:center;gap:8px;">
                                             <span>${statusIcon}</span>
                                             <span>${task.title}</span>
@@ -862,9 +892,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 
                                 const isUnread = !notification.read_at;
                                 const unreadStyle = isUnread ? 'box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15); border: 1px solid #dbeafe;' : '';
+                                const readAttr = isUnread ? '' : 'data-read="true"';
+                                const opacity = isUnread ? '1' : '0.6';
                                 
                                 notificationHTML += `
-                                    <div class="community-notification" data-notification-id="${notification.id}" style="margin-bottom:12px;padding:12px;background:${bgColor};border-radius:8px;border-left:4px solid ${statusColor};cursor:pointer;transition:all 0.2s;${unreadStyle}" onclick="markNotificationAsRead('${notification.id}')">
+                                    <div class="community-notification" data-notification-id="${notification.id}" ${readAttr} style="margin-bottom:12px;padding:12px;background:${bgColor};border-radius:8px;border-left:4px solid ${statusColor};cursor:pointer;transition:all 0.2s;${unreadStyle};opacity:${opacity}" onclick="markNotificationAsRead('${notification.id}')">
                                         <div style="font-weight:600;color:#111827;display:flex;align-items:center;gap:8px;">
                                             <span>${statusIcon}</span>
                                             <span>${isAccepted ? 'Join Request Accepted!' : 'Join Request Rejected'}</span>
@@ -889,9 +921,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             saNotifications.forEach(notification => {
                                 const isUnread = !notification.read_at;
                                 const unreadStyle = isUnread ? 'box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15); border: 1px solid #dbeafe;' : '';
+                                const readAttr = isUnread ? '' : 'data-read="true"';
+                                const opacity = isUnread ? '1' : '0.6';
                                 
                                 notificationHTML += `
-                                    <div class="community-notification" data-notification-id="${notification.id}" style="margin-bottom:12px;padding:12px;background:#f0fdf4;border-radius:8px;border-left:4px solid #22c55e;cursor:pointer;transition:all 0.2s;${unreadStyle}" onclick="markNotificationAsRead('${notification.id}')">
+                                    <div class="community-notification" data-notification-id="${notification.id}" ${readAttr} style="margin-bottom:12px;padding:12px;background:#f0fdf4;border-radius:8px;border-left:4px solid #22c55e;cursor:pointer;transition:all 0.2s;${unreadStyle};opacity:${opacity}" onclick="markNotificationAsRead('${notification.id}')">
                                         <div style="font-weight:600;color:#111827;display:flex;align-items:center;gap:8px;">
                                             <span>🎉</span>
                                             <span>Assigned as Student Assistant!</span>
@@ -932,6 +966,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 document.querySelectorAll('.accept-btn').forEach(function(btn) {
                                     btn.addEventListener('click', function(e) {
                                         e.preventDefault();
+                                        e.stopPropagation();
                                         var reqId = btn.getAttribute('data-request-id');
                                         var userId = btn.getAttribute('data-user-id');
                                         
@@ -948,7 +983,23 @@ document.addEventListener('DOMContentLoaded', function() {
                                         .then(data => {
                                             if (data.success) {
                                                 btn.closest('div').parentElement.innerHTML = '<span style="color:#22c55e;font-weight:600;">Accepted</span>';
-                                                updateNotificationCount();
+                                                
+                                                // Immediately update the count
+                                                const countSpan = document.getElementById('notificationCount');
+                                                const currentCount = parseInt(countSpan.textContent) || 0;
+                                                const newCount = Math.max(0, currentCount - 1);
+                                                
+                                                if (newCount > 0) {
+                                                    countSpan.textContent = newCount;
+                                                } else {
+                                                    countSpan.textContent = '0';
+                                                }
+                                                
+                                                // Update from server
+                                                setTimeout(() => {
+                                                    updateNotificationCount();
+                                                }, 500);
+                                                
                                                 setTimeout(() => {
                                                     notificationDropdown.style.display = 'none';
                                                 }, 1000);
@@ -961,6 +1012,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 document.querySelectorAll('.reject-btn').forEach(function(btn) {
                                     btn.addEventListener('click', function(e) {
                                         e.preventDefault();
+                                        e.stopPropagation();
                                         var reqId = btn.getAttribute('data-request-id');
                                         
                                         fetch(`/community/join-request/${reqId}/action`, {
@@ -976,7 +1028,23 @@ document.addEventListener('DOMContentLoaded', function() {
                                         .then(data => {
                                             if (data.success) {
                                                 btn.closest('div').parentElement.innerHTML = '<span style="color:#ef4444;font-weight:600;">Rejected</span>';
-                                                updateNotificationCount();
+                                                
+                                                // Immediately update the count
+                                                const countSpan = document.getElementById('notificationCount');
+                                                const currentCount = parseInt(countSpan.textContent) || 0;
+                                                const newCount = Math.max(0, currentCount - 1);
+                                                
+                                                if (newCount > 0) {
+                                                    countSpan.textContent = newCount;
+                                                } else {
+                                                    countSpan.textContent = '0';
+                                                }
+                                                
+                                                // Update from server
+                                                setTimeout(() => {
+                                                    updateNotificationCount();
+                                                }, 500);
+                                                
                                                 setTimeout(() => {
                                                     notificationDropdown.style.display = 'none';
                                                 }, 1000);
