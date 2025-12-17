@@ -77,56 +77,59 @@
     .stat-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 18px;
-        padding: 32px 24px 28px 24px;
+        border-radius: 12px;
+        padding: 20px 18px;
         text-align: left;
         text-decoration: none;
         color: inherit;
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 18px;
-        box-shadow: 0 4px 24px rgba(45,46,131,0.08);
+        gap: 14px;
+        box-shadow: 0 2px 12px rgba(45,46,131,0.06);
         transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
         cursor: pointer;
         position: relative;
         overflow: hidden;
-        min-width: 240px;
+        min-width: 200px;
         flex: 1 1 0;
-        max-width: 320px;
+        max-width: 280px;
     }
     .stat-card:hover {
         background: #f8fafc;
-        box-shadow: 0 8px 32px rgba(45,46,131,0.13);
-        transform: translateY(-4px) scale(1.025);
+        box-shadow: 0 4px 16px rgba(45,46,131,0.1);
+        transform: translateY(-2px);
         text-decoration: none;
         color: inherit;
     }
     .stat-icon {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
         color: #2d2e83;
         background: #f1f5f9;
         border-radius: 50%;
-        padding: 14px;
-        box-shadow: 0 2px 8px rgba(45,46,131,0.08);
+        padding: 12px;
+        box-shadow: 0 2px 6px rgba(45,46,131,0.06);
         margin-bottom: 0;
         display: flex;
         align-items: center;
         justify-content: center;
+        min-width: 50px;
+        min-height: 50px;
     }
     .stat-number {
-        font-size: 2.3rem;
+        font-size: 1.8rem;
         font-weight: 800;
         color: #1e293b;
         margin-bottom: 0.2rem;
     }
     .stat-label {
-        font-size: 1.05rem;
+        font-size: 0.85rem;
         color: #374151;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.03em;
         font-weight: 600;
         margin-top: 0.1rem;
+        line-height: 1.3;
     }
 
     /* Filter Buttons */
@@ -496,33 +499,14 @@
         </div>
     </div>
     
+    <h2 style="font-size: 1.5rem; font-weight: 700; color: #111827; margin: 32px 0 20px 0; padding-left: 24px;">Students:</h2>
+    
     <div class="dashboard-stats">
         <a href="{{ route('student.list') }}" class="stat-card">
             <span class="stat-icon"><i class="bi bi-people"></i></span>
             <div>
                 <div class="stat-number">{{ \App\Models\Student::where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester)->count() }}</div>
-                <div class="stat-label">Current Student Assistants</div>
-            </div>
-        </a>
-        <a href="{{ route('applicants.list') }}" class="stat-card">
-            <span class="stat-icon"><i class="bi bi-person-lines-fill"></i></span>
-            <div>
-                <div class="stat-number">{{ \App\Models\Application::count() }}</div>
-                <div class="stat-label">Total Applications</div>
-            </div>
-        </a>
-        <a href="{{ route('admin.usermanagement') }}" class="stat-card">
-            <span class="stat-icon"><i class="bi bi-person-badge"></i></span>
-            <div>
-                <div class="stat-number">{{ \App\Models\User::where(function($q) use ($selectedSchoolYear, $selectedSemester) { $q->where('role', '!=', 'student')->orWhereHas('student', function($sq) use ($selectedSchoolYear, $selectedSemester) { $sq->where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester); }); })->count() }}</div>
-                <div class="stat-label">Users</div>
-            </div>
-        </a>
-        <a href="{{ url('/admin/reports/tasks') }}" class="stat-card">
-            <span class="stat-icon"><i class="bi bi-check2-circle"></i></span>
-            <div>
-                <div class="stat-number">{{ \App\Models\StudentTask::where('status', 'completed')->whereHas('user.student', function($q) use ($selectedSchoolYear, $selectedSemester) { $q->where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester); })->count() }}</div>
-                <div class="stat-label">Completed Tasks</div>
+                <div class="stat-label">Total SAs</div>
             </div>
         </a>
         <a href="{{ route('admin.attendance.report') }}" class="stat-card">
@@ -532,11 +516,11 @@
                 <div class="stat-label">Total Attendance</div>
             </div>
         </a>
-        <a href="{{ route('admin.evaluations.index') }}" class="stat-card">
-            <span class="stat-icon"><i class="bi bi-clipboard-data"></i></span>
+        <a href="{{ url('/admin/reports/tasks') }}" class="stat-card">
+            <span class="stat-icon"><i class="bi bi-check2-circle"></i></span>
             <div>
-                <div class="stat-number">{{ \App\Models\Evaluation::whereHas('student', function($q) use ($selectedSchoolYear, $selectedSemester) { $q->where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester); })->count() }}</div>
-                <div class="stat-label">Evaluated Students</div>
+                <div class="stat-number">{{ \App\Models\StudentTask::where('status', 'completed')->whereHas('user.student', function($q) use ($selectedSchoolYear, $selectedSemester) { $q->where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester); })->count() }}</div>
+                <div class="stat-label">Completed Tasks</div>
             </div>
         </a>
         <a href="{{ url('/admin/reports/grades') }}" class="stat-card">
@@ -551,6 +535,30 @@
                     }}
                 </div>
                 <div class="stat-label">Grades Submitted</div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="dashboard-stats" style="margin-top: 24px;">
+        <a href="{{ route('applicants.list') }}" class="stat-card">
+            <span class="stat-icon"><i class="bi bi-person-lines-fill"></i></span>
+            <div>
+                <div class="stat-number">{{ \App\Models\Application::count() }}</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+        </a>
+        <a href="{{ route('admin.usermanagement') }}" class="stat-card">
+            <span class="stat-icon"><i class="bi bi-person-badge"></i></span>
+            <div>
+                <div class="stat-number">{{ \App\Models\User::where(function($q) use ($selectedSchoolYear, $selectedSemester) { $q->where('role', '!=', 'student')->orWhereHas('student', function($sq) use ($selectedSchoolYear, $selectedSemester) { $sq->where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester); }); })->count() }}</div>
+                <div class="stat-label">Users</div>
+            </div>
+        </a>
+        <a href="{{ route('admin.evaluations.index') }}" class="stat-card">
+            <span class="stat-icon"><i class="bi bi-clipboard-data"></i></span>
+            <div>
+                <div class="stat-number">{{ \App\Models\Evaluation::whereHas('student', function($q) use ($selectedSchoolYear, $selectedSemester) { $q->where('school_year', $selectedSchoolYear)->where('semester', $selectedSemester); })->count() }}</div>
+                <div class="stat-label">Evaluated Student Assistants</div>
             </div>
         </a>
     </div>

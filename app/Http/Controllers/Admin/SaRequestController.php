@@ -29,7 +29,7 @@ class SaRequestController extends Controller
         $semester = $request->query('semester');
         
         // Get all students from the student list, filtered by school year and semester only
-        $query = \App\Models\Student::select('id', 'student_name', 'id_number', 'course', 'year_level', 'designated_office');
+        $query = \App\Models\Student::select('id', 'first_name', 'last_name', 'middle_name', 'id_number', 'course', 'year_level', 'designated_office');
         
         // Filter by school year and semester (matching what's shown in admin student list)
         if ($schoolYear) {
@@ -40,7 +40,19 @@ class SaRequestController extends Controller
             $query->where('semester', $semester);
         }
         
-        $students = $query->orderBy('student_name')->get();
+        $students = $query->orderBy('last_name')->orderBy('first_name')->get();
+        
+        // Map the students to include the computed student_name
+        $students = $students->map(function($student) {
+            return [
+                'id' => $student->id,
+                'student_name' => $student->student_name, // This uses the accessor
+                'id_number' => $student->id_number,
+                'course' => $student->course,
+                'year_level' => $student->year_level,
+                'designated_office' => $student->designated_office,
+            ];
+        });
 
         return response()->json(['students' => $students]);
     }

@@ -388,7 +388,8 @@
                         <th>Task</th>
                         <th>Level of Priority</th>
                         <th>Due Date</th>
-                        <th>Status</th>
+                        <th>Progress</th>
+                        <th></th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -400,6 +401,14 @@
                             <td>{{ $task->title }}</td>
                             <td>{{ ucfirst(str_replace('_', ' ', $task->priority)) }}</td>
                             <td>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</td>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div style="flex:1;background:#e5e7eb;border-radius:8px;height:8px;overflow:hidden;">
+                                        <div style="background:#10b981;height:100%;width:{{ ($task->current_step ?? 0) * 10 }}%;transition:width 0.3s;"></div>
+                                    </div>
+                                    <span style="font-weight:600;color:#374151;font-size:0.85rem;min-width:40px;" data-task-id="{{ $task->id }}" class="progress-text">{{ ($task->current_step ?? 0) * 10 }}%</span>
+                                </div>
+                            </td>
                             <td>
                                 @if($task->status === 'rejected')
                                     <span class="status-badge" style="background:#fee2e2;color:#b91c1c;">Rejected</span>
@@ -554,6 +563,14 @@
                         <td>${task.title}</td>
                         <td>${task.priority ? (task.priority.charAt(0).toUpperCase() + task.priority.slice(1).replace('_', ' ')) : ''}</td>
                         <td>${task.due_date_formatted}</td>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div style="flex:1;background:#e5e7eb;border-radius:8px;height:8px;overflow:hidden;">
+                                    <div style="background:#10b981;height:100%;width:${(task.current_step ?? 0) * 10}%;transition:width 0.3s;"></div>
+                                </div>
+                                <span style="font-weight:600;color:#374151;font-size:0.85rem;min-width:40px;" data-task-id="${task.id}" class="progress-text">${(task.current_step ?? 0) * 10}%</span>
+                            </div>
+                        </td>
                         <td>
                             ${task.status === 'rejected' ? '<span class="status-badge" style="background:#fee2e2;color:#b91c1c;">Rejected</span>' : (task.verified ? '<span class="status-badge status-completed">Verified</span>' : '<span class="status-badge status-pending">Pending</span>')}
                         </td>

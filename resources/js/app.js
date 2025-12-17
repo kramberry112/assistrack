@@ -100,6 +100,49 @@ window.Echo.channel('student-tasks')
     });
 console.log('StudentTaskRejected event handler attached.');
 
+// Listen for StudentTaskStepUpdated event for real-time progress updates
+window.Echo.channel('student-tasks')
+    .listen('StudentTaskStepUpdated', (e) => {
+        console.log('StudentTaskStepUpdated event received:', e);
+        
+        if (window.currentUserId && e.userId == window.currentUserId) {
+            const card = document.querySelector(`.task-card[data-task-id="${e.taskId}"]`);
+            if (card) {
+                // Update step items
+                const stepItems = card.querySelectorAll('.step-item');
+                stepItems.forEach(function(item) {
+                    const itemStep = parseInt(item.getAttribute('data-step'));
+                    if (itemStep <= e.currentStep) {
+                        item.classList.add('completed');
+                    } else {
+                        item.classList.remove('completed');
+                    }
+                });
+                
+                // Update progress bar
+                const progressBar = card.querySelector('.progress-bar-fill');
+                if (progressBar) {
+                    progressBar.style.width = e.percentage + '%';
+                }
+                
+                // Update percentage text
+                const percentageText = card.querySelector('.progress-percentage');
+                if (percentageText) {
+                    percentageText.textContent = e.percentage + '%';
+                }
+                
+                // Enable/disable complete button
+                const completeBtn = card.querySelector('.task-action.complete');
+                if (completeBtn) {
+                    completeBtn.disabled = e.currentStep < 10;
+                }
+                
+                console.log('Progress updated for task:', e.taskId, 'to', e.percentage + '%');
+            }
+        }
+    });
+console.log('StudentTaskStepUpdated event handler attached.');
+
 // Listen for Community Join Request notifications
 window.Echo.private(`App.Models.User.${window.currentUserId}`)
     .notification((notification) => {

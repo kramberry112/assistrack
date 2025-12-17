@@ -381,21 +381,22 @@ window.currentUserId = {{ auth()->id() }};
     /* Task Cards - unchanged styling */
     .task-card {
         background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        padding: 28px 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 24px;
         transition: box-shadow 0.2s;
     }
 
     .task-card:hover {
-        box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
     }
 
     .task-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
+        gap: 8px;
     }
 
     .task-title {
@@ -430,10 +431,10 @@ window.currentUserId = {{ auth()->id() }};
     }
 
     .task-description {
-        color: #444;
-        font-size: 1rem;
-        margin-bottom: 10px;
-        line-height: 1.5;
+        color: #6b7280;
+        font-size: 0.95rem;
+        margin-bottom: 16px;
+        line-height: 1.6;
     }
 
     .task-meta {
@@ -786,30 +787,31 @@ window.currentUserId = {{ auth()->id() }};
 
     /* Step Tracker Styles */
     .step-tracker {
-        margin: 16px 0;
-        padding: 12px;
+        margin: 20px 0;
+        padding: 16px;
         background: #f9fafb;
         border-radius: 8px;
+        border: 1px solid #e5e7eb;
     }
 
     .step-tracker-title {
         font-size: 0.85rem;
         font-weight: 600;
         color: #6b7280;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
     }
 
     .steps-container {
         display: flex;
         gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 8px;
+        justify-content: space-between;
+        margin-bottom: 12px;
     }
 
     .step-item {
-        width: 32px;
-        height: 32px;
-        border-radius: 6px;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -824,7 +826,7 @@ window.currentUserId = {{ auth()->id() }};
 
     .step-item:hover {
         border-color: #7c83e7;
-        transform: scale(1.05);
+        transform: scale(1.08);
     }
 
     .step-item.completed {
@@ -834,26 +836,25 @@ window.currentUserId = {{ auth()->id() }};
     }
 
     .progress-bar-container {
-        height: 8px;
+        height: 10px;
         background: #e5e7eb;
-        border-radius: 4px;
+        border-radius: 5px;
         overflow: hidden;
-        margin-top: 8px;
+        margin-bottom: 8px;
     }
 
     .progress-bar-fill {
         height: 100%;
         background: linear-gradient(90deg, #7c83e7, #6366f1);
         transition: width 0.3s ease;
-        border-radius: 4px;
+        border-radius: 5px;
     }
 
     .progress-percentage {
-        font-size: 0.9rem;
-        font-weight: 600;
+        font-size: 0.95rem;
+        font-weight: 700;
         color: #7c83e7;
-        margin-top: 4px;
-        text-align: right;
+        text-align: center;
     }
 
     /* Notification Styles */
@@ -1086,9 +1087,8 @@ window.currentUserId = {{ auth()->id() }};
                                         <rect x="3" y="3" width="18" height="18" rx="2"/>
                                         <line x1="9" y1="9" x2="15" y2="9"/>
                                     </svg>
-                                    <span style="color:#374151;">
-                                        <span style="font-weight:500;">Due:</span>
-                                        {{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}
+                                    <span style="color:#374151;white-space:nowrap;">
+                                        <span style="font-weight:500;">Due:</span> {{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}
                                     </span>
                                 </div>
                                 @if(($task->status == 'in_progress' || $task->status == 'completed') && $task->started_date && $task->started_time)

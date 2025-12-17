@@ -50,6 +50,14 @@ class ApplicationController extends Controller
                 'first_name' => 'required|string|max:255',
                 'middle_name' => 'nullable|string|max:255',
                 'course' => 'required|string|max:255',
+                'site_program' => 'nullable|string|max:255',
+                'soe_program' => 'nullable|string|max:255',
+                'ste_program' => 'nullable|string|max:255',
+                'sba_program' => 'nullable|string|max:255',
+                'sihm_program' => 'nullable|string|max:255',
+                'sohs_program' => 'nullable|string|max:255',
+                'soh_program' => 'nullable|string|max:255',
+                'soc_program' => 'nullable|string|max:255',
                 'year_level' => 'required|string|max:255',
                 'age' => 'required|string|max:10',
                 'id_number' => 'required|string|max:255',
@@ -78,6 +86,38 @@ class ApplicationController extends Controller
             ]);
 
             \Log::info('Validation passed');
+
+            // Combine school and program into course field
+            $school = $data['course'];
+            $program = null;
+            
+            if ($school === 'SITE' && !empty($data['site_program'])) {
+                $program = $data['site_program'];
+            } elseif ($school === 'SOE' && !empty($data['soe_program'])) {
+                $program = $data['soe_program'];
+            } elseif ($school === 'STE' && !empty($data['ste_program'])) {
+                $program = $data['ste_program'];
+            } elseif ($school === 'SBA' && !empty($data['sba_program'])) {
+                $program = $data['sba_program'];
+            } elseif ($school === 'SIHM' && !empty($data['sihm_program'])) {
+                $program = $data['sihm_program'];
+            } elseif ($school === 'SOHS' && !empty($data['sohs_program'])) {
+                $program = $data['sohs_program'];
+            } elseif ($school === 'SOH' && !empty($data['soh_program'])) {
+                $program = $data['soh_program'];
+            } elseif ($school === 'SOC' && !empty($data['soc_program'])) {
+                $program = $data['soc_program'];
+            }
+
+            // Format: "SCHOOL: PROGRAM" if program exists, otherwise just "SCHOOL"
+            if ($program) {
+                $data['course'] = $school . ': ' . $program;
+            }
+
+            // Remove program fields from data array as they're not database columns
+            unset($data['site_program'], $data['soe_program'], $data['ste_program'], 
+                  $data['sba_program'], $data['sihm_program'], $data['sohs_program'], 
+                  $data['soh_program'], $data['soc_program']);
 
             // Handle cropped picture (base64)
             if ($data['cropped_picture']) {

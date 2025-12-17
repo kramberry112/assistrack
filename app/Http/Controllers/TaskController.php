@@ -179,6 +179,7 @@ class TaskController extends Controller {
                 'due_date_formatted' => \Carbon\Carbon::parse($task->due_date)->format('F d, Y'),
                 'verified' => (bool)$task->verified,
                 'status' => $task->status,
+                'current_step' => $task->current_step ?? 0,
             ];
         });
         return response()->json($formatted);

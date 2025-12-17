@@ -16,8 +16,10 @@ class StudentTaskController extends Controller {
         $grouped = [
             'todo' => $tasks->filter(function($task) {
                 return $task->status === 'todo';
-            }),
-            'in_progress' => $tasks->where('status', 'in_progress'),
+            })->sortByDesc('created_at'),
+            'in_progress' => $tasks->filter(function($task) {
+                return $task->status === 'in_progress';
+            })->sortByDesc('updated_at'),
             'completed' => $tasks->where('status', 'completed')->sortByDesc('updated_at'),
             // Only show tasks that are NOT completed or rejected and due today or earlier
             'due' => $tasks->filter(function($task) {
@@ -224,6 +226,13 @@ class StudentTaskController extends Controller {
         
         $task->current_step = $request->step;
         $task->save();
+        
+        // Broadcast step update event for real-time updates
+        broadcast(new \App\Events\StudentTaskStepUpdated(
+            $task->id,
+            $task->user_id,
+            $task->current_step
+        ))->toOthers();
         
         return response()->json([
             'success' => true,

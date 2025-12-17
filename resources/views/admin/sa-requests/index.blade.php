@@ -561,6 +561,10 @@
     
     <div class="header-wrapper">
         <p class="sa-requests-desc">Review and manage Student Assistant requests from offices</p>
+        <!-- Debug: Display current semester and school year -->
+        <div style="background: #fef3c7; padding: 8px; margin: 8px 0; border-radius: 4px; font-size: 0.85rem;">
+            <strong>Debug Info:</strong> Semester = "{{ $currentSemester }}" | School Year = "{{ $currentSchoolYear }}"
+        </div>
     </div>
 
     <div style="flex: 1; padding: 0 24px 24px;">
@@ -863,24 +867,44 @@ function loadAvailableStudents(office) {
     const select = document.getElementById('assignStudentId');
     select.innerHTML = '<option value="">Loading students...</option>';
     
+    // Debug: Check what semester value we have
+    const semesterValue = '{{ $currentSemester }}';
+    const schoolYearValue = '{{ $currentSchoolYear }}';
+    console.log('Semester:', semesterValue);
+    console.log('School Year:', schoolYearValue);
+    
     // Fetch available students for current school year and semester (excluding those from the requesting office)
-    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}&school_year={{ $currentSchoolYear }}&semester={{ urlencode($currentSemester) }}`;
+    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}&school_year=${encodeURIComponent(schoolYearValue)}&semester=${encodeURIComponent(semesterValue)}`;
+    
+    console.log('Fetching students from:', url);
+    
     fetch(url, {
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Students data:', data);
         select.innerHTML = '<option value="">Select a student...</option>';
-        data.students.forEach(student => {
-            const option = document.createElement('option');
-            option.value = student.id;
-            const officeText = student.designated_office ? ` - ${student.designated_office}` : '';
-            option.textContent = `${student.student_name} (${student.id_number}) - ${student.course} Year ${student.year_level}${officeText}`;
-            select.appendChild(option);
-        });
+        if (data.students && data.students.length > 0) {
+            data.students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                const officeText = student.designated_office ? ` - ${student.designated_office}` : '';
+                option.textContent = `${student.student_name} (${student.id_number}) - ${student.course} Year ${student.year_level}${officeText}`;
+                select.appendChild(option);
+            });
+        } else {
+            select.innerHTML = '<option value="">No students available</option>';
+        }
     })
     .catch(error => {
         console.error('Error loading students:', error);
@@ -892,16 +916,32 @@ function loadAvailableStudentsMultiple(maxCount, office) {
     const container = document.getElementById('studentCheckboxList');
     container.innerHTML = '<div style="text-align: center; padding: 10px;">Loading students...</div>';
     
+    // Debug: Check what semester value we have
+    const semesterValue = '{{ $currentSemester }}';
+    const schoolYearValue = '{{ $currentSchoolYear }}';
+    console.log('Semester:', semesterValue);
+    console.log('School Year:', schoolYearValue);
+    
     // Fetch available students for current school year and semester (excluding those from the requesting office)
-    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}&school_year={{ $currentSchoolYear }}&semester={{ urlencode($currentSemester) }}`;
+    const url = `/admin/available-students?exclude_office=${encodeURIComponent(office)}&school_year=${encodeURIComponent(schoolYearValue)}&semester=${encodeURIComponent(semesterValue)}`;
+    
+    console.log('Fetching students from:', url);
+    
     fetch(url, {
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Students data:', data);
         container.innerHTML = '';
         if (data.students.length === 0) {
             container.innerHTML = '<div style="text-align: center; padding: 10px; color: #6b7280;">No available students found</div>';
